@@ -80,15 +80,19 @@ div {
     }
 
     .race-data {
-        height: 170px;
+        height: 190px;
     }
 
     #sidebar-footer {
-        display: none;
+        display: none !important;
     }
 
     #slide {
-        height: calc(100vh - var(--sidebar-header-height))
+        height: calc(100vh - var(--sidebar-header-height)) !important;
+    }
+
+    .track-car {
+        height: 250px !important;
     }
 }
 
@@ -174,7 +178,7 @@ div {
     margin: 0;
     object-fit: cover;
     width: 100%;
-    height: 400px;
+    height: 100%;
 }
 
 .track-logo {
@@ -406,8 +410,17 @@ div {
 }
 
 
+
+/*
+height: 20px - close-button top,
+        10px - close-button margin-bottom,
+        44px - tabs div height,
+        10px - tabs div margin-bottom,
+        (20px + 4vw) - close-button height,
+*/
+
 :root {
-    --sidebar-header-height: calc(20px + 10px + 20px + 44px + (20px + 4vw));
+    --sidebar-header-height: calc(20px + 10px + 20px + 44px + 10px + (20px + 4vw));
     --sidebar-footer-height: calc(12vh);
 }
 
@@ -420,6 +433,7 @@ div {
     width: 100%;
     font-family: 'Roboto', sans-serif;
     margin-top: 20px;
+    margin-bottom: 10px;
     display: inline-block;
 }
 
