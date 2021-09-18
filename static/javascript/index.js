@@ -3,21 +3,42 @@ var sorted_races = []
 var focused_server;
 
 var slide_time;
+// var auto_refresh = false;
 
 document.addEventListener('DOMContentLoaded', function () {
     // should read #FF0000 or rgb(255, 0, 0)
     slide_time = $('#main-sidebar').css('transition-duration');
-    slide_time = parseFloat(slide_time.substring(0, slide_time.indexOf('s'))) * 1000;
-    console.log(slide_time);
+    slide_time = parseFloat(slide_time.substring(0, slide_time.indexOf('s'))) * 1000 + 100;
 }, false);
 
 
 
 
+// var time_since_last_refresh = 0;
+// var auto_refresh_every = 5;
 
 function update_times(){
+    var countdown = document.getElementById("sidebar-countdown");
+    // var auto_refresh_countdown = document.getElementById("auto-refresh-countdown");
+
     setInterval(function() {
-        countdown = document.getElementById("sidebar-countdown");
+        
+
+        // if (auto_refresh){
+        //     auto_refresh_countdown.innerHTML = (auto_refresh_every - time_since_last_refresh) + "s";
+            
+        //     if (time_since_last_refresh == auto_refresh_every){
+        //         time_since_last_refresh = 0;
+        //         location.reload();
+        //     }
+        //     time_since_last_refresh += 1;
+        // }
+        // else {
+        //     auto_refresh_countdown.innerHTML = "";
+        //     time_since_last_refresh = 0;
+        // }
+
+        
 
         for (let i = 0; i < time_lefts.length; i++){
             if (time_lefts[i] < 0){
@@ -135,7 +156,7 @@ function open_race(server, redirect=true){
         
         for (let i=0; i<server.players.length; i++){
             var driver = server.players[i];
-            var driver_element = `<div class="sidebar-section sidebar-driver-details">
+            var driver_element = `<div class="sidebar-section sidebar-driver-details" onclick="window.open('https://game.raceroom.com/users/${driver.UserId}', '_blank').focus();">
                                     <div class="driver-line">
                                         <div class="driver-icon" style="flex: 1;">
                                             <img src="http://game.raceroom.com/game/user_avatar/${driver.UserId}" class="driver-icon" height="120vh" style="margin-right: 8px;">
@@ -207,3 +228,13 @@ function moveToSecond() {
     $(".tab").attr('class', 'tab');
     $("#tab2").attr('class', 'tab selected');
 }
+
+
+
+
+
+
+// function autoRefreshEnableDisable(){
+//     value = document.getElementById("auto-refresh").checked;
+//     auto_refresh = value;
+// }
