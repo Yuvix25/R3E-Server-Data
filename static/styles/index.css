@@ -114,6 +114,10 @@ div {
         display: none !important;
         flex: 0 !important;
     }
+
+    .driver-country {
+        margin-right: 0px !important;
+    }
 }
 
 @media only screen and (max-width: 1709px) {
