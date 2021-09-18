@@ -47,7 +47,8 @@ function update_times(){
 
 
 function joinFocusedServer(){
-    var url = 'rrre://multiplayer/join?data={"MultiplayerJoin":{"Address":"{' + focused_server.ip + '}:' + focused_server.port + '"}}';
+    var url = 'rrre://multiplayer/join?data={"MultiplayerJoin":{"Address":"' + focused_server.ip + ':' + focused_server.port + '"}}';
+    console.log(url);
     window.open(url, '_blank').focus()
 }
 
