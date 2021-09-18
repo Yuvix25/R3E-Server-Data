@@ -94,6 +94,10 @@ div {
     .track-car {
         height: 250px !important;
     }
+
+    #sidebar-track-details {
+        height: 18vh !important;
+    }
 }
 
 @media only screen and (max-width: 1709px) {
