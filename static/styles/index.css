@@ -82,6 +82,14 @@ div {
     .race-data {
         height: 170px;
     }
+
+    #sidebar-footer {
+        display: none;
+    }
+
+    #slide {
+        height: calc(100vh - var(--sidebar-header-height))
+    }
 }
 
 @media only screen and (max-width: 1709px) {
@@ -473,6 +481,7 @@ div {
 
 #slide {
     width: 200%;
+    height: calc(100vh - var(--sidebar-header-height) - var(--sidebar-footer-height));
     display: flex;
 
     /* overflow: hidden; */
