@@ -1,4 +1,4 @@
-import os, requests, json
+import json
 from flask import Flask, render_template, request
 from utils import get_all_races, get_race
 

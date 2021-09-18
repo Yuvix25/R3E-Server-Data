@@ -1,5 +1,4 @@
 import datetime
-from genericpath import isfile
 import urllib.request, json, time, os
 from datetime import datetime
 
