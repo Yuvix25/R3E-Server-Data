@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+        <title>R3E Advanced Statistics</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/index.css') }}">
+
+        <script src="//code.jquery.com/jquery-2.2.1.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+        <script src="{{ url_for('static',filename='javascript/index.js') }}"></script>
+        <!-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" media="screen"> -->
+        <style>
+            .container {
+                max-width: 1000px;
+            }
+        </style>
+
+    </head>
+
+    <body>
+
+        <h1 style="margin-left: 20px;">Live Ranked Servers:</h1>
+
+        {% for server in servers %}
+            <div class="race-container" onclick='get_race("{{server.name}}");'>
+
+                <script>
+                    time_lefts.push({{server.time_left}});
+                    sorted_races.push('{{server.name}}');
+                </script>
+                
+                <div class="track-car">
+                    <img src="{{server.track_thumbnail}}" class="track-img"></img>
+                    <img src="{{server.track_logo}}" class="track-logo"></img>
+                    {% for thumb in server.classes_thumbnails %}
+                        {% if server.classes_thumbnails|length > 4 %}
+                            <img src="{{thumb}}" class="class-img" style="left: calc((calc(27% / ({{server.classes_thumbnails|length}} - 4)) + var(--class-img-margin)) * {{loop.index-1}} + var(--class-img-margin)); width: calc(27% / ({{server.classes_thumbnails|length}} - 4)); height: auto;"></img>
+                        {% else %}
+                            <img src="{{thumb}}" class="class-img" style="left: calc((var(--class-img-height) + var(--class-img-margin)) * {{loop.index-1}} + var(--class-img-margin));"></img>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <div style="display: flex;">
+                    <img src="{{server.thumbnail}}" class="thumbnail"></img>
+
+                    <div style="margin-left: 20px; position: relative;" class="server-details">
+
+                        <div class="name-level">
+                            <h2>{{server.name}}</h2>
+                            {% if server.level == "Rookie" %}
+                                <img class="level-img" src="{{ url_for('static',filename='images/rookie.png') }}"></img>
+                            {% elif server.level == "Amateur" %}
+                                <img class="level-img" src="{{ url_for('static',filename='images/am.png') }}"></img>
+                            {% elif server.level == "Pro" %}
+                                <img class="level-img" src="{{ url_for('static',filename='images/pro.png') }}"></img>
+                            {% endif %}
+                        </div>
+
+                        <div style="display: inline-flex; right: 20px; bottom: 2px; position: absolute; justify-content: space-between; width: calc(100% - 20px);">
+
+                            <div class="driver-count">
+                                <img class="car-icon" src="/static/images/car-front.png"></img>
+                                <p>{{server.player_ids|length}}</p>
+                            </div>
+                            
+                            <div class="session">
+                                <img class="clock-icon" src="/static/images/clock.png"></img>
+                                <p>{{server.session}}</p>
+                            </div>
+
+                            <div class="countdown" style="display: flex;">
+                                <p id="minutes-{{loop.index-1}}"></p>
+                                <p id="seconds-{{loop.index-1}}"></p>
+                            </div>
+                        </div>
+
+                </div>
+
+
+                </div>
+
+            </div>
+        {% endfor %}
+
+        
+        <div class="sidebar" id="loading-sidebar">
+            <center>
+                <img class="close-button" onclick="close_sidebar();" src="{{ url_for('static',filename='images/close_button.png') }}">
+            </center>
+            <h1 style="text-align: center !important; margin-top: 40%;">Loading...</h1>
+        </div>
+        
+
+        <div class="sidebar" id="main-sidebar" style="display: flex; flex-flow: column; height: 100%;">
+
+            <!--
+            height: 20px - close-button top,
+                    10px - close-button margin-bottom,
+                    44px - tabs div height,
+                    (20px + 4vw) - close-button height,
+            -->
+
+            <div style="height: var(--sidebar-header-height);">
+                <center>
+                    <img class="close-button" onclick="close_sidebar();" src="{{ url_for('static',filename='images/close_button.png') }}">
+                </center>
+                
+                <br>
+                <center>
+                    <div class="tabs">
+                        <div id="tab1" class="tab selected">General</div>
+                        <div id="tab2" class="tab">Drivers</div>
+                    </div>
+                </center>
+            </div>
+            
+            
+            <div id="slide" style="height: calc(100vh - var(--sidebar-header-height) - var(--sidebar-footer-height));">
+                <div id="general-info">
+                    <div id="sidebar-main-details" class="sidebar-section">
+                        <div id="sidebar-track-details" style="display: flex; position: relative; height: 13vh;">
+                            <div id="sidebar-track-logo" style="flex: 1;"></div>
+                            <div id="sidebar-track-text" style="flex: 3; padding-left: 30px !important;">
+                                <h2 id="sidebar-track-name" style="margin-bottom: 10px;"></h2>
+                                <h3 id="sidebar-track-layout" style="margin-top: 10px;"></h3>
+                            </div>
+                            <div id="sidebar-track-map" style="flex: 1;"></div>
+                        </div>
+                        
+                        <div id="sidebar-classes"></div>
+
+                        <div id="sidebar-track-details" style="display: flex; margin-top: 10px;">
+                            <div id="sidebar-drivers-text" class="two-line-data" style="flex: 1;">
+                                <h3 class="sidebar-header" style="text-align: center !important;">Drivers</h2>
+                                <h3 id="sidebar-driver-count" style="text-align: center !important;"></h3>
+                            </div>
+
+                            <div id="sidebar-sof-text" class="two-line-data" style="flex: 1;">
+                                <h3 class="sidebar-header" style="text-align: center !important;">S.o.F</h3>
+                                <h3 id="sidebar-sof" style="text-align: center !important;"></h3>
+                            </div>
+
+                            <div id="sidebar-rep-text" class="two-line-data" style="flex: 1;">
+                                <h3 class="sidebar-header" style="text-align: center !important;">Reputation</h3>
+                                <h3 id="sidebar-rep" style="text-align: center !important;"></h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="sidebar-time-details" class="sidebar-section">
+                        <div id="sidebar-session-details" style="display: flex; margin-top: 10px;">
+
+                            <div id="sidebar-session-text" class="two-line-data" style="flex: 1;">
+                                <h3 class="sidebar-header" style="text-align: center !important;">Session</h3>
+                                <h3 id="sidebar-session" style="text-align: center !important;"></h3>
+                            </div>
+
+                            <div id="sidebar-countdown" class="two-line-data" style="flex: 1;">
+                                <h3 class="sidebar-header" style="text-align: center !important;">Time Left</h3>
+                                <div class="countdown" style="display: flex;">
+                                    <h3 id="sidebar-minutes" style="margin-top: 11px;"></h3>
+                                    <h3 id="sidebar-seconds" style="margin-top: 11px;"></h3>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div id="sidebar-duration-details" style="display: flex; margin-top: 10px;">
+                            <div id="sidebar-p-dur-text" class="two-line-data" style="flex: 1;">
+                                <h3 class="sidebar-header" style="text-align: center !important;">P</h3>
+                                <h3 id="sidebar-p-dur" style="text-align: center !important;"></h3>
+                            </div>
+                            
+                            <div id="sidebar-q-dur-text" class="two-line-data" style="flex: 1;">
+                                <h3 class="sidebar-header" style="text-align: center !important;">Q</h3>
+                                <h3 id="sidebar-q-dur" style="text-align: center !important;"></h3>
+                            </div>
+                            
+                            
+                        </div>
+                    </div>
+
+                    <div id="sidebar-race-details" class="sidebar-section">
+                        <div id="sidebar-race-settings-1" style="display: flex; margin-top: 10px;">
+                            <div id="sidebar-tirewear-text" class="two-line-data" style="flex: 1;">
+                                <h3 class="sidebar-header" style="text-align: center !important;">Tire Wear</h3>
+                                <h3 id="sidebar-tirewear" style="text-align: center !important;"></h3>
+                            </div>
+
+                            <div id="sidebar-fuelusage-text" class="two-line-data" style="flex: 1;">
+                                <h3 class="sidebar-header" style="text-align: center !important;">Fuel Usage</h3>
+                                <h3 id="sidebar-fuelusage" style="text-align: center !important;"></h3>
+                            </div>
+                        </div>
+
+                        <div id="sidebar-race-settings-2" style="display: flex; margin-top: 10px;">
+                            <div id="sidebar-mandatorypit-text" class="two-line-data" style="flex: 1;">
+                                <h3 class="sidebar-header" style="text-align: center !important;">Mandatory Pit</h3>
+                                <h3 id="sidebar-mandatorypit" style="text-align: center !important;"></h3>
+                            </div>
+
+                            <div id="sidebar-cutrules-text" class="two-line-data" style="flex: 1;">
+                                <h3 class="sidebar-header" style="text-align: center !important;">Cut Rules</h3>
+                                <h3 id="sidebar-cutrules" style="text-align: center !important;"></h3>
+                            </div>
+                        </div>
+                    </div>
+                
+                </div>
+
+                <div id="driver-info" style="width: 100%; text-align: center;"></div>
+            </div>
+
+            <!-- height: var(--sidebar-footer-height); -->
+            <div id="sidebar-footer" style="height: var(--sidebar-footer-height); display: flex; align-items: center; justify-content: center;">
+                <button onclick="joinFocusedServer()">Join Server</button>
+            </div>
+        </div>
+
+
+        <script>
+            update_times();
+        </script>
+
+
+
+        <br>
+        {% for error in errors %}
+        <h4>{{ error }}</h4>
+        {% endfor %}
+
+        
+    </body>
+
+</html>
