@@ -97,7 +97,7 @@ div {
 
     #sidebar-track-details {
         height: 18vh !important;
-        margin-bottom: 7vh;
+        margin-bottom: 10vh;
     }
 
     #sidebar-track-logo {
@@ -108,6 +108,11 @@ div {
     #sidebar-classes {
         width: 90% !important;
         left: 5% !important;
+    }
+
+    #sidebar-races-completed {
+        display: none !important;
+        flex: 0 !important;
     }
 }
 

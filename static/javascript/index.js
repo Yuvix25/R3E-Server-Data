@@ -160,7 +160,7 @@ function open_race(server, redirect=true){
                                             <h3>${driver.Reputation}</h3>
                                         </div>
 
-                                        <div style="flex: 1; display: flex; margin-left: 80px;">
+                                        <div style="flex: 1; display: flex; margin-left: 80px;" id="sidebar-races-completed">
                                             <img src="/static/images/car-front-2.png" width="35px" height="35px;" style="margin-top: 15px; margin-right: 5px;"></img>
                                             <h3>${driver.RacesCompleted}</h3>
                                         </div>
