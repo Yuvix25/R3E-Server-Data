@@ -78,6 +78,10 @@ div {
     .server-details {
         height: 12vh;
     }
+
+    .race-data {
+        height: 180px;
+    }
 }
 
 @media only screen and (max-width: 1709px) {
