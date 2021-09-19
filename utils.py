@@ -56,7 +56,8 @@ def update_local_db(update_full_every=3, reset_small_every="friday"):
 
     now = int(time.time())
 
-    
+    if not os.path.isdir("./db"):
+        os.mkdir("db")
 
     # Users DB:
 
