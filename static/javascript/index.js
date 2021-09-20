@@ -156,7 +156,7 @@ function open_race(server, redirect=true){
         
         for (let i=0; i<server.players.length; i++){
             var driver = server.players[i];
-            var driver_element = `<div class="sidebar-section sidebar-driver-details" onclick="window.open('https://game.raceroom.com/users/${driver.UserId}', '_blank').focus();">
+            var driver_element = `<div class="sidebar-section sidebar-driver-details" onclick="window.open('https://game.raceroom.com/users/${driver.UserId}/career', '_blank').focus();">
                                     <div class="driver-line">
                                         <div class="driver-icon" style="flex: 1;">
                                             <img src="http://game.raceroom.com/game/user_avatar/${driver.UserId}" class="driver-icon" height="120vh" style="margin-right: 8px;">
