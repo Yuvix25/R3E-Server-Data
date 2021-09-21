@@ -4,7 +4,7 @@ var focused_server;
 var statics_url;
 
 var slide_time;
-// var auto_refresh = false;
+var auto_refresh = false;
 
 document.addEventListener('DOMContentLoaded', function () {
     // should read #FF0000 or rgb(255, 0, 0)
@@ -15,29 +15,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-// var time_since_last_refresh = 0;
-// var auto_refresh_every = 5;
+var time_since_last_refresh = 0;
+var auto_refresh_every = 60;
 
 function update_times(){
     var countdown = document.getElementById("sidebar-countdown");
-    // var auto_refresh_countdown = document.getElementById("auto-refresh-countdown");
+    var auto_refresh_countdown = document.getElementById("auto-refresh-countdown");
 
-    setInterval(function() {
+    setInterval(async function() {
         
 
-        // if (auto_refresh){
-        //     auto_refresh_countdown.innerHTML = (auto_refresh_every - time_since_last_refresh) + "s";
+        if (auto_refresh){
+            auto_refresh_countdown.innerHTML = (auto_refresh_every - time_since_last_refresh) + "s";
             
-        //     if (time_since_last_refresh == auto_refresh_every){
-        //         time_since_last_refresh = 0;
-        //         location.reload();
-        //     }
-        //     time_since_last_refresh += 1;
-        // }
-        // else {
-        //     auto_refresh_countdown.innerHTML = "";
-        //     time_since_last_refresh = 0;
-        // }
+            if (time_since_last_refresh == auto_refresh_every){
+                time_since_last_refresh = 0;
+                await applyFilters();
+            }
+            time_since_last_refresh += 1;
+        }
+        else {
+            auto_refresh_countdown.innerHTML = "";
+            time_since_last_refresh = 0;
+        }
 
         
 
@@ -100,7 +100,7 @@ async function get_race(name){
 }
 
 
-function applyFilters(){
+async function applyFilters(){
     var reverse = document.getElementById("reverse-order-checkbox").checked;
 
     var select = document.getElementById("regions-dropdown");
@@ -112,7 +112,7 @@ function applyFilters(){
     var select = document.getElementById("sort-by-dropdown");
     var sort_by = select.options[select.selectedIndex].value + (reverse ? "-1" : "");
 
-    create_race_list(region, level, sort_by);
+    await create_race_list(region, level, sort_by);
 }
 
 
@@ -402,7 +402,7 @@ function moveToSecond() {
 
 
 
-// function autoRefreshEnableDisable(){
-//     value = document.getElementById("auto-refresh").checked;
-//     auto_refresh = value;
-// }
+function autoRefreshEnableDisable(){
+    auto_refresh = document.getElementById("auto-refresh").checked;
+    time_since_last_refresh = 0;
+}

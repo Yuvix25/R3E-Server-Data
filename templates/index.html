@@ -37,18 +37,6 @@
 
         <!-- <h1 style="margin-left: 20px;">Live Ranked Servers:</h1> -->
 
-        
-        <!-- <div style="margin: 20px; margin-top: 30px; display: flex;">
-            <h3 style="margin: 0; margin-right: 20px;">Auto-Refresh</h3>
-            <label class="switch" style="margin-top: 5px;">
-                <input type="checkbox" id="auto-refresh" onchange="autoRefreshEnableDisable();">
-                <span class="slider round"></span>
-            </label>
-            <h3 id="auto-refresh-countdown" style="margin: 0; margin-left: 20px;"></h3>
-        </div>
-
-        <br> -->
-
         <script>
             statics_url = {{ url_for('static',filename='') }};
         </script>
@@ -101,6 +89,18 @@
                 <img src="{{ url_for('static',filename='/images/search_icon.png') }}" style="height: 4vh; position: absolute; right: 40px;" id="search_icon" onclick="applyFilters();">
             </div>
         </div>
+
+
+        <div style="margin: 20px; margin-top: 30px; display: flex;">
+            <h3 style="margin: 0; margin-right: 20px; font-size: 35px;">Auto-Refresh</h3>
+            <label class="switch" style="margin-top: 5px;">
+                <input type="checkbox" id="auto-refresh" onchange="autoRefreshEnableDisable();">
+                <span class="slider round"></span>
+            </label>
+            <h3 id="auto-refresh-countdown" style="margin: 0; margin-left: 20px; font-size: 35px;"></h3>
+        </div>
+
+        <br>
         
 
 
