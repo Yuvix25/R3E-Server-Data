@@ -35,71 +35,58 @@
         </div>
 
         <br> -->
+
+        <script>
+            statics_url = {{ url_for('static',filename='') }};
+        </script>
         
-
-        {% for server in servers %}
-            <div class="race-container" onclick='get_race("{{server.name}}");'>
-
-                <script>
-                    time_lefts.push({{server.time_left}});
-                    sorted_races.push('{{server.name}}');
-                </script>
+        <div id="search-tools-wrapper">
+            <div id="search-tools" style="display: flex; height: 4vh;">
+                <label for="regions">Region:</label>
+                <div class="dropdown">
+                    <select name="regions" id="regions-dropdown" class="dropdown-select">
+                        <option value="all">All</option>
+                        <option value="europe">Europe</option>
+                        <option value="america">America</option>
+                        <option value="oceania">Oceania</option>
+                    </select>
+                </div>
                 
-                <div class="track-car">
-                    <img src="{{server.track_thumbnail}}" class="track-img"></img>
-                    <img src="{{server.track_logo}}" class="track-logo"></img>
-                    {% for thumb in server.classes_thumbnails %}
-                        {% if server.classes_thumbnails|length > 4 %}
-                            <img src="{{thumb}}" class="class-img" style="left: calc((calc(27% / ({{server.classes_thumbnails|length}} - 4)) + var(--class-img-margin)) * {{loop.index-1}} + var(--class-img-margin)); width: calc(27% / ({{server.classes_thumbnails|length}} - 4)); height: auto;"></img>
-                        {% else %}
-                            <img src="{{thumb}}" class="class-img" style="left: calc((var(--class-img-height) + var(--class-img-margin)) * {{loop.index-1}} + var(--class-img-margin));"></img>
-                        {% endif %}
-                    {% endfor %}
+                <label for="levels">Level:</label>
+                <div class="dropdown">
+                    <select name="levels" id="levels-dropdown" class="dropdown-select">
+                        <option value="all">All</option>
+                        <option value="rookie">Rookie</option>
+                        <option value="am">Amateur</option>
+                        <option value="pro">Pro</option>
+                    </select>
                 </div>
-
-                <div style="display: flex;" class="race-data">
-                    <img src="{{server.thumbnail}}" class="thumbnail"></img>
-
-                    <div style="margin-left: 20px; position: relative;" class="server-details">
-
-                        <div class="name-level">
-                            <h2>{{server.name}}</h2>
-                            {% if server.level == "Rookie" %}
-                                <img class="level-img" src="{{ url_for('static',filename='images/rookie.png') }}"></img>
-                            {% elif server.level == "Amateur" %}
-                                <img class="level-img" src="{{ url_for('static',filename='images/am.png') }}"></img>
-                            {% elif server.level == "Pro" %}
-                                <img class="level-img" src="{{ url_for('static',filename='images/pro.png') }}"></img>
-                            {% endif %}
-                        </div>
-
-                        <div style="display: inline-flex; position: relative; margin-top: 20px; margin-left: 0px; margin-bottom: 10px; justify-content: space-between; width: calc(100% - 20px);">
-
-                            <div class="driver-count">
-                                <img class="car-icon" src="/static/images/car-front-1.png"></img>
-                                <p>{{server.player_ids|length}}</p>
-                            </div>
-                            
-                            <div class="session">
-                                <img class="clock-icon" src="/static/images/clock.png"></img>
-                                <p>{{server.session}}</p>
-                            </div>
-
-                            <div class="countdown" style="display: flex;">
-                                <p id="minutes-{{loop.index-1}}"></p>
-                                <p id="seconds-{{loop.index-1}}"></p>
-                            </div>
-                        </div>
-
+                
+                <label for="sort-by">Sort By:</label>
+                <div class="dropdown">
+                    <select name="sort-by" id="sort-by-dropdown" class="dropdown-select">
+                        <option value="players">Player Count</option>
+                        <option value="time">Time Left</option>
+                        <option value="session">Session</option>
+                    </select>
                 </div>
+                
+                <label id="reverse-label">
+                    <input id="reverse-order-checkbox" type="checkbox" />
+                    <img src="{{ url_for('static',filename='/images/reverse_order.png') }}" style="height: 100%;" id="reverse-order">
+                </label>
 
 
-                </div>
-
+                <img src="{{ url_for('static',filename='/images/search_icon.png') }}" style="height: 5vh; position: absolute; right: 40px;" id="search_icon" onclick="applyFilters();">
             </div>
-        {% endfor %}
-
+        </div>
         
+
+
+        <div id="race-list" style="width: 100%;">
+        </div>
+        
+
         <div class="sidebar" id="loading-sidebar">
             <center>
                 <img class="close-button" onclick="close_sidebar();" src="{{ url_for('static',filename='images/close_button.png') }}">

@@ -1,10 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;800;900&display=swap');
-
-
-html,body {
-    margin:0;
-    padding:0;
-    overflow-x:hidden;
+html,
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
 }
 
 body {
@@ -12,25 +11,25 @@ body {
 }
 
 h1 {
-	text-align: left !important;
-	font-family: 'Roboto', sans-serif;
-	font-weight: 500;
+    text-align: left !important;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
     font-size: 70px;
     color: white;
 }
 
 h2 {
-	text-align: left !important;
-	font-family: 'Roboto', sans-serif;
-	font-weight: 400;
+    text-align: left !important;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
     font-size: 55px;
     color: white;
 }
 
 h3 {
-	/* text-align: left; */
-	font-family: 'Roboto', sans-serif;
-	font-weight: 300;
+    /* text-align: left; */
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
     font-size: 40px;
     color: white;
 }
@@ -42,17 +41,13 @@ div {
 
 .race-container {
     font-family: 'Roboto', sans-serif;
-    
     background-color: rgb(19, 19, 19);
     color: white;
     padding: 0px;
     padding-right: 20px;
     margin: 1%;
-
     display: inline-block;
-
     box-shadow: 5px 5px 50px rgb(14, 14, 14);
-
     transition: transform 0.3s;
 }
 
@@ -68,7 +63,7 @@ div {
 }
 
 @media only screen and (max-width: 890px) {
-    :root {
+     :root {
         --class-img-height: 16vw;
         --class-img-margin: 12px;
     }
@@ -78,50 +73,41 @@ div {
     .server-details {
         height: 12vh;
     }
-
     .race-data {
         height: 190px;
     }
-
     #sidebar-footer {
         display: none !important;
     }
-
     #slide {
         height: calc(100vh - var(--sidebar-header-height)) !important;
     }
-
     .track-car {
         height: 250px !important;
     }
-
     #sidebar-track-details {
         height: 18vh !important;
         margin-bottom: 10vh;
     }
-
     #sidebar-track-logo {
         display: none !important;
         flex: 0 !important;
     }
-
     #sidebar-classes {
         width: 90% !important;
         left: 5% !important;
     }
-
     #sidebar-races-completed {
         display: none !important;
         flex: 0 !important;
     }
-
     .driver-country {
         margin-right: 0px !important;
     }
 }
 
 @media only screen and (max-width: 1709px) {
-    :root {
+     :root {
         --sidebar-width: 100%;
     }
     .race-container {
@@ -140,7 +126,6 @@ div {
         width: 31%;
     }
 }
-
 
 .thumbnail {
     flex: 1;
@@ -166,6 +151,165 @@ div {
     color: rgb(99, 99, 99);
     font-weight: 500;
 }
+
+
+/* Search tools: */
+
+#search-tools-wrapper {
+    font-family: 'Roboto', sans-serif;
+    font-size: 25px;
+    background-color: white;
+    padding: 1vh !important;
+    border-radius: 5px;
+    height: 6vh;
+    margin: 20px;
+    display : flex;
+    align-items : center;
+}
+
+#search-tools {
+    align-items : center;
+}
+
+.dropdown {
+    margin-right: 20px;
+    margin-left: 10px;
+    /* margin-bottom: 8px; */
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    width: 150px;
+    height: 4vh;
+    background: #f2f2f2;
+    border: 1px solid;
+    border-color: white #f7f7f7 whitesmoke;
+    border-radius: 3px;
+    background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.06));
+    background-image: -moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.06));
+    background-image: -o-linear-gradient(top, transparent, rgba(0, 0, 0, 0.06));
+    background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.06));
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+}
+
+.dropdown:before,
+.dropdown:after {
+    content: '';
+    position: absolute;
+    z-index: 2;
+    top: 9px;
+    right: 10px;
+    width: 0;
+    height: 0;
+    border: 4px dashed;
+    border-color: #888888 transparent;
+    pointer-events: none;
+}
+
+.dropdown:before {
+    border-bottom-style: solid;
+    border-top: none;
+}
+
+.dropdown:after {
+    margin-top: 7px;
+    border-top-style: solid;
+    border-bottom: none;
+}
+
+.dropdown-select {
+    position: absolute;
+    vertical-align: middle;
+    width: 130%;
+    margin: 0;
+    padding: 6px 8px 6px 10px;
+    height: 100%;
+    /* line-height: 14px; */
+    font-size: 12px;
+    color: #62717a;
+    text-shadow: 0 1px white;
+    background: #f2f2f2;
+    /* Fallback for IE 8 */
+    background: rgba(0, 0, 0, 0) !important;
+    /* "transparent" doesn't work with Opera */
+    border: 0;
+    border-radius: 0;
+    -webkit-appearance: none;
+}
+
+.dropdown-select:focus {
+    z-index: 3;
+    width: 100%;
+    color: #394349;
+    outline: none;
+}
+
+.dropdown-select>option {
+    margin: 3px;
+    font-size: 20px;
+    padding: 6px 8px;
+    text-shadow: none;
+    background: #f2f2f2;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+
+#reverse-label {
+    cursor: pointer;
+    height: 100%;
+}
+
+#reverse-label img {
+    position: relative;
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    -webkit-transition: all 600ms;
+    transition: all 600ms;
+    width: 100%;
+    height: 100%;
+}
+
+input {
+    display: none;
+}
+
+:checked + img {
+    transform: rotateX(180deg);
+    -webkit-transform: rotateX(180deg);
+}
+
+#search_icon:hover {
+    cursor: pointer;
+}
+
+
+
+
+/* Fix for IE 8 putting the arrows behind the select element. */
+
+.lt-ie9 .dropdown {
+    z-index: 1;
+}
+
+.lt-ie9 .dropdown-select {
+    z-index: -1;
+}
+
+.lt-ie9 .dropdown-select:focus {
+    z-index: 3;
+}
+
+
+/* Dirty fix for Firefox adding padding where it shouldn't. */
+
+@-moz-document url-prefix() {
+    .dropdown-select {
+        padding-left: 6px;
+    }
+}
+
+
 
 
 
@@ -198,7 +342,6 @@ div {
     height: 400px;
 }
 
-
 .track-img {
     position: relative;
     margin: 0;
@@ -219,7 +362,6 @@ div {
     box-shadow: 5px 5px 30px black;
 }
 
-
 .class-img {
     margin: 0;
     /* width: 18%; */
@@ -227,12 +369,9 @@ div {
     position: absolute;
     left: var(--class-img-margin);
     bottom: 20px;
-
-    -webkit-filter: drop-shadow(2px 2px 8px rgb(50, 50, 50) );
+    -webkit-filter: drop-shadow(2px 2px 8px rgb(50, 50, 50));
     filter: drop-shadow(2px 2px 8px rgb(50, 50, 50));
 }
-
-
 
 .circle {
     left: 20px;
@@ -246,17 +385,14 @@ div {
     align-items: center;
     justify-content: center;
     width: 18%;
-
     box-shadow: 1px 1px 50px rgb(71, 71, 71);
 }
-  
+
 .circle:after {
     content: '';
     padding-top: 100%;
-    display:table;
+    display: table;
 }
-
-
 
 .driver-count {
     display: flex;
@@ -268,7 +404,6 @@ div {
 }
 
 
-
 /* Countdown: */
 
 .countdown {
@@ -276,19 +411,17 @@ div {
     align-items: center;
     justify-content: center;
 }
-  
+
 .countdown p {
     font-size: 30px;
     text-transform: uppercase;
 }
 
 
-
 /* Sidebar: */
 
 .sidebar {
     /* display: none; */
-
     position: fixed;
     z-index: 10;
     width: var(--sidebar-width);
@@ -297,9 +430,7 @@ div {
     top: 0;
     background-color: black;
     box-shadow: 1px -2px 25px black;
-
     overflow: hidden;
-
     transition: right 0.5s;
 }
 
@@ -312,7 +443,7 @@ div {
     font-size: 20px;
 }
 
-#sidebar-track-details > h3 {
+#sidebar-track-details>h3 {
     text-align: left !important;
 }
 
@@ -379,7 +510,6 @@ div {
 .close-button {
     position: relative;
     width: calc(20px + 4%);
-
     top: 20px;
     margin-bottom: 10px;
 }
@@ -388,8 +518,7 @@ div {
     cursor: pointer;
 }
 
-
-.sidebar-driver-details{
+.sidebar-driver-details {
     width: 90%;
     margin-left: auto;
     margin-right: auto;
@@ -420,7 +549,6 @@ div {
     background-color: black;
 }
 
-
 #sidebar-footer button {
     color: white;
     background-color: black;
@@ -440,7 +568,6 @@ div {
 }
 
 
-
 /*
 height: 20px - close-button top,
         10px - close-button margin-bottom,
@@ -455,9 +582,7 @@ height: 20px - close-button top,
 }
 
 
-
 /* Tabs: */
-
 
 .tabs {
     width: 100%;
@@ -498,7 +623,6 @@ height: 20px - close-button top,
     position: absolute;
     width: 400px;
     height: 200px;
-
     line-height: 200px;
     text-align: center;
     font-size: 28pt;
@@ -509,7 +633,6 @@ height: 20px - close-button top,
     flex: 1;
     top: 0px;
     left: 0px;
-
     overflow-x: hidden;
     overflow-y: auto;
 }
@@ -518,7 +641,6 @@ height: 20px - close-button top,
     flex: 1;
     top: 0px;
     left: 100%;
-
     overflow-x: hidden;
     overflow-y: auto;
 }
@@ -527,21 +649,17 @@ height: 20px - close-button top,
     width: 200%;
     height: calc(100vh - var(--sidebar-header-height) - var(--sidebar-footer-height));
     display: flex;
-
     /* overflow: hidden; */
-
     transition: transform 0.3s ease-in-out 0s;
     -moz-transition: -moz-transform 0.3s ease-in-out 0s;
     -webkit-transition: -webkit-transform 0.3s ease-in-out 0s;
 }
 
-
 .move-to-first {
     transform: translateX(0px);
     -moz-transform: translateX(0px);
-    -webkit-transform: translateX(0px);    
+    -webkit-transform: translateX(0px);
 }
-
 
 .move-to-second {
     transform: translateX(-50%);
@@ -550,27 +668,31 @@ height: 20px - close-button top,
 }
 
 
-
-
 /* Auto-refresh toggle */
 
+
 /* The switch - the box around the slider */
+
 .switch {
     position: relative;
     display: inline-block;
     width: 60px;
     height: 34px;
-  }
-  
-  /* Hide default HTML checkbox */
-  .switch input {
+}
+
+
+/* Hide default HTML checkbox */
+
+.switch input {
     opacity: 0;
     width: 0;
     height: 0;
-  }
-  
-  /* The slider */
-  .slider {
+}
+
+
+/* The slider */
+
+.slider {
     position: absolute;
     cursor: pointer;
     top: 0;
@@ -580,9 +702,9 @@ height: 20px - close-button top,
     background-color: #ccc;
     -webkit-transition: .4s;
     transition: .4s;
-  }
-  
-  .slider:before {
+}
+
+.slider:before {
     position: absolute;
     content: "";
     height: 26px;
@@ -592,27 +714,29 @@ height: 20px - close-button top,
     background-color: white;
     -webkit-transition: .4s;
     transition: .4s;
-  }
-  
-  input:checked + .slider {
+}
+
+input:checked+.slider {
     background-color: #2196F3;
-  }
-  
-  input:focus + .slider {
+}
+
+input:focus+.slider {
     box-shadow: 0 0 1px #2196F3;
-  }
-  
-  input:checked + .slider:before {
+}
+
+input:checked+.slider:before {
     -webkit-transform: translateX(26px);
     -ms-transform: translateX(26px);
     transform: translateX(26px);
-  }
-  
-  /* Rounded sliders */
-  .slider.round {
+}
+
+
+/* Rounded sliders */
+
+.slider.round {
     border-radius: 34px;
-  }
-  
-  .slider.round:before {
+}
+
+.slider.round:before {
     border-radius: 50%;
-  }
+}

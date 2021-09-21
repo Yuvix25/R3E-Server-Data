@@ -1,6 +1,7 @@
 var time_lefts = []
 var sorted_races = []
 var focused_server;
+var statics_url;
 
 var slide_time;
 // var auto_refresh = false;
@@ -97,6 +98,173 @@ async function get_race(name){
 
     return data;
 }
+
+
+function applyFilters(){
+    var reverse = document.getElementById("reverse-order-checkbox").checked;
+
+    var select = document.getElementById("regions-dropdown");
+    var region = select.options[select.selectedIndex].value;
+
+    var select = document.getElementById("levels-dropdown");
+    var level = select.options[select.selectedIndex].value;
+
+    var select = document.getElementById("sort-by-dropdown");
+    var sort_by = select.options[select.selectedIndex].value + (reverse ? "-1" : "");
+
+    create_race_list(region, level, sort_by);
+}
+
+
+
+async function create_race_list(region="all", level="all", sort_by=""){
+    /*
+    region: show only races form this region (options: all, europe, america, oceania).
+    level : show only races of this level (options: all, rookie, am, pro).
+    sort_by:
+        time      - sort by most time left.
+        time-1    - sort by least time left.
+        players   - sort by most players in server.
+        players-1 - sort by least players in server;
+        session   - sort by session (order is: practice, qualify, race).
+        session-1 - sort by session (order is: race, quialify, practice). 
+    */
+
+    var race_list;
+    await $.getJSON("/get_race_list", (rec) => {
+        race_list = rec;
+    });
+
+    var container = document.getElementById("race-list");
+    container.innerHTML = "";
+
+    time_lefts = [];
+    sorted_races = [];
+
+    var sessions = ["practice", "qualify", "race"];
+
+
+    var race_htmls = [];
+
+    if (sort_by.toLowerCase().includes("time")) {
+        race_list.sort(function(a, b){
+            return (b.time_left - a.time_left) * (sort_by[sort_by.length-1] == "1" ? -1 : 1);
+        });
+    }
+    else if (sort_by.toLowerCase().includes("players-1")) {
+        race_list.sort(function(a, b){
+            return (a.player_ids.length - b.player_ids.length);
+        });
+    }
+    else if (sort_by.toLowerCase().includes("session")) {
+        race_list.sort(function(a, b){
+            return (sessions.indexOf(b.session.toLowerCase()) - sessions.indexOf(a.session.toLowerCase())) * (sort_by[sort_by.length-1] == "1" ? 1 : -1);
+        });
+    }
+
+
+    race_list.forEach(
+        (server, index) => {
+            if (region != "all" && !server.name.toLowerCase().includes(region.toLowerCase())) {
+                return;
+            }
+            if (level != "all" && !server.level.toLowerCase().includes(level.toLowerCase())) {
+                return;
+            }
+
+            var classes_thumbnails = '';
+            if (server.classes_thumbnails.length > 4){
+                server.classes_thumbnails.forEach(
+                    (thumb, classes_index) => {
+                        classes_thumbnails += `<img src="${thumb}" class="class-img"
+                        style="left: calc((calc(27% / (${server.classes_thumbnails.length} - 4)) + var(--class-img-margin)) * ${classes_index} + var(--class-img-margin)); width: calc(27% / (${server.classes_thumbnails.length} - 4)); height: auto;"></img>`;
+                    }
+                )
+            }
+            else {
+                server.classes_thumbnails.forEach(
+                    (thumb, classes_index) => {
+                        classes_thumbnails += `<img src="${thumb}" class="class-img" style="left: calc((var(--class-img-height) + var(--class-img-margin)) * ${classes_index} + var(--class-img-margin));"></img>`
+                    }
+                )
+            }
+
+
+            var level_shortened;
+            if (server.level == "Amateur"){
+                level_shortened = 'am';
+            }
+            else{
+                level_shortened = server.level;
+            }
+
+
+            var level_img = `<img class="level-img" src="${statics_url + 'images/' + level_shortened.toLowerCase() + '.png'}"></img>`;
+
+            time_lefts.push(server.time_left);
+            sorted_races.push(server.name);
+
+            var race_html = `<div class="race-container" onclick='get_race("${server.name}");'>
+                                
+                                <div class="track-car">
+                                    <img src="${server.track_thumbnail}" class="track-img"></img>
+                                    <img src="${server.track_logo}" class="track-logo"></img>
+                                    ${classes_thumbnails}
+                                </div>
+
+                                <div style="display: flex;" class="race-data">
+                                    <img src="${server.thumbnail}" class="thumbnail"></img>
+
+                                    <div style="margin-left: 20px; position: relative;" class="server-details">
+
+                                        <div class="name-level">
+                                            <h2>${server.name}</h2>
+                                                ${level_img}
+                                        </div>
+
+                                        <div style="display: inline-flex; position: relative; margin-top: 20px; margin-left: 0px; margin-bottom: 10px; justify-content: space-between; width: calc(100% - 20px);">
+
+                                            <div class="driver-count">
+                                                <img class="car-icon" src="/static/images/car-front-1.png"></img>
+                                                <p>${server.player_ids.length}</p>
+                                            </div>
+                                            
+                                            <div class="session">
+                                                <img class="clock-icon" src="/static/images/clock.png"></img>
+                                                <p>${server.session}</p>
+                                            </div>
+
+                                            <div class="countdown" style="display: flex;">
+                                                <p id="minutes-${index}"></p>
+                                                <p id="seconds-${index}"></p>
+                                            </div>
+                                        </div>
+
+                                </div>
+
+
+                                </div>
+
+                            </div>`
+            
+
+            race_htmls.push(race_html);
+            container.innerHTML += race_html;
+            
+        }
+    );
+
+
+    // if (sort_by == "" || sort_by == "players") {
+    //     already sorted
+    // }
+
+
+}
+
+
+
+create_race_list();
 
 function open_race(server, redirect=true){
     if (redirect){
