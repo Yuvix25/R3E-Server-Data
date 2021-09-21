@@ -41,43 +41,51 @@
         </script>
         
         <div id="search-tools-wrapper">
-            <div id="search-tools" style="display: flex; height: 4vh;">
-                <label for="regions">Region:</label>
-                <div class="dropdown">
-                    <select name="regions" id="regions-dropdown" class="dropdown-select">
-                        <option value="all">All</option>
-                        <option value="europe">Europe</option>
-                        <option value="america">America</option>
-                        <option value="oceania">Oceania</option>
-                    </select>
+            <div id="search-tools" style="display: flex; flex-flow: row wrap; min-height: 4vh;">
+                <div style="display: flex; margin: 5px;">
+                    <label for="regions">Region:</label>
+                    <div class="dropdown">
+                        <select name="regions" id="regions-dropdown" class="dropdown-select">
+                            <option value="all">All</option>
+                            <option value="europe">Europe</option>
+                            <option value="america">America</option>
+                            <option value="oceania">Oceania</option>
+                        </select>
+                    </div>
                 </div>
                 
-                <label for="levels">Level:</label>
-                <div class="dropdown">
-                    <select name="levels" id="levels-dropdown" class="dropdown-select">
-                        <option value="all">All</option>
-                        <option value="rookie">Rookie</option>
-                        <option value="am">Amateur</option>
-                        <option value="pro">Pro</option>
-                    </select>
+                <div style="display: flex; margin: 5px;">
+                    <label for="levels">Level:</label>
+                    <div class="dropdown">
+                        <select name="levels" id="levels-dropdown" class="dropdown-select">
+                            <option value="all">All</option>
+                            <option value="rookie">Rookie</option>
+                            <option value="am">Amateur</option>
+                            <option value="pro">Pro</option>
+                        </select>
+                    </div>
                 </div>
                 
-                <label for="sort-by">Sort By:</label>
-                <div class="dropdown">
-                    <select name="sort-by" id="sort-by-dropdown" class="dropdown-select">
-                        <option value="players">Player Count</option>
-                        <option value="time">Time Left</option>
-                        <option value="session">Session</option>
-                    </select>
+                <div style="display: flex; margin: 5px;">
+                    <label for="sort-by">Sort By:</label>
+                    <div class="dropdown">
+                        <select name="sort-by" id="sort-by-dropdown" class="dropdown-select">
+                            <option value="players">Player Count</option>
+                            <option value="time">Time Left</option>
+                            <option value="session">Session</option>
+                        </select>
+                    </div>
+
+                    <label id="reverse-label">
+                        <input id="reverse-order-checkbox" type="checkbox" />
+                        <img src="{{ url_for('static',filename='/images/reverse_order.png') }}" style="height: 4vh;" id="reverse-order">
+                    </label>
                 </div>
                 
-                <label id="reverse-label">
-                    <input id="reverse-order-checkbox" type="checkbox" />
-                    <img src="{{ url_for('static',filename='/images/reverse_order.png') }}" style="height: 100%;" id="reverse-order">
-                </label>
+                
 
 
-                <img src="{{ url_for('static',filename='/images/search_icon.png') }}" style="height: 5vh; position: absolute; right: 40px;" id="search_icon" onclick="applyFilters();">
+                <img src="{{ url_for('static',filename='/images/search_icon.png') }}" style="height: 4vh; position: absolute; right: 40px;" id="search_icon" onclick="applyFilters();">
             </div>
         </div>
         
