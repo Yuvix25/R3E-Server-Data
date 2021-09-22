@@ -162,15 +162,13 @@ async function create_race_list(region="all", level="all", sort_by=""){
         });
     }
 
+    race_list = race_list.filter(server => {
+        return (region == "all" || server.name.toLowerCase().includes(region.toLowerCase())) && (level == "all" || server.level.toLowerCase().includes(level.toLowerCase()))
+    });
+
 
     race_list.forEach(
         (server, index) => {
-            if (region != "all" && !server.name.toLowerCase().includes(region.toLowerCase())) {
-                return;
-            }
-            if (level != "all" && !server.level.toLowerCase().includes(level.toLowerCase())) {
-                return;
-            }
 
             var classes_thumbnails = '';
             server.classes_thumbnails.forEach(
@@ -223,7 +221,7 @@ async function create_race_list(region="all", level="all", sort_by=""){
                                 </div>
 
                                 <div style="display: flex;" class="race-data">
-                                    <img src="${server.thumbnail}" class="thumbnail"></img>
+                                    <!-- <img src="${server.thumbnail}" class="thumbnail"></img> -->
 
                                     <div style="margin-left: 20px; position: relative;" class="server-details">
 

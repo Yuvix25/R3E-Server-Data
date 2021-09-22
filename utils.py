@@ -371,7 +371,8 @@ class Race:
 
     def get_track_data(self):
         self.track, self.track_layout = get_track_layout_data(self.track_layout_id)
-        self.track_thumbnail = f"https://prod.r3eassets.com/assets/content/track/{name_as_path(self.track['Name'])}-{self.track['Id']}-signature-original.webp"
+        # self.track_thumbnail = f"https://prod.r3eassets.com/assets/content/track/{name_as_path(self.track['Name'])}-{self.track['Id']}-signature-original.webp"
+        self.track_thumbnail = f"https://prod.r3eassets.com/assets/content/track/{name_as_path(self.track['Name'])}-{self.track['Id']}-image-full.webp"
         self.track_logo = f"https://prod.r3eassets.com/assets/content/track/{name_as_path(self.track['Name'])}-{self.track['Id']}-logo-original.webp"
         self.track_map = f"https://prod.r3eassets.com/assets/content/tracklayout/{name_as_path(self.track['Name'])}-{name_as_path(self.track_layout['Name'])}-{self.track_layout['Id']}-image-small.webp"
         return self.track, self.track_layout
