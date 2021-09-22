@@ -173,21 +173,26 @@ async function create_race_list(region="all", level="all", sort_by=""){
             }
 
             var classes_thumbnails = '';
-            if (server.classes_thumbnails.length > 4){
-                server.classes_thumbnails.forEach(
-                    (thumb, classes_index) => {
-                        classes_thumbnails += `<img src="${thumb}" class="class-img"
-                        style="left: calc((calc(27% / (${server.classes_thumbnails.length} - 4)) + var(--class-img-margin)) * ${classes_index} + var(--class-img-margin)); width: calc(27% / (${server.classes_thumbnails.length} - 4)); height: auto;"></img>`;
-                    }
-                )
-            }
-            else {
-                server.classes_thumbnails.forEach(
-                    (thumb, classes_index) => {
-                        classes_thumbnails += `<img src="${thumb}" class="class-img" style="left: calc((var(--class-img-height) + var(--class-img-margin)) * ${classes_index} + var(--class-img-margin));"></img>`
-                    }
-                )
-            }
+            server.classes_thumbnails.forEach(
+                (thumb, classes_index) => {
+                    classes_thumbnails += `<img src="${thumb}" class="class-img logo-row-item"></img>`;
+                }
+            )
+            // if (server.classes_thumbnails.length > 4){
+            //     server.classes_thumbnails.forEach(
+            //         (thumb, classes_index) => {
+            //             classes_thumbnails += `<img src="${thumb}" class="class-img"
+            //             style="left: calc((calc(27% / (${server.classes_thumbnails.length} - 4)) + var(--class-img-margin)) * ${classes_index} + var(--class-img-margin)); width: calc(27% / (${server.classes_thumbnails.length} - 4)); height: auto;"></img>`;
+            //         }
+            //     )
+            // }
+            // else {
+            //     server.classes_thumbnails.forEach(
+            //         (thumb, classes_index) => {
+            //             classes_thumbnails += `<img src="${thumb}" class="class-img" style="left: calc((var(--class-img-height) + var(--class-img-margin)) * ${classes_index} + var(--class-img-margin));"></img>`
+            //         }
+            //     )
+            // }
 
 
             var level_shortened;
@@ -208,8 +213,13 @@ async function create_race_list(region="all", level="all", sort_by=""){
                                 
                                 <div class="track-car">
                                     <img src="${server.track_thumbnail}" class="track-img"></img>
-                                    <img src="${server.track_logo}" class="track-logo"></img>
-                                    ${classes_thumbnails}
+                                    <div style="display: flex; position: absolute; top: 0px; left:10px; height: 48%; width: calc(100% - 20px); align-items: center;">
+                                        <img src="${server.track_logo}" class="track-logo logo-row-item"></img>
+                                        <img src="${server.track_map}" class="track-logo logo-row-item"></img>
+                                    </div>
+                                    <div style="display: flex; position: absolute; bottom: 0px; left: 5px; height: 48%; width: calc(100% - 10px); align-items: center;">
+                                        ${classes_thumbnails}
+                                    </div>
                                 </div>
 
                                 <div style="display: flex;" class="race-data">

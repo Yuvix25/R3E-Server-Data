@@ -57,16 +57,14 @@ div {
 }
 
 :root {
-    --class-img-height: 160px;
-    --class-img-margin: 20px;
     --sidebar-width: 40%;
 }
 
+.thumbnail {
+    display: none;
+}
+
 @media only screen and (max-width: 890px) {
-     :root {
-        --class-img-height: 16vw;
-        --class-img-margin: 12px;
-    }
     .thumbnail {
         display: none;
     }
@@ -104,6 +102,10 @@ div {
     .driver-country {
         margin-right: 0px !important;
     }
+
+    .race-container {
+        width: 98% !important;
+    }
 }
 
 @media only screen and (max-width: 1709px) {
@@ -111,19 +113,24 @@ div {
         --sidebar-width: 100%;
     }
     .race-container {
-        width: 98%;
-    }
-}
-
-@media only screen and (min-width: 1710px) and (max-width: 2999px) {
-    .race-container {
+        /* width: 98%; */
         width: 47.8%;
     }
 }
 
-@media only screen and (min-width: 3000px) {
+@media only screen and (min-width: 1710px) and (max-width: 2299px) {
     .race-container {
+        /* width: 47.8%; */
         width: 31%;
+    }
+}
+
+@media only screen and (min-width: 2300px) {
+    .race-container {
+        width: 18%;
+    }
+    .track-car {
+        height: 250px !important;
     }
 }
 
@@ -349,25 +356,26 @@ input {
     height: 100%;
 }
 
+
+.logo-row-item {
+    flex: 0 1 auto;
+    max-height: 100%;
+    max-width: 100%;
+    min-height: 0;
+    min-width: 0;
+}
+
 .track-logo {
-    position: absolute;
-    margin: 0;
-    /* width: 18%; */
-    height: 40%;
-    top: 20px;
-    left: 20px;
+    max-height: calc(100% - 30px);
+    margin: 5px;
     background-color: white;
     padding: 5px;
-    box-shadow: 5px 5px 30px black;
+    -webkit-filter: drop-shadow(2px 2px 8px rgb(50, 50, 50));
+    filter: drop-shadow(2px 2px 8px rgb(50, 50, 50));
 }
 
 .class-img {
     margin: 0;
-    /* width: 18%; */
-    height: var(--class-img-height);
-    position: absolute;
-    left: var(--class-img-margin);
-    bottom: 20px;
     -webkit-filter: drop-shadow(2px 2px 8px rgb(50, 50, 50));
     filter: drop-shadow(2px 2px 8px rgb(50, 50, 50));
 }
