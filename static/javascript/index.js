@@ -1,6 +1,7 @@
 var time_lefts = []
 var sorted_races = []
 var focused_server;
+var sidebar_opened = false;
 var statics_url;
 
 var slide_time;
@@ -82,10 +83,17 @@ async function get_race(name){
     var loading_sidebar = document.getElementById("loading-sidebar");
     loading_sidebar.style.right = 0;
 
+    sidebar_opened = true;
+
     var data;
-    await $.getJSON("/get_race?name=" + name.replaceAll(" ", "-").replaceAll("#", ""), (rec) => {
-        data = rec;
-    });
+    // await $.getJSON("/get_race?name=" + name.replaceAll(" ", "-").replaceAll("#", ""), (rec) => {
+    //     data = rec;
+    // });
+    data = await (await fetch("/get_race?name=" + name.replaceAll(" ", "-").replaceAll("#", ""))).json();
+
+    if (!sidebar_opened) {
+        return data;
+    }
 
     focused_server = data;
 
@@ -387,6 +395,7 @@ function open_race(server, redirect=true){
 }
 
 function close_sidebar(){
+    sidebar_opened = false;
     var sidebar = document.getElementById("main-sidebar");
     sidebar.style.right = "calc(0px - var(--sidebar-width) - 25px)";
     sidebar = document.getElementById("loading-sidebar");
@@ -420,19 +429,15 @@ function close_sidebar(){
 //     $("#tab2").attr('class', 'tab selected');
 // }
 
-
-document.onload = function () {
-    document.getElementById("tab1").onclick = moveToFirst;
-    document.getElementById("tab1").onclick = moveToSecond;
-}
-
 function moveToFirst() {
+    console.log("first");
     document.getElementById("slide").className = "move-to-first";
     document.getElementById("tab2").className = "tab";
     document.getElementById("tab1").className = "tab selected";
 }
 
 function moveToSecond() {
+    console.log("second");
     document.getElementById("slide").className = "move-to-second";
     document.getElementById("tab1").className = "tab";
     document.getElementById("tab2").className = "tab selected";
