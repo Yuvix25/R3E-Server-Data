@@ -60,9 +60,6 @@ div {
     .race-data {
         height: 140px;
     }
-    #sidebar-footer {
-        display: none !important;
-    }
     #slide {
         height: calc(100vh - var(--sidebar-header-height)) !important;
     }
@@ -100,6 +97,15 @@ div {
     }
 }
 
+@media only screen and (max-width: 1120px) {
+    :root {
+        --sidebar-width: 100%;
+    }
+    #sidebar-footer {
+        display: none !important;
+    }
+}
+
 
 @media only screen and (min-width: 580px) and (max-width: 900px) {
     /* .race-container {
@@ -116,7 +122,6 @@ div {
     } */
     :root {
         --race-container-width: 31.33vw !important;
-        --sidebar-width: 100%;
     }
 }
 
