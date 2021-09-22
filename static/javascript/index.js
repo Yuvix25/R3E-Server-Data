@@ -8,7 +8,8 @@ var auto_refresh = false;
 
 document.addEventListener('DOMContentLoaded', function () {
     // should read #FF0000 or rgb(255, 0, 0)
-    slide_time = $('#main-sidebar').css('transition-duration');
+    // slide_time = $('#main-sidebar').css('transition-duration');
+    slide_time = document.getElementById("main-sidebar").style.transitionDuration;
     slide_time = parseFloat(slide_time.substring(0, slide_time.indexOf('s'))) * 1000 + 100;
 }, false);
 
@@ -115,7 +116,20 @@ async function applyFilters(){
     await create_race_list(region, level, sort_by);
 }
 
-
+// async function getJSON(url, callback) {
+//     var xhr = new XMLHttpRequest();
+//     xhr.open('GET', url, true);
+//     xhr.responseType = 'json';
+//     xhr.onload = function() {
+//       var status = xhr.status;
+//       if (status === 200) {
+//         callback(null, xhr.response);
+//       } else {
+//         callback(status, xhr.response);
+//       }
+//     };
+//     await xhr.send();
+// };
 
 async function create_race_list(region="all", level="all", sort_by=""){
     /*
@@ -131,9 +145,11 @@ async function create_race_list(region="all", level="all", sort_by=""){
     */
 
     var race_list;
-    await $.getJSON("/get_race_list", (rec) => {
-        race_list = rec;
-    });
+    // await $.getJSON("/get_race_list", (rec) => {
+    //     race_list = rec;
+    // });
+
+    race_list = await (await fetch("/get_race_list")).json();
 
     var container = document.getElementById("race-list");
     container.innerHTML = "";
@@ -386,25 +402,41 @@ function close_sidebar(){
 }
 
 
-$(function () {
-    $("#tab1").click(moveToFirst);
-    $("#tab2").click(moveToSecond);
-});
+// $(function () {
+//     $("#tab1").click(moveToFirst);
+//     $("#tab2").click(moveToSecond);
+// });
 
+
+// function moveToFirst() {
+//     $("#slide").attr('class', 'move-to-first');
+//     $(".tab").attr('class', 'tab');
+//     $("#tab1").attr('class', 'tab selected');
+// }
+
+// function moveToSecond() {
+//     $("#slide").attr('class', 'move-to-second');
+//     $(".tab").attr('class', 'tab');
+//     $("#tab2").attr('class', 'tab selected');
+// }
+
+
+document.onload = function () {
+    document.getElementById("tab1").onclick = moveToFirst;
+    document.getElementById("tab1").onclick = moveToSecond;
+}
 
 function moveToFirst() {
-    $("#slide").attr('class', 'move-to-first');
-    $(".tab").attr('class', 'tab');
-    $("#tab1").attr('class', 'tab selected');
+    document.getElementById("slide").className = "move-to-first";
+    document.getElementById("tab2").className = "tab";
+    document.getElementById("tab1").className = "tab selected";
 }
 
 function moveToSecond() {
-    $("#slide").attr('class', 'move-to-second');
-    $(".tab").attr('class', 'tab');
-    $("#tab2").attr('class', 'tab selected');
+    document.getElementById("slide").className = "move-to-second";
+    document.getElementById("tab1").className = "tab";
+    document.getElementById("tab2").className = "tab selected";
 }
-
-
 
 
 
