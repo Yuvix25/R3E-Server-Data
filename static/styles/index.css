@@ -102,9 +102,14 @@ div {
     .driver-country {
         margin-right: 0px !important;
     }
-
     .race-container {
-        width: 98% !important;
+        width: 98vw !important;
+    }
+}
+
+@media only screen and (min-width: 891px) and (max-width: 1300px) {
+    .race-container {
+        width: 47.2vw !important;
     }
 }
 
@@ -114,20 +119,24 @@ div {
     }
     .race-container {
         /* width: 98%; */
-        width: 47.8%;
+        /* width: 47.8%; */
+        width: 31vw;
     }
 }
 
 @media only screen and (min-width: 1710px) and (max-width: 2299px) {
     .race-container {
         /* width: 47.8%; */
-        width: 31%;
+        width: 22.6vw;
+    }
+    .track-car {
+        height: 300px !important;
     }
 }
 
 @media only screen and (min-width: 2300px) {
     .race-container {
-        width: 18%;
+        width: 17.8vw;
     }
     .track-car {
         height: 250px !important;
