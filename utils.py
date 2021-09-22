@@ -14,7 +14,6 @@ LEVELS = {
     75 : "Amateur",
     80 : "Pro",
     85 : "Gold",
-    90 : "Platinum",
 }
 
 MULTIPLIERS = {
