@@ -232,7 +232,7 @@ async function create_race_list(region="all", level="all", sort_by=""){
                                                 ${level_img}
                                         </div>
 
-                                        <div style="display: inline-flex; position: relative; margin-top: 20px; margin-left: 0px; margin-bottom: 10px; justify-content: space-between; width: calc(100% - 20px);">
+                                        <div style="display: inline-flex; position: relative; margin-top: 20px; margin-left: 0px; margin-bottom: 10px; justify-content: space-between; align-items: center; width: calc(100% - 20px);">
 
                                             <div class="driver-count">
                                                 <img class="car-icon" src="/static/images/car-front-1.png"></img>
@@ -257,7 +257,6 @@ async function create_race_list(region="all", level="all", sort_by=""){
 
                             </div>`
             
-
             race_htmls.push(race_html);
             container.innerHTML += race_html;
             

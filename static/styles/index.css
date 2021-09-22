@@ -4,6 +4,7 @@ body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    min-height: 100vh;
 }
 
 body {
@@ -39,32 +40,17 @@ div {
     /* margin: 0; */
 }
 
-.race-container {
-    font-family: 'Roboto', sans-serif;
-    background-color: rgb(19, 19, 19);
-    color: white;
-    padding: 0px;
-    padding-right: 20px;
-    margin: 1%;
-    display: inline-block;
-    box-shadow: 5px 5px 50px rgb(14, 14, 14);
-    transition: transform 0.3s;
-}
-
-.race-container:hover {
-    cursor: pointer;
-    transform: scale(1.01);
-}
-
 :root {
     --sidebar-width: 40%;
+    --race-container-width: 98vw;
 }
+
 
 .thumbnail {
     display: none;
 }
 
-@media only screen and (max-width: 890px) {
+@media only screen and (max-width: 1400px) {
     .thumbnail {
         display: none;
     }
@@ -102,46 +88,109 @@ div {
     .driver-country {
         margin-right: 0px !important;
     }
-    .race-container {
+}
+
+
+@media only screen and (max-width: 759px) {
+    /* .race-container {
         width: 98vw !important;
+    } */
+    :root {
+        --race-container-width: 98vw !important;
     }
 }
 
-@media only screen and (min-width: 891px) and (max-width: 1300px) {
-    .race-container {
-        width: 47.2vw !important;
+@media only screen and (min-width: 760px) and (max-width: 1169px) {
+    /* .race-container {
+        width: 48vw !important;
+    } */
+    :root {
+        --race-container-width: 48vw !important;
     }
 }
 
-@media only screen and (max-width: 1709px) {
+@media only screen and (min-width: 1170px) and (max-width: 1580px) {
+    /* .race-container {
+        width: 31.33vw !important;
+    } */
+    :root {
+        --race-container-width: 31.33vw !important;
+    }
+}
+
+@media only screen and (max-width: 2039px) {
      :root {
         --sidebar-width: 100%;
+        --race-container-width: 23vw;
     }
-    .race-container {
-        /* width: 98%; */
-        /* width: 47.8%; */
-        width: 31vw;
-    }
+    /* .race-container {
+        width: 23vw;
+    } */
 }
 
-@media only screen and (min-width: 1710px) and (max-width: 2299px) {
-    .race-container {
-        /* width: 47.8%; */
-        width: 22.6vw;
+@media only screen and (min-width: 2040px) and (max-width: 2469px) {
+    /* .race-container {
+        width: 18vw;
+    } */
+    :root {
+        --race-container-width: 18vw;
     }
+
     .track-car {
         height: 300px !important;
     }
 }
 
-@media only screen and (min-width: 2300px) {
-    .race-container {
-        width: 17.8vw;
+@media only screen and (min-width: 2470px) {
+    /* .race-container {
+        width: 15vw;
+    } */
+    :root {
+        --race-container-width: 15vw;
     }
+
     .track-car {
         height: 250px !important;
     }
 }
+
+
+.race-list {
+    min-height: 100vh;
+}
+.race-container {
+    font-family: 'Roboto', sans-serif;
+    background-color: rgb(19, 19, 19);
+    color: white;
+    padding: 0px;
+    padding-right: 20px;
+    margin: 1vw;
+    /* display: inline-block; */
+    float: left;
+    box-shadow: 5px 5px 50px rgb(14, 14, 14);
+    transition: transform 0.3s;
+    width: calc(var(--race-container-width) - 12px);
+}
+
+.race-container:hover {
+    cursor: pointer;
+    transform: scale(1.01);
+}
+
+.race-container h2 {
+    font-weight: 400;
+    font-size: calc((var(--race-container-width) - 12px) / 20);
+    margin: 0 !important;
+}
+
+.race-container p {
+    margin-top: 20px;
+    color: rgb(99, 99, 99);
+    font-weight: 500;
+    font-size: 100%;
+}
+
+
 
 .thumbnail {
     flex: 1;
@@ -153,19 +202,19 @@ div {
 
 .name-level {
     width: calc(100% - 20px);
+    margin-top: 10px;
+    height: 40px;
     display: inline-flex;
+    align-items: center;
     justify-content: space-between;
 }
 
-.race-container h2 {
-    font-weight: 400;
-    font-size: 1.5em;
+.level-img {
+    height: 90%;
 }
 
-.race-container p {
-    margin-top: 20px;
-    color: rgb(99, 99, 99);
-    font-weight: 500;
+.countdown p {
+    font-size: 120% !important;
 }
 
 
@@ -346,11 +395,6 @@ input {
     height: 35px;
 }
 
-.level-img {
-    margin-top: 15px;
-    height: 40px;
-}
-
 .track-car {
     position: relative;
     width: 100%;
@@ -423,13 +467,11 @@ input {
 /* Countdown: */
 
 .countdown {
-    margin-top: -11px;
     align-items: center;
     justify-content: center;
 }
 
 .countdown p {
-    font-size: 30px;
     text-transform: uppercase;
 }
 
