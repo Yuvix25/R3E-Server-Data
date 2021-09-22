@@ -197,7 +197,7 @@ async function create_race_list(region="all", level="all", sort_by=""){
             var classes_thumbnails = '';
             server.classes_thumbnails.forEach(
                 (thumb, classes_index) => {
-                    classes_thumbnails += `<img src="${thumb}" class="class-img logo-row-item"></img>`;
+                    classes_thumbnails += `<img src="${thumb}" alt="class_thumbnail" class="class-img logo-row-item"></img>`;
                 }
             )
             // if (server.classes_thumbnails.length > 4){
@@ -226,7 +226,7 @@ async function create_race_list(region="all", level="all", sort_by=""){
             }
 
 
-            var level_img = `<img class="level-img" src="${statics_url + 'images/' + level_shortened.toLowerCase() + '.png'}"></img>`;
+            var level_img = `<img class="level-img" src="${statics_url + 'images/' + level_shortened.toLowerCase() + '.png'}" alt="level"></img>`;
 
             time_lefts.push(server.time_left);
             sorted_races.push(server.name);
@@ -234,10 +234,10 @@ async function create_race_list(region="all", level="all", sort_by=""){
             var race_html = `<div class="race-container" onclick='get_race("${server.name}");'>
                                 
                                 <div class="track-car">
-                                    <img src="${server.track_thumbnail}" class="track-img"></img>
+                                    <img src="${server.track_thumbnail}" alt="track_thumbnail" class="track-img"></img>
                                     <div style="display: flex; position: absolute; top: 0px; left:10px; height: 48%; width: calc(100% - 20px); align-items: center;">
-                                        <img src="${server.track_logo}" class="track-logo logo-row-item"></img>
-                                        <img src="${server.track_map}" class="track-logo logo-row-item"></img>
+                                        <img src="${server.track_logo}" alt="track_logo" class="track-logo logo-row-item"></img>
+                                        <img src="${server.track_map}" alt="track_map" class="track-logo logo-row-item"></img>
                                     </div>
                                     <div style="display: flex; position: absolute; bottom: 0px; left: 5px; height: 48%; width: calc(100% - 10px); align-items: center;">
                                         ${classes_thumbnails}
@@ -245,7 +245,7 @@ async function create_race_list(region="all", level="all", sort_by=""){
                                 </div>
 
                                 <div style="display: flex;" class="race-data">
-                                    <!-- <img src="${server.thumbnail}" class="thumbnail"></img> -->
+                                    <!-- <img src="${server.thumbnail}" alt="server_thumbnail" class="thumbnail"></img> -->
 
                                     <div style="margin-left: 20px; position: relative;" class="server-details">
 
@@ -257,12 +257,12 @@ async function create_race_list(region="all", level="all", sort_by=""){
                                         <div style="display: inline-flex; position: relative; margin-top: 20px; margin-left: 0px; margin-bottom: 10px; justify-content: space-between; align-items: center; width: calc(100% - 20px);">
 
                                             <div class="driver-count">
-                                                <img class="car-icon" src="/static/images/car-front-1.png"></img>
+                                                <img class="car-icon" src="${statics_url + 'images/car-front-1.png'}" alt="car_front_1"></img>
                                                 <p>${server.player_ids.length}</p>
                                             </div>
                                             
                                             <div class="session">
-                                                <img class="clock-icon" src="/static/images/clock.png"></img>
+                                                <img class="clock-icon" src="${statics_url + 'images/clock.png'}" alt="clock"></img>
                                                 <p>${server.session}</p>
                                             </div>
 
@@ -309,8 +309,8 @@ function open_race(server, redirect=true){
         sidebar.style.right = 0;
         document.getElementById("sidebar-track-name").innerHTML = server.track.Name;
         document.getElementById("sidebar-track-layout").innerHTML = server.track_layout.Name;
-        document.getElementById("sidebar-track-logo").innerHTML = '<img src="' + server.track_logo + '" class="sidebar-track-logo"></img>\n';
-        document.getElementById("sidebar-track-map").innerHTML = '<img src="' + server.track_map + '" class="sidebar-track-map"></img>\n';
+        document.getElementById("sidebar-track-logo").innerHTML = '<img src="' + server.track_logo + '" alt="track_logo" class="sidebar-track-logo"></img>\n';
+        document.getElementById("sidebar-track-map").innerHTML = '<img src="' + server.track_map + '" alt="track_map" class="sidebar-track-map"></img>\n';
 
         document.getElementById("sidebar-driver-count").innerHTML = server.player_ids.length;
         document.getElementById("sidebar-sof").innerHTML = Math.round(server.sof * 1000) / 1000;
@@ -343,7 +343,7 @@ function open_race(server, redirect=true){
         classes_div.innerHTML = "";
 
         for(let i=0; i<server.classes_thumbnails.length; i++){
-            classes_div.innerHTML += '<img src="' + server.classes_thumbnails[i] + '" class="class-img"></img>\n';
+            classes_div.innerHTML += '<img src="' + server.classes_thumbnails[i] + '" alt="class_thumbnail" class="class-img"></img>\n';
         }
 
 
@@ -358,7 +358,7 @@ function open_race(server, redirect=true){
             var driver_element = `<div class="sidebar-section sidebar-driver-details" onclick="window.open('https://game.raceroom.com/users/${driver.UserId}/career', '_blank').focus();">
                                     <div class="driver-line">
                                         <div class="driver-icon" style="flex: 1;">
-                                            <img src="http://game.raceroom.com/game/user_avatar/${driver.UserId}" class="driver-icon" height="120vh" style="margin-right: 8px;">
+                                            <img src="http://game.raceroom.com/game/user_avatar/${driver.UserId}" alt="drvier_icon" class="driver-icon" height="120vh" style="margin-right: 8px;">
                                         </div>
 
                                         <div id="sidebar-track-text" style="flex: 1; padding-left: 30px !important;">
@@ -367,7 +367,7 @@ function open_race(server, redirect=true){
                                         </div>
                                         
                                         <div class="driver-icon" style="flex: 1; justify-content: right;">
-                                            <img src="https://static1.beta.game.raceroom.com/static/img/flags/${driver.Country.toLowerCase()}.svg" class="driver-country" height="60vh" style="aspect-ratio: 7 / 6; margin-right: 20px;">
+                                            <img src="https://static1.beta.game.raceroom.com/static/img/flags/${driver.Country.toLowerCase()}.svg" alt="${driver.Country.toLowerCase()}_country_flag" class="driver-country" height="60vh" style="aspect-ratio: 7 / 6; margin-right: 20px;">
                                         </div>
                                     </div>
 
@@ -382,7 +382,7 @@ function open_race(server, redirect=true){
                                         </div>
 
                                         <div style="flex: 1; display: flex; margin-left: 80px;" id="sidebar-races-completed">
-                                            <img src="/static/images/car-front-2.png" width="35px" height="35px;" style="margin-top: 15px; margin-right: 5px;"></img>
+                                            <img src="${statics_url + 'images/car-front-2.png'}" alt="car_front_2" width="35px" height="35px;" style="margin-top: 15px; margin-right: 5px;"></img>
                                             <h3>${driver.RacesCompleted}</h3>
                                         </div>
                                     </div>
