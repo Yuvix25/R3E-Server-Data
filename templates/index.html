@@ -42,7 +42,7 @@
         </script>
         
         <div id="search-tools-wrapper">
-            <div id="search-tools" style="display: flex; flex-flow: row wrap; min-height: 4vh;">
+            <div id="search-tools" style="display: flex; flex-flow: row wrap; min-height: 4vh; width: calc(100% - 6vh);">
                 <div style="display: flex; margin: 5px;">
                     <label for="regions">Region:</label>
                     <div class="dropdown">
@@ -84,10 +84,8 @@
                 </div>
                 
                 
-
-
-                <img src="{{ url_for('static',filename='/images/search_icon.png') }}" style="height: 4vh; position: absolute; right: 40px;" id="search_icon" onclick="applyFilters();">
             </div>
+            <img src="{{ url_for('static',filename='/images/search_icon.png') }}" style="height: 4vh; position: absolute; right: 40px;" id="search_icon" onclick="applyFilters();">
         </div>
 
 

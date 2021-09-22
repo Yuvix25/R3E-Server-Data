@@ -58,7 +58,7 @@ div {
         height: 12vh;
     }
     .race-data {
-        height: 190px;
+        height: 140px;
     }
     #sidebar-footer {
         display: none !important;
@@ -91,7 +91,7 @@ div {
 }
 
 
-@media only screen and (max-width: 759px) {
+@media only screen and (max-width: 579px) {
     /* .race-container {
         width: 98vw !important;
     } */
@@ -100,12 +100,22 @@ div {
     }
 }
 
-@media only screen and (min-width: 760px) and (max-width: 1169px) {
+
+@media only screen and (min-width: 580px) and (max-width: 900px) {
+    /* .race-container {
+        width: 98vw !important;
+    } */
+    :root {
+        --race-container-width: 47vw !important;
+    }
+}
+
+@media only screen and (min-width: 901px) and (max-width: 1169px) {
     /* .race-container {
         width: 48vw !important;
     } */
     :root {
-        --race-container-width: 48vw !important;
+        --race-container-width: 31.33vw !important;
     }
 }
 
@@ -114,18 +124,32 @@ div {
         width: 31.33vw !important;
     } */
     :root {
-        --race-container-width: 31.33vw !important;
+        --race-container-width: 23vw !important;
+    }
+
+    .track-car {
+        height: 230px !important;
     }
 }
 
-@media only screen and (max-width: 2039px) {
-     :root {
-        --sidebar-width: 100%;
-        --race-container-width: 23vw;
+@media only screen and (min-width: 1581px) and (max-width: 2039px) {
+    :root {
+        --race-container-width: 18vw;
     }
+
+    .track-car {
+        height: 250px !important;
+    }
+
     /* .race-container {
         width: 23vw;
     } */
+}
+
+@media only screen and (max-width: 2039px) {
+    :root {
+       --sidebar-width: 100%;
+   }
 }
 
 @media only screen and (min-width: 2040px) and (max-width: 2469px) {
@@ -135,9 +159,8 @@ div {
     :root {
         --race-container-width: 18vw;
     }
-
     .track-car {
-        height: 300px !important;
+        height: 230px !important;
     }
 }
 
@@ -146,11 +169,15 @@ div {
         width: 15vw;
     } */
     :root {
-        --race-container-width: 15vw;
+        --race-container-width: 13.6vw;
     }
 
     .track-car {
-        height: 250px !important;
+        height: 200px !important;
+    }
+
+    .race-container {
+        margin: 0.5vw !important;
     }
 }
 
