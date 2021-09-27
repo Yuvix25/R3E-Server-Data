@@ -10,8 +10,6 @@ var auto_refresh = false;
 var race_list;
 
 document.addEventListener('DOMContentLoaded', function () {
-    // should read #FF0000 or rgb(255, 0, 0)
-    // slide_time = $('#main-sidebar').css('transition-duration');
     slide_time = document.getElementById("main-sidebar").style.transitionDuration;
     slide_time = parseFloat(slide_time.substring(0, slide_time.indexOf('s'))) * 1000 + 100;
 }, false);
@@ -131,20 +129,6 @@ async function applyFilters(show_loading=true, reload_data=false){
     await create_race_list(region, level, sort_by, show_loading, reload_data);
 }
 
-// async function getJSON(url, callback) {
-//     var xhr = new XMLHttpRequest();
-//     xhr.open('GET', url, true);
-//     xhr.responseType = 'json';
-//     xhr.onload = function() {
-//       var status = xhr.status;
-//       if (status === 200) {
-//         callback(null, xhr.response);
-//       } else {
-//         callback(status, xhr.response);
-//       }
-//     };
-//     await xhr.send();
-// };
 
 async function create_race_list(region="all", level="all", sort_by="", show_loading=true, reload_data=false){
     /*
@@ -224,25 +208,10 @@ async function create_race_list(region="all", level="all", sort_by="", show_load
 
                 var classes_thumbnails = '';
                 server.classes_thumbnails.forEach(
-                    (thumb, classes_index) => {
+                    (thumb) => {
                         classes_thumbnails += `<img src="${thumb}" alt="class_thumbnail" class="class-img logo-row-item"></img>`;
                     }
                 )
-                // if (server.classes_thumbnails.length > 4){
-                //     server.classes_thumbnails.forEach(
-                //         (thumb, classes_index) => {
-                //             classes_thumbnails += `<img src="${thumb}" class="class-img"
-                //             style="left: calc((calc(27% / (${server.classes_thumbnails.length} - 4)) + var(--class-img-margin)) * ${classes_index} + var(--class-img-margin)); width: calc(27% / (${server.classes_thumbnails.length} - 4)); height: auto;"></img>`;
-                //         }
-                //     )
-                // }
-                // else {
-                //     server.classes_thumbnails.forEach(
-                //         (thumb, classes_index) => {
-                //             classes_thumbnails += `<img src="${thumb}" class="class-img" style="left: calc((var(--class-img-height) + var(--class-img-margin)) * ${classes_index} + var(--class-img-margin));"></img>`
-                //         }
-                //     )
-                // }
 
 
                 var level_shortened;
@@ -278,7 +247,7 @@ async function create_race_list(region="all", level="all", sort_by="", show_load
                                         <div style="margin-left: 20px; position: relative;" class="server-details">
 
                                             <div class="name-level">
-                                                <h2>${server.name}</h2>
+                                                <h2 style="margin-right: 4px !important;">${server.name}</h2>
                                                     ${level_img}
                                             </div>
 
@@ -450,24 +419,6 @@ function close_sidebar(){
     
 }
 
-
-// $(function () {
-//     $("#tab1").click(moveToFirst);
-//     $("#tab2").click(moveToSecond);
-// });
-
-
-// function moveToFirst() {
-//     $("#slide").attr('class', 'move-to-first');
-//     $(".tab").attr('class', 'tab');
-//     $("#tab1").attr('class', 'tab selected');
-// }
-
-// function moveToSecond() {
-//     $("#slide").attr('class', 'move-to-second');
-//     $(".tab").attr('class', 'tab');
-//     $("#tab2").attr('class', 'tab selected');
-// }
 
 function moveToFirst() {
     console.log("first");
