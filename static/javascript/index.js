@@ -30,9 +30,9 @@ function update_times(){
         if (auto_refresh){
             auto_refresh_countdown.innerHTML = Math.floor(auto_refresh_every - time_since_last_refresh) + "s";
             
-            if (time_since_last_refresh == auto_refresh_every){
+            if (Math.floor(time_since_last_refresh) == auto_refresh_every){
                 time_since_last_refresh = 0;
-                await applyFilters(reload_data=true);
+                await applyFilters(true, true);
             }
             time_since_last_refresh += 0.01;
         }
