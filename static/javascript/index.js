@@ -32,7 +32,7 @@ function update_times(){
             
             if (time_since_last_refresh == auto_refresh_every){
                 time_since_last_refresh = 0;
-                await applyFilters();
+                await applyFilters(show_loading=false);
             }
             time_since_last_refresh += 1;
         }
@@ -65,7 +65,7 @@ function update_times(){
                 document.getElementById("seconds-"+i).innerHTML = seconds;
             }
             catch {
-                
+
             }
             
 
@@ -115,7 +115,7 @@ async function get_race(name){
 }
 
 
-async function applyFilters(){
+async function applyFilters(show_loading=true){
     var reverse = document.getElementById("reverse-order-checkbox").checked;
 
     var select = document.getElementById("regions-dropdown");
@@ -127,7 +127,7 @@ async function applyFilters(){
     var select = document.getElementById("sort-by-dropdown");
     var sort_by = select.options[select.selectedIndex].value + (reverse ? "-1" : "");
 
-    await create_race_list(region, level, sort_by);
+    await create_race_list(region, level, sort_by, show_loading);
 }
 
 // async function getJSON(url, callback) {
@@ -145,7 +145,7 @@ async function applyFilters(){
 //     await xhr.send();
 // };
 
-async function create_race_list(region="all", level="all", sort_by=""){
+async function create_race_list(region="all", level="all", sort_by="", show_loading=true){
     /*
     region: show only races form this region (options: all, europe, america, oceania).
     level : show only races of this level (options: all, rookie, am, pro).
@@ -165,12 +165,16 @@ async function create_race_list(region="all", level="all", sort_by=""){
     // });
     container = document.getElementById("race-list");
     try{
-        container.innerHTML = '<h1 style="text-align: center !important; margin-top: 20%;">Loading...</h1>';
+        if (show_loading) {
+            container.innerHTML = '<h1 style="text-align: center !important; margin-top: 20%;">Loading...</h1>';
+        }
     }
     catch {
         window.onload = function() {
             container = document.getElementById("race-list");
-            container.innerHTML = '<h1 style="text-align: center !important; margin-top: 20%;">Loading...</h1>';
+            if (show_loading) {
+                container.innerHTML = '<h1 style="text-align: center !important; margin-top: 20%;">Loading...</h1>';
+            }
         }
     }
     
