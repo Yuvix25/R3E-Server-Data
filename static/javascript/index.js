@@ -274,7 +274,7 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
             }
         );
 
-        container.insertAdjacentHTML('afterend', new_inner);
+        container.insertAdjacentHTML('afterend', new_inner.join('\n'));
 
         current_races = document.getElementsByClassName("race-container");
     }
