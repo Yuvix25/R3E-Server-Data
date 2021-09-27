@@ -60,8 +60,14 @@ function update_times(){
                 document.getElementById("sidebar-seconds").innerHTML = seconds;
             }
 
-            document.getElementById("minutes-"+i).innerHTML = minutes + ":";
-            document.getElementById("seconds-"+i).innerHTML = seconds;
+            try{
+                document.getElementById("minutes-"+i).innerHTML = minutes + ":";
+                document.getElementById("seconds-"+i).innerHTML = seconds;
+            }
+            catch {
+                
+            }
+            
 
             time_lefts[i] -= 1;
         }
@@ -153,14 +159,25 @@ async function create_race_list(region="all", level="all", sort_by=""){
     */
 
     var race_list;
+    var container;
     // await $.getJSON("/get_race_list", (rec) => {
     //     race_list = rec;
     // });
+    container = document.getElementById("race-list");
+    try{
+        container.innerHTML = '<h1 style="text-align: center !important; margin-top: 20%;">Loading...</h1>';
+    }
+    catch {
+        window.onload = function() {
+            container = document.getElementById("race-list");
+            container.innerHTML = '<h1 style="text-align: center !important; margin-top: 20%;">Loading...</h1>';
+        }
+    }
+    
 
     race_list = await (await fetch("/get_race_list")).json();
-
-    var container = document.getElementById("race-list");
-    container.innerHTML = "";
+    
+    container.innerHTML = '';
 
     time_lefts = [];
     sorted_races = [];
