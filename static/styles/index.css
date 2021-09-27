@@ -185,6 +185,12 @@ div {
 .race-list {
     min-height: 100vh;
 }
+
+
+.invisible {
+    display: none !important;
+}
+
 .race-container {
     font-family: 'Roboto', sans-serif;
     background-color: rgb(19, 19, 19);
