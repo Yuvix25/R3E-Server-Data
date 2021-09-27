@@ -203,7 +203,7 @@ async function create_race_list(region="all", level="all", sort_by="", show_load
     if (current_races.length == 0) {
         container.innerHTML = '';
 
-        filtered_race_list.forEach(
+        var new_inner = filtered_race_list.map(
             (server, index) => {
 
                 var classes_thumbnails = '';
@@ -276,10 +276,12 @@ async function create_race_list(region="all", level="all", sort_by="", show_load
 
                                 </div>`
                 
-                container.innerHTML += race_html;
-                
+                // container.innerHTML += race_html;
+                return race_html;
             }
         );
+
+        container.insertAdjacentHTML('afterend', new_inner);
 
         current_races = document.getElementsByClassName("race-container");
     }
