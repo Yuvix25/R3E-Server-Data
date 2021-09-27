@@ -48,7 +48,7 @@ function update_times(){
             }
             
             let minutes = Math.floor(time_lefts[i] / 60);
-            let seconds = time_lefts[i] % 60;
+            let seconds = Math.floor(time_lefts[i]) % 60;
 
             minutes = ('00'+minutes).slice(-2);
             seconds = ('00'+seconds).slice(-2);
@@ -67,10 +67,10 @@ function update_times(){
             }
             
 
-            time_lefts[i] -= 1;
+            time_lefts[i] -= 0.01;
         }
     
-    }, 1000)
+    }, 10)
 }
 
 
@@ -194,8 +194,6 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
         time_lefts = [];
         sorted_races = [];
 
-        container.innerHTML = '';
-
         var new_inner = filtered_race_list.map(
             (server, index) => {
 
@@ -274,6 +272,7 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
             }
         );
         
+        container.innerHTML = '';
         container.insertAdjacentHTML('afterbegin', new_inner.join('\n'));
 
         current_races = document.getElementsByClassName("race-container");
