@@ -42,7 +42,6 @@ function update_times(){
         }
 
         
-
         for (let i = 0; i < time_lefts.length; i++){
             if (time_lefts[i] < 0){
                 time_lefts[i] = 0;
@@ -114,7 +113,7 @@ async function get_race(name){
 }
 
 
-async function applyFilters(reload_data=false){
+async function applyFilters(reload_data=false, reorder=false){
     var reverse = document.getElementById("reverse-order-checkbox").checked;
 
     var select = document.getElementById("regions-dropdown");
@@ -126,11 +125,11 @@ async function applyFilters(reload_data=false){
     var select = document.getElementById("sort-by-dropdown");
     var sort_by = select.options[select.selectedIndex].value + (reverse ? "-1" : "");
 
-    await create_race_list(region, level, sort_by, reload_data);
+    await create_race_list(region, level, sort_by, reload_data, reorder);
 }
 
 
-async function create_race_list(region="all", level="all", sort_by="", reload_data=false){
+async function create_race_list(region="all", level="all", sort_by="", reload_data=false, reorder=false){
     /*
     region: show only races form this region (options: all, europe, america, oceania).
     level : show only races of this level (options: all, rookie, am, pro).
@@ -160,15 +159,13 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
         race_list = await (await fetch("/get_race_list")).json();
     }
     
-
-    time_lefts = [];
-    sorted_races = [];
+    
 
     var sessions = ["practice", "qualify", "race"];
 
 
 
-    var filtered_race_list = race_list.slice()
+    var filtered_race_list = race_list.slice();
 
     if (sort_by.toLowerCase().includes("time")) {
         filtered_race_list.sort(function(a, b){
@@ -193,7 +190,10 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
 
     var current_races = document.getElementsByClassName("race-container");
 
-    if (current_races.length == 0) {
+    if (current_races.length == 0 || reorder) {
+        time_lefts = [];
+        sorted_races = [];
+
         container.innerHTML = '';
 
         var new_inner = filtered_race_list.map(
@@ -273,8 +273,8 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
                 return race_html;
             }
         );
-
-        container.insertAdjacentHTML('afterend', new_inner.join('\n'));
+        
+        container.insertAdjacentHTML('afterbegin', new_inner.join('\n'));
 
         current_races = document.getElementsByClassName("race-container");
     }
@@ -283,18 +283,17 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
     for (let server of current_races){
         var server_name = server.getElementsByClassName("name-level")[0].getElementsByTagName("h2")[0].innerHTML;
         var found = false
-        for (let i=0; i<race_list.length; i++){
-            if (race_list[i].name == server_name){
+        for (let i=0; i<filtered_race_list.length; i++){
+            if (filtered_race_list[i].name == server_name){
                 server.className = "race-container";
                 found = true;
-                break
+                break;
             }
         }
         if (!found) {
             server.className = "race-container invisible";
         }
     }
-
 }
 
 

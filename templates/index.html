@@ -76,7 +76,7 @@
                 <div style="display: flex; margin: 5px;">
                     <label for="sort-by">Sort By:</label>
                     <div class="dropdown">
-                        <select name="sort-by" id="sort-by-dropdown" class="dropdown-select" onchange="applyFilters();">
+                        <select name="sort-by" id="sort-by-dropdown" class="dropdown-select" onchange="applyFilters(false, true);">
                             <option value="players">Player Count</option>
                             <option value="time">Time Left</option>
                             <option value="session">Session</option>
@@ -84,7 +84,7 @@
                     </div>
 
                     <label id="reverse-label">
-                        <input id="reverse-order-checkbox" type="checkbox" onchange="applyFilters();"/>
+                        <input id="reverse-order-checkbox" type="checkbox" onchange="applyFilters(false, true);"/>
                         <img src="{{ url_for('static',filename='/images/reverse_order.png') }}" alt="reverse_order" style="height: 4vh;" id="reverse-order">
                     </label>
                 </div>
