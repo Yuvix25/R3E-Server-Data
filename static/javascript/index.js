@@ -28,13 +28,13 @@ function update_times(){
         
 
         if (auto_refresh){
-            auto_refresh_countdown.innerHTML = (auto_refresh_every - time_since_last_refresh) + "s";
+            auto_refresh_countdown.innerHTML = Math.floor(auto_refresh_every - time_since_last_refresh) + "s";
             
             if (time_since_last_refresh == auto_refresh_every){
                 time_since_last_refresh = 0;
                 await applyFilters(reload_data=true);
             }
-            time_since_last_refresh += 1;
+            time_since_last_refresh += 0.01;
         }
         else {
             auto_refresh_countdown.innerHTML = "";
