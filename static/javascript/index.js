@@ -32,7 +32,7 @@ function update_times(){
             
             if (time_since_last_refresh == auto_refresh_every){
                 time_since_last_refresh = 0;
-                await applyFilters(show_loading=false, reload_data=true);
+                await applyFilters(reload_data=true);
             }
             time_since_last_refresh += 1;
         }
@@ -114,7 +114,7 @@ async function get_race(name){
 }
 
 
-async function applyFilters(show_loading=true, reload_data=false){
+async function applyFilters(reload_data=false){
     var reverse = document.getElementById("reverse-order-checkbox").checked;
 
     var select = document.getElementById("regions-dropdown");
@@ -126,11 +126,11 @@ async function applyFilters(show_loading=true, reload_data=false){
     var select = document.getElementById("sort-by-dropdown");
     var sort_by = select.options[select.selectedIndex].value + (reverse ? "-1" : "");
 
-    await create_race_list(region, level, sort_by, show_loading, reload_data);
+    await create_race_list(region, level, sort_by, reload_data);
 }
 
 
-async function create_race_list(region="all", level="all", sort_by="", show_loading=true, reload_data=false){
+async function create_race_list(region="all", level="all", sort_by="", reload_data=false){
     /*
     region: show only races form this region (options: all, europe, america, oceania).
     level : show only races of this level (options: all, rookie, am, pro).
@@ -149,17 +149,10 @@ async function create_race_list(region="all", level="all", sort_by="", show_load
     //     race_list = rec;
     // });
     container = document.getElementById("race-list");
-    try{
-        if (show_loading) {
-            container.innerHTML = '<h1 style="text-align: center !important; margin-top: 20%;">Loading...</h1>';
-        }
-    }
-    catch {
+    
+    if (container == undefined) {
         window.onload = function() {
             container = document.getElementById("race-list");
-            if (show_loading) {
-                container.innerHTML = '<h1 style="text-align: center !important; margin-top: 20%;">Loading...</h1>';
-            }
         }
     }
     
