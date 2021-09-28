@@ -1,5 +1,8 @@
-var time_lefts = []
-var sorted_races = []
+var initial_time_lefts = [];
+var time_lefts = [];
+var last_update_time = Date.now();
+
+var sorted_races = [];
 var focused_server;
 var sidebar_opened = false;
 var statics_url;
@@ -17,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-var time_since_last_refresh = 0;
+var started_at = Date.now();
 var auto_refresh_every = 60;
 
 function update_times(){
@@ -28,17 +31,16 @@ function update_times(){
         
 
         if (auto_refresh){
-            auto_refresh_countdown.innerHTML = Math.floor(auto_refresh_every - time_since_last_refresh) + "s";
+            auto_refresh_countdown.innerHTML = Math.floor(auto_refresh_every - (Date.now() - started_at)/1000) + "s";
             
-            if (Math.floor(time_since_last_refresh) == auto_refresh_every){
-                time_since_last_refresh = 0;
+            if (Math.floor((Date.now() - started_at)/1000) == auto_refresh_every){
+                started_at = Date.now();
                 await applyFilters(true, true);
             }
-            time_since_last_refresh += 0.01;
         }
         else {
             auto_refresh_countdown.innerHTML = "";
-            time_since_last_refresh = 0;
+            started_at = Date.now();
         }
 
         
@@ -67,7 +69,7 @@ function update_times(){
             }
             
 
-            time_lefts[i] -= 0.01;
+            time_lefts[i] = initial_time_lefts[i] - (Date.now() - last_update_time)/1000
         }
     
     }, 10)
@@ -157,6 +159,7 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
     
     if (reload_data || race_list == undefined) {
         race_list = await (await fetch("/get_race_list")).json();
+        last_update_time = Date.now();
     }
     
     
@@ -191,6 +194,7 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
     var current_races = document.getElementsByClassName("race-container");
 
     if (current_races.length == 0 || reorder) {
+        initial_time_lefts = [];
         time_lefts = [];
         sorted_races = [];
 
@@ -215,7 +219,8 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
 
 
                 var level_img = `<img class="level-img" src="${statics_url + 'images/' + level_shortened.toLowerCase() + '.png'}" alt="level"></img>`;
-
+                
+                initial_time_lefts.push(server.time_left);
                 time_lefts.push(server.time_left);
                 sorted_races.push(server.name);
 
@@ -432,5 +437,5 @@ function moveToSecond() {
 
 function autoRefreshEnableDisable(){
     auto_refresh = document.getElementById("auto-refresh").checked;
-    time_since_last_refresh = 0;
+    started_at = Date.now();
 }
