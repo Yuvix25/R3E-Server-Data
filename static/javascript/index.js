@@ -33,7 +33,7 @@ function update_times(){
         if (auto_refresh){
             auto_refresh_countdown.innerHTML = Math.floor(auto_refresh_every - (Date.now() - started_at)/1000) + "s";
             
-            if (Math.floor((Date.now() - started_at)/1000) == auto_refresh_every){
+            if (Math.floor((Date.now() - started_at)/1000) >= auto_refresh_every){
                 started_at = Date.now();
                 await applyFilters(true, true);
             }
