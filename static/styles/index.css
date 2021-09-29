@@ -63,13 +63,16 @@ div {
     #slide {
         height: calc(100vh - var(--sidebar-header-height)) !important;
     }
+    #sidebar-footer {
+        display: none !important;
+    }
     .track-car {
         height: 250px !important;
     }
-    #sidebar-track-details {
+    /* #sidebar-track-details {
         height: 18vh !important;
-        margin-bottom: 10vh;
-    }
+        margin-bottom: 6vh;
+    } */
     #sidebar-track-logo {
         display: none !important;
         flex: 0 !important;

@@ -32,7 +32,7 @@ def send_race_list():
 
 @app.route('/get_race', methods=['GET', 'POST'])
 def send_race():
-    return json.dumps(get_race(request.args.get('name').replace("-", " ")[:-1] + "#" + request.args.get('name').replace("-", " ")[-1]).__dict__)
+    return json.dumps(get_race(request.args.get('name').replace("_", " ").replace("--h--", "#")).__dict__)
 
 
 if __name__ == '__main__':

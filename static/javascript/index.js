@@ -12,11 +12,6 @@ var auto_refresh = false;
 
 var race_list;
 
-document.addEventListener('DOMContentLoaded', function () {
-    slide_time = document.getElementById("main-sidebar").style.transitionDuration;
-    slide_time = parseFloat(slide_time.substring(0, slide_time.indexOf('s'))) * 1000 + 100;
-}, false);
-
 
 
 
@@ -95,7 +90,8 @@ async function get_race(name){
     // await $.getJSON("/get_race?name=" + name.replaceAll(" ", "-").replaceAll("#", ""), (rec) => {
     //     data = rec;
     // });
-    data = await (await fetch("/get_race?name=" + name.replaceAll(" ", "-").replaceAll("#", ""))).json();
+
+    data = await (await fetch("/get_race?name=" + name.replaceAll(" ", "_").replaceAll("#", "--h--"))).json();
 
     if (!sidebar_opened) {
         return data;
@@ -337,9 +333,9 @@ function open_race(server, redirect=true){
         var durations_div = document.getElementById("sidebar-duration-details");
 
         for (let i=0; i<server.r_duration.length; i++){
-            durations_div.innerHTML += '<div id="sidebar-r' + i + '-dur-text" class="two-line-data" style="flex: 1;">' + 
+            durations_div.insertAdjacentHTML('beforeend', '<div id="sidebar-r' + i + '-dur-text" class="two-line-data" style="flex: 1;">' + 
             '<h3 class="sidebar-header" style="text-align: center !important;">R</h3> ' + 
-            '<h3 id="sidebar-r' + i + '-dur" style="text-align: center !important;">' + server.r_duration[i] + '</h3></div>'
+            '<h3 id="sidebar-r' + i + '-dur" style="text-align: center !important;">' + server.r_duration[i] + '</h3></div>');
         }
 
         var countdown = document.getElementById("sidebar-countdown")
@@ -419,14 +415,12 @@ function close_sidebar(){
 
 
 function moveToFirst() {
-    console.log("first");
     document.getElementById("slide").className = "move-to-first";
     document.getElementById("tab2").className = "tab";
     document.getElementById("tab1").className = "tab selected";
 }
 
 function moveToSecond() {
-    console.log("second");
     document.getElementById("slide").className = "move-to-second";
     document.getElementById("tab1").className = "tab";
     document.getElementById("tab2").className = "tab selected";

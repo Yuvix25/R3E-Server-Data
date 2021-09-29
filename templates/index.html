@@ -10,7 +10,7 @@
         <meta name="author" content="Yuval Rosen">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/index.css') }}">
+
         <link rel="icon" type="image/png" href="{{ url_for('static',filename='images/favicon.png') }}"/>
         <link rel="apple-touch-icon" href="{{ url_for('static',filename='images/favicon.png') }}">
 
@@ -40,6 +40,19 @@
     </head>
 
     <body>
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/index.css') }}">
+
+        <script>
+            let elem = document.createElement('div');
+            elem.className = "sidebar";
+            document.body.appendChild(elem);
+            slide_time = getComputedStyle(elem).transitionDuration;
+            document.body.removeChild(elem);
+
+            slide_time = parseFloat(slide_time.substring(0, slide_time.indexOf('s'))) * 1000 + 100;
+        </script>
+
+
 
         <!-- <h1 style="margin-left: 20px;">Live Ranked Servers:</h1> -->
 
