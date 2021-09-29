@@ -148,9 +148,9 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
     container = document.getElementById("race-list");
     
     if (container == undefined) {
-        window.onload = function() {
+        document.addEventListener('DOMContentLoaded', (event) => {
             container = document.getElementById("race-list");
-        }
+        })
     }
     
     if (reload_data || race_list == undefined) {

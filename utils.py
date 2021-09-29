@@ -1,6 +1,9 @@
-import datetime
+import datetime, ssl
 import urllib.request, json, time, os
 from datetime import datetime
+
+
+CONTEXT = ssl._create_unverified_context()
 
 
 SESSIONS = {
@@ -73,7 +76,7 @@ def update_local_db(update_full_every=3, reset_small_every="friday"):
     
 
     if (not os.path.isfile(RATINGS_PATH)) or diff > update_full_every:
-        with urllib.request.urlopen("https://game.raceroom.com/multiplayer-rating/ratings.json") as web_data:
+        with urllib.request.urlopen("https://game.raceroom.com/multiplayer-rating/ratings.json", context=CONTEXT) as web_data:
             data = web_data.read().decode()
             f = open(RATINGS_PATH, "w", encoding="utf-8")
             f.write(f"{now}\n" + data)
@@ -93,7 +96,7 @@ def update_local_db(update_full_every=3, reset_small_every="friday"):
     
 
     if (not os.path.isfile(R3E_PATH)) or diff > update_full_every:
-        with urllib.request.urlopen("https://raw.githubusercontent.com/sector3studios/r3e-spectator-overlay/master/r3e-data.json") as web_data:
+        with urllib.request.urlopen("https://raw.githubusercontent.com/sector3studios/r3e-spectator-overlay/master/r3e-data.json", context=CONTEXT) as web_data:
             data = web_data.read().decode()
             f = open(R3E_PATH, "w", encoding="utf-8")
             f.write(f"{now}\n" + data)
@@ -427,8 +430,9 @@ class Race:
 
 def get_all_races():
     update_local_db()
+    
 
-    with urllib.request.urlopen("https://game.raceroom.com/multiplayer-rating/servers/") as web_data:
+    with urllib.request.urlopen("https://game.raceroom.com/multiplayer-rating/servers/", context=CONTEXT) as web_data:
         ranked = json.loads(web_data.read().decode())["result"]
 
     races = []
@@ -445,7 +449,7 @@ def get_all_races():
 def get_race(name):
     update_local_db()
 
-    with urllib.request.urlopen("https://game.raceroom.com/multiplayer-rating/servers/") as web_data:
+    with urllib.request.urlopen("https://game.raceroom.com/multiplayer-rating/servers/", context=CONTEXT) as web_data:
         ranked = json.loads(web_data.read().decode())["result"]
 
     for i in ranked:
