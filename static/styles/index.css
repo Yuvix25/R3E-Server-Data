@@ -69,10 +69,10 @@ div {
     .track-car {
         height: 250px !important;
     }
-    /* #sidebar-track-details {
+    #sidebar-track-details {
         height: 18vh !important;
         margin-bottom: 6vh;
-    } */
+    }
     #sidebar-track-logo {
         display: none !important;
         flex: 0 !important;
