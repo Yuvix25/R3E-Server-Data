@@ -361,7 +361,7 @@ function open_race(server, redirect=true){
             var driver_element = `<div class="sidebar-section sidebar-driver-details" onclick="window.open('https://game.raceroom.com/users/${driver.UserId}/career', '_blank').focus();">
                                     <div class="driver-line">
                                         <div class="driver-icon" style="flex: 1;">
-                                            <img src="http://game.raceroom.com/game/user_avatar/${driver.UserId}" alt="drvier_icon" class="driver-icon" height="120vh" style="margin-right: 8px;">
+                                            <img src="https://game.raceroom.com/game/user_avatar/${driver.UserId}" alt="drvier_icon" class="driver-icon" height="120vh" style="margin-right: 8px;">
                                         </div>
 
                                         <div id="sidebar-track-text" style="flex: 1; padding-left: 30px !important;">
