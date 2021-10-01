@@ -16,7 +16,7 @@ var race_list;
 
 
 var started_at = Date.now();
-var auto_refresh_every = 5;
+var auto_refresh_every = 60;
 
 function update_times(){
     var countdown = document.getElementById("sidebar-countdown");
