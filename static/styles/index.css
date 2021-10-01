@@ -51,6 +51,9 @@ div {
 }
 
 @media only screen and (max-width: 1400px) {
+    :root {
+        --sidebar-width: 50%;
+    }
     .thumbnail {
         display: none;
     }
@@ -90,6 +93,12 @@ div {
     }
 }
 
+@media screen and (max-width: 500px) {
+    #sidebar-track-map {
+        display: none !important;
+        flex: 0 !important;
+    }
+}
 
 @media only screen and (max-width: 579px) {
     /* .race-container {

@@ -31,6 +31,14 @@ function update_times(){
             if (Math.floor((Date.now() - started_at)/1000) >= auto_refresh_every){
                 started_at = Date.now();
                 await applyFilters(true, true);
+
+                if (sidebar_opened) {
+                    focused_server = await get_race(focused_server.name);
+
+                    if (sidebar_opened) {
+                        open_race(focused_server, false);
+                    }
+                }
             }
         }
         else {
@@ -78,6 +86,17 @@ function joinFocusedServer(){
 }
 
 async function get_race(name){
+    var data;
+    // await $.getJSON("/get_race?name=" + name.replaceAll(" ", "-").replaceAll("#", ""), (rec) => {
+    //     data = rec;
+    // });
+
+    data = await (await fetch("/get_race?name=" + name.replaceAll(" ", "_").replaceAll("#", "--h--"))).json();
+
+    return data
+}
+
+async function open_race_sidebar(name){
     var sidebar = document.getElementById("main-sidebar");
     sidebar.style.right = "calc(0px - var(--sidebar-width) - 25px)";
 
@@ -86,20 +105,20 @@ async function get_race(name){
 
     sidebar_opened = true;
 
-    var data;
-    // await $.getJSON("/get_race?name=" + name.replaceAll(" ", "-").replaceAll("#", ""), (rec) => {
-    //     data = rec;
-    // });
+    // var data;
 
-    data = await (await fetch("/get_race?name=" + name.replaceAll(" ", "_").replaceAll("#", "--h--"))).json();
+    // data = await (await fetch("/get_race?name=" + name.replaceAll(" ", "_").replaceAll("#", "--h--"))).json();
 
+    // if (!sidebar_opened) {
+    //     return data;
+    // }
+
+    focused_server = await get_race(name)
     if (!sidebar_opened) {
-        return data;
+        return focused_server
     }
 
-    focused_server = data;
-
-    open_race(data, false);
+    open_race(focused_server, false);
 
     setTimeout(
         () => {
@@ -107,7 +126,7 @@ async function get_race(name){
         }
     , slide_time);
 
-    return data;
+    return focused_server;
 }
 
 
@@ -220,7 +239,7 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
                 time_lefts.push(server.time_left);
                 sorted_races.push(server.name);
 
-                var race_html = `<div class="race-container" onclick='get_race("${server.name}");'>
+                var race_html = `<div class="race-container" onclick='open_race_sidebar("${server.name}");'>
                                     
                                     <div class="track-car">
                                         <img src="${server.track_thumbnail}" alt="track_thumbnail" class="track-img"></img>
@@ -331,6 +350,9 @@ function open_race(server, redirect=true){
 
 
         var durations_div = document.getElementById("sidebar-duration-details");
+        if (durations_div.innerHTML.indexOf('<div id="sidebar-r0-dur-text"') != -1){
+            durations_div.innerHTML = durations_div.innerHTML.substring(0, durations_div.innerHTML.indexOf('<div id="sidebar-r0-dur-text"'));
+        }
 
         for (let i=0; i<server.r_duration.length; i++){
             durations_div.insertAdjacentHTML('beforeend', '<div id="sidebar-r' + i + '-dur-text" class="two-line-data" style="flex: 1;">' + 
