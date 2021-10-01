@@ -175,8 +175,14 @@ def get_players(pids):
     results = grequests.map(requests)
 
     users = []
-    for res in results:
-        users.append(res.json())
+    for i, res in enumerate(results):
+        try:
+            users.append(res.json())
+        except:
+            with urllib.request.urlopen(f"https://game.raceroom.com/utils/user-info/{pids[i]}", context=CONTEXT) as data:
+                user = json.loads(data.read().decode())
+                new_data = {"UserId": pids[i], "Username": user["username"], "Fullname": user["name"], "Rating": 1500, "ActivityPoints": 0, "RacesCompleted": 0, "Reputation": 70, "Country": user["country"]["code"].upper(), "Team": user["team"]}
+                users.append(new_data)
     return users
 
 
