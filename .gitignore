@@ -1,6 +1,7 @@
 __pycache__/
 db/
-
 .vscode
+
 *.pptx
 test.py
+launch.json

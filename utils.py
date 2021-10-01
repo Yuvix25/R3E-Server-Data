@@ -1,6 +1,9 @@
 import datetime, ssl
 import urllib.request, json, time, os
 from datetime import datetime
+import grequests
+from gevent import monkey
+monkey.patch_all()
 
 
 CONTEXT = ssl._create_unverified_context()
@@ -41,15 +44,17 @@ CUT_RULES = {
 
 
 DB_LOCATION = "./db"
-RATINGS_FILE = "ratings.json"
+# RATINGS_FILE = "ratings.json"
 R3E_FILE = "r3e-data.json"
 SMALL_R3E_FILE = "r3e_small.json"
-SMALL_PLAYERS_FILE = "players_small.json"
+SERVERS_FILE = "servers.json"
+# SMALL_PLAYERS_FILE = "players_small.json"
 
-RATINGS_PATH = os.path.join(DB_LOCATION, RATINGS_FILE)
+# RATINGS_PATH = os.path.join(DB_LOCATION, RATINGS_FILE)
 R3E_PATH = os.path.join(DB_LOCATION, R3E_FILE)
 SMALL_R3E_PATH = os.path.join(DB_LOCATION, SMALL_R3E_FILE)
-SMALL_PLAYERS_PATH = os.path.join(DB_LOCATION, SMALL_PLAYERS_FILE)
+SERVERS_PATH = os.path.join(DB_LOCATION, SERVERS_FILE)
+# SMALL_PLAYERS_PATH = os.path.join(DB_LOCATION, SMALL_PLAYERS_FILE)
 
 
 def update_local_db(update_full_every=3, reset_small_every="friday"):
@@ -65,22 +70,22 @@ def update_local_db(update_full_every=3, reset_small_every="friday"):
 
     # Users DB:
 
-    if os.path.isfile(RATINGS_PATH):
-        f = open(RATINGS_PATH, encoding="utf-8")
-        content = f.read()
-        f.close()
+    # if os.path.isfile(RATINGS_PATH):
+    #     f = open(RATINGS_PATH, encoding="utf-8")
+    #     content = f.read()
+    #     f.close()
 
-        last_save = int(content.split()[0])
+    #     last_save = int(content.split()[0])
 
-        diff = (now - last_save) / (60*60*24)
+    #     diff = (now - last_save) / (60*60*24)
     
 
-    if (not os.path.isfile(RATINGS_PATH)) or diff > update_full_every:
-        with urllib.request.urlopen("https://game.raceroom.com/multiplayer-rating/ratings.json", context=CONTEXT) as web_data:
-            data = web_data.read().decode()
-            f = open(RATINGS_PATH, "w", encoding="utf-8")
-            f.write(f"{now}\n" + data)
-            f.close()
+    # if (not os.path.isfile(RATINGS_PATH)) or diff > update_full_every:
+    #     with urllib.request.urlopen("https://game.raceroom.com/multiplayer-rating/ratings.json", context=CONTEXT) as web_data:
+    #         data = web_data.read().decode()
+    #         f = open(RATINGS_PATH, "w", encoding="utf-8")
+    #         f.write(f"{now}\n" + data)
+    #         f.close()
     
     
     # Content DB:
@@ -105,10 +110,10 @@ def update_local_db(update_full_every=3, reset_small_every="friday"):
 
     # Small DBs:
 
-    if datetime.today().strftime('%A').lower == reset_small_every or (not os.path.isfile(SMALL_PLAYERS_PATH)):
-        f = open(SMALL_PLAYERS_PATH, "w")
-        f.write("[]")
-        f.close()
+    # if datetime.today().strftime('%A').lower == reset_small_every or (not os.path.isfile(SMALL_PLAYERS_PATH)):
+    #     f = open(SMALL_PLAYERS_PATH, "w")
+    #     f.write("[]")
+    #     f.close()
     
     if datetime.today().strftime('%A').lower == reset_small_every or (not os.path.isfile(SMALL_R3E_PATH)):
         f = open(SMALL_R3E_PATH, "w")
@@ -117,7 +122,7 @@ def update_local_db(update_full_every=3, reset_small_every="friday"):
 
 
 
-def get_player_data(pid):
+def get_player_data_old(pid):
     """
     pid - player Id.
 
@@ -152,6 +157,27 @@ def get_player_data(pid):
             
             return user_data
 
+
+def get_player_data(pid):
+    """
+    pid - player Id.
+
+    returns: dict with the following keys - "UserId", "Username", "Fullname", "Rating", "ActivityPoints", "RacesCompleted", "Reputation", "Country", "Team"
+    """
+
+    with urllib.request.urlopen(f"https://game.raceroom.com/multiplayer-rating/user/{pid}.json", context=CONTEXT) as data:
+        return json.loads(data.read().decode())
+
+
+def get_players(pids):
+    urls = [f"https://game.raceroom.com/multiplayer-rating/user/{pid}.json" for pid in pids]
+    requests = (grequests.get(u) for u in urls)
+    results = grequests.map(requests)
+
+    users = []
+    for res in results:
+        users.append(res.json())
+    return users
 
 
 def get_car_data_by_livery(lid, race_name=None):
@@ -348,10 +374,12 @@ class Race:
 
 
     def get_player_data(self):
-        player_data = [get_player_data(pid) for pid in self.player_ids]
-        if any([p is None for p in player_data]):
-            update_local_db(update_full_every=0)
-            player_data = [get_player_data(pid) for pid in self.player_ids]
+        # player_data = [get_player_data(pid) for pid in self.player_ids]
+        player_data = get_players(self.player_ids)
+
+        # if any([p is None for p in player_data]):
+        #     update_local_db(update_full_every=0)
+        #     player_data = [get_player_data(pid) for pid in self.player_ids]
             
         
 
@@ -425,15 +453,33 @@ class Race:
         
         return self.cars, self.car_classes
 
+def update_local_servers():
+    with urllib.request.urlopen("https://game.raceroom.com/multiplayer-rating/servers/", context=CONTEXT) as web_data:
+        res = json.loads(web_data.read().decode())["result"]
 
+        f = open(SERVERS_PATH, "w")
+        f.write(json.dumps(res))
+        f.close()
+
+        return res
+
+
+def get_local_servers():
+    if os.path.isfile(SERVERS_PATH):
+        f = open(SERVERS_PATH)
+        content = f.read()
+        f.close()
+        return json.loads(content)
+    else:
+        return update_local_servers()
 
 
 def get_all_races():
     update_local_db()
-    
 
-    with urllib.request.urlopen("https://game.raceroom.com/multiplayer-rating/servers/", context=CONTEXT) as web_data:
-        ranked = json.loads(web_data.read().decode())["result"]
+    # with urllib.request.urlopen("https://game.raceroom.com/multiplayer-rating/servers/", context=CONTEXT) as web_data:
+    #     ranked = json.loads(web_data.read().decode())["result"]
+    ranked = update_local_servers()
 
     races = []
     for i in ranked:
@@ -449,11 +495,13 @@ def get_all_races():
 def get_race(name):
     update_local_db()
 
-    with urllib.request.urlopen("https://game.raceroom.com/multiplayer-rating/servers/", context=CONTEXT) as web_data:
-        ranked = json.loads(web_data.read().decode())["result"]
+    # with urllib.request.urlopen("https://game.raceroom.com/multiplayer-rating/servers/", context=CONTEXT) as web_data:
+    #     ranked = json.loads(web_data.read().decode())["result"]
+    ranked = get_local_servers()
 
     for i in ranked:
-        race = Race(i)
-        if race.name == name:
+        if i["Server"]["Settings"]["ServerName"] == name:
+            race = Race(i)
             race.get_extra_data()
+            
             return race
