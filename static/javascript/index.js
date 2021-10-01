@@ -16,7 +16,7 @@ var race_list;
 
 
 var started_at = Date.now();
-var auto_refresh_every = 60;
+var auto_refresh_every = 5;
 
 function update_times(){
     var countdown = document.getElementById("sidebar-countdown");
@@ -34,9 +34,10 @@ function update_times(){
 
                 if (sidebar_opened) {
                     focused_server = await get_race(focused_server.name);
+                    // focused_server.session = "Race";
 
                     if (sidebar_opened) {
-                        open_race(focused_server, false);
+                        open_race(focused_server, false, false);
                     }
                 }
             }
@@ -319,15 +320,19 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
 
 create_race_list();
 
-function open_race(server, redirect=true){
+function open_race(server, redirect=true, change_tab=true){
     if (redirect){
         location.href = "?name=" + server.name.replaceAll(" ", "-").replaceAll("#", "");
     }
     else {
-        console.log(server);
+        // console.log(server);
 
         var sidebar = document.getElementById("main-sidebar");
-        moveToFirst();
+
+        if (change_tab) {
+            moveToFirst();
+        }
+        
         sidebar.style.right = 0;
         document.getElementById("sidebar-track-name").innerHTML = server.track.Name;
         document.getElementById("sidebar-track-layout").innerHTML = server.track_layout.Name;
