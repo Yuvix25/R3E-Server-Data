@@ -186,7 +186,7 @@ def get_players(pids):
     return users
 
 
-def get_car_data_by_livery(lid, race_name=None):
+def get_car_data_by_livery(lid):
     """
     lid - livery Id.
 
@@ -472,7 +472,7 @@ def update_local_servers():
 
 def get_local_servers():
     if os.path.isfile(SERVERS_PATH):
-        f = open(SERVERS_PATH)
+        f = open(SERVERS_PATH, encoding="utf-8")
         content = f.read()
         f.close()
         return json.loads(content)
