@@ -1,6 +1,6 @@
 import json
 from flask import Flask, render_template, request
-from utils import get_all_races, get_race
+from utils import get_all_races, get_race, parse_race_name
 
 
 app = Flask(__name__)
@@ -16,7 +16,7 @@ def index():
     try:
         # servers = get_all_races()
         if request.args.get('name') is not None:
-            focused_server = get_race(request.args.get('name').replace("-", " ")[:-1] + "#" + request.args.get('name').replace("-", " ")[-1])
+            focused_server = get_race(parse_race_name(request.args.get('name')))
         
     except Exception as e:
         print(e)
@@ -32,7 +32,7 @@ def send_race_list():
 
 @app.route('/get_race', methods=['GET', 'POST'])
 def send_race():
-    return json.dumps(get_race(request.args.get('name').replace("_", " ").replace("--h--", "#")).__dict__)
+    return json.dumps(get_race(parse_race_name(request.args.get('name'))).__dict__)
 
 
 if __name__ == '__main__':

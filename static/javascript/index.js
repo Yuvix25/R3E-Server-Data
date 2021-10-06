@@ -92,7 +92,7 @@ async function get_race(name){
     //     data = rec;
     // });
 
-    data = await (await fetch("/get_race?name=" + name.replaceAll(" ", "_").replaceAll("#", "--h--"))).json();
+    data = await (await fetch("/get_race?name=" + name.replaceAll(" ", "_").replaceAll("#", "--h--").replaceAll("+", "--p--"))).json();
 
     return data
 }

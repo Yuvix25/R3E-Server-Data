@@ -511,3 +511,8 @@ def get_race(name):
             race.get_extra_data()
             
             return race
+
+
+
+def parse_race_name(name):
+    return name.replace("_", " ").replace("--h--", "#").replace("--p--", "+")
