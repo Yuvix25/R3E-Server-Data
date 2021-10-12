@@ -1,9 +1,15 @@
 import datetime, ssl
 import urllib.request, json, time, os
 from datetime import datetime
-import grequests
-from gevent import monkey
-monkey.patch_all()
+# import requests
+# import grequests
+import requests_cache
+
+SESSION = requests_cache.CachedSession("players_cache")
+
+# import grequests
+# from gevent import monkey
+# monkey.patch_all()
 
 
 CONTEXT = ssl._create_unverified_context()
@@ -55,7 +61,6 @@ R3E_PATH = os.path.join(DB_LOCATION, R3E_FILE)
 SMALL_R3E_PATH = os.path.join(DB_LOCATION, SMALL_R3E_FILE)
 SERVERS_PATH = os.path.join(DB_LOCATION, SERVERS_FILE)
 # SMALL_PLAYERS_PATH = os.path.join(DB_LOCATION, SMALL_PLAYERS_FILE)
-
 
 def update_local_db(update_full_every=3, reset_small_every="friday"):
     """
@@ -178,13 +183,30 @@ def get_players(pids):
     for i, res in enumerate(results):
         try:
             users.append(res.json())
-        except:
+        except Exception as e:
             with urllib.request.urlopen(f"https://game.raceroom.com/utils/user-info/{pids[i]}", context=CONTEXT) as data:
                 user = json.loads(data.read().decode())
                 new_data = {"UserId": pids[i], "Username": user["username"], "Fullname": user["name"], "Rating": 1500, "ActivityPoints": 0, "RacesCompleted": 0, "Reputation": 70, "Country": user["country"]["code"].upper(), "Team": user["team"]}
                 users.append(new_data)
     return users
 
+
+def get_players_cached(pids):
+    urls = [f"https://game.raceroom.com/multiplayer-rating/user/{pid}.json" for pid in pids]
+    # requests = (grequests.get(u) for u in urls)
+    # results = grequests.map(requests)
+    results = (SESSION.get(u) for u in urls)
+
+    users = []
+    for i, res in enumerate(results):
+        try:
+            users.append(res.json())
+        except Exception as e:
+            with urllib.request.urlopen(f"https://game.raceroom.com/utils/user-info/{pids[i]}", context=CONTEXT) as data:
+                user = json.loads(data.read().decode())
+                new_data = {"UserId": pids[i], "Username": user["username"], "Fullname": user["name"], "Rating": 1500, "ActivityPoints": 0, "RacesCompleted": 0, "Reputation": 70, "Country": user["country"]["code"].upper(), "Team": user["team"]}
+                users.append(new_data)
+    return users
 
 def get_car_data_by_livery(lid):
     """
@@ -377,11 +399,13 @@ class Race:
             self.get_first_livery()
         if self.cars is None:
             self.get_car_data()
+        if self.name == "Long NSU Race Europe #2":
+            print(self.data)
 
 
     def get_player_data(self):
         # player_data = [get_player_data(pid) for pid in self.player_ids]
-        player_data = get_players(self.player_ids)
+        player_data = get_players_cached(self.player_ids)
 
         # if any([p is None for p in player_data]):
         #     update_local_db(update_full_every=0)
@@ -498,7 +522,8 @@ def get_all_races():
     return sorted(races, key = lambda x: len(x.player_ids))[::-1]
 
 
-def get_race(name):
+def get_race(ip, port):
+    port = int(port)
     update_local_db()
 
     # with urllib.request.urlopen("https://game.raceroom.com/multiplayer-rating/servers/", context=CONTEXT) as web_data:
@@ -506,7 +531,7 @@ def get_race(name):
     ranked = get_local_servers()
 
     for i in ranked:
-        if i["Server"]["Settings"]["ServerName"] == name:
+        if i["Server"]["ServerIp"] == ip and i["Server"]["Port"] == port:
             race = Race(i)
             race.get_extra_data()
             

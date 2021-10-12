@@ -33,7 +33,7 @@ function update_times(){
                 await applyFilters(true, true);
 
                 if (sidebar_opened) {
-                    focused_server = await get_race(focused_server.name);
+                    focused_server = await get_race(focused_server.ip, focused_server.port);
                     // focused_server.session = "Race";
 
                     if (sidebar_opened) {
@@ -86,18 +86,19 @@ function joinFocusedServer(){
     window.open(url, '_blank').focus()
 }
 
-async function get_race(name){
+async function get_race(ip, port){
     var data;
     // await $.getJSON("/get_race?name=" + name.replaceAll(" ", "-").replaceAll("#", ""), (rec) => {
     //     data = rec;
     // });
 
-    data = await (await fetch("/get_race?name=" + name.replaceAll(" ", "_").replaceAll("#", "--h--").replaceAll("+", "--p--"))).json();
+    // data = await (await fetch("/get_race?name=" + name.replaceAll(" ", "_").replaceAll("#", "--h--").replaceAll("+", "--p--"))).json();
+    data = await (await fetch("/get_race?ip=" + ip + "&port=" + port)).json()
 
     return data
 }
 
-async function open_race_sidebar(name){
+async function open_race_sidebar(ip, port){
     var sidebar = document.getElementById("main-sidebar");
     sidebar.style.right = "calc(0px - var(--sidebar-width) - 25px)";
 
@@ -114,7 +115,7 @@ async function open_race_sidebar(name){
     //     return data;
     // }
 
-    focused_server = await get_race(name)
+    focused_server = await get_race(ip, port)
     if (!sidebar_opened) {
         return focused_server
     }
@@ -240,7 +241,7 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
                 time_lefts.push(server.time_left);
                 sorted_races.push(server.name);
 
-                var race_html = `<div class="race-container" onclick='open_race_sidebar("${server.name}");'>
+                var race_html = `<div class="race-container" onclick='open_race_sidebar("${server.ip}", ${server.port});'>
                                     
                                     <div class="track-car">
                                         <img src="${server.track_thumbnail}" alt="track_thumbnail" class="track-img"></img>
@@ -322,7 +323,7 @@ create_race_list();
 
 function open_race(server, redirect=true, change_tab=true){
     if (redirect){
-        location.href = "?name=" + server.name.replaceAll(" ", "-").replaceAll("#", "");
+        location.href = "?ip=" + server.ip;
     }
     else {
         // console.log(server);
@@ -334,6 +335,7 @@ function open_race(server, redirect=true, change_tab=true){
         }
         
         sidebar.style.right = 0;
+        
         document.getElementById("sidebar-track-name").innerHTML = server.track.Name;
         document.getElementById("sidebar-track-layout").innerHTML = server.track_layout.Name;
         document.getElementById("sidebar-track-logo").innerHTML = '<img src="' + server.track_logo + '" alt="track_logo" class="sidebar-track-logo"></img>\n';
