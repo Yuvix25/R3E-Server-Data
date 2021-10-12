@@ -131,6 +131,30 @@ async function open_race_sidebar(ip, port){
     return focused_server;
 }
 
+async function loadFilters(){
+    var region = localStorage.getItem('region');
+    var level = localStorage.getItem('level');
+    var sort_by = localStorage.getItem('sortby');
+    var reverse = localStorage.getItem('reverse') == "true";
+
+    if (region == null || level == null || sort_by == null || reverse == null){
+        return applyFilters(true, true);
+    }
+
+    document.getElementById("reverse-order-checkbox").checked = reverse;
+
+    var select = document.getElementById("regions-dropdown");
+    select.value = region;
+
+    var select = document.getElementById("levels-dropdown");
+    select.value = level;
+
+    var select = document.getElementById("sort-by-dropdown");
+    select.value = sort_by;
+
+    await create_race_list(region, level, sort_by + (reverse ? "-1" : ""), true, true);
+}
+
 
 async function applyFilters(reload_data=false, reorder=false){
     var reverse = document.getElementById("reverse-order-checkbox").checked;
@@ -142,9 +166,14 @@ async function applyFilters(reload_data=false, reorder=false){
     var level = select.options[select.selectedIndex].value;
 
     var select = document.getElementById("sort-by-dropdown");
-    var sort_by = select.options[select.selectedIndex].value + (reverse ? "-1" : "");
+    var sort_by = select.options[select.selectedIndex].value;
 
-    await create_race_list(region, level, sort_by, reload_data, reorder);
+    localStorage.setItem('region', region);
+    localStorage.setItem('level', level);
+    localStorage.setItem('sortby', sort_by);
+    localStorage.setItem('reverse', reverse);
+
+    await create_race_list(region, level, sort_by + (reverse ? "-1" : ""), reload_data, reorder);
 }
 
 
@@ -160,6 +189,8 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
         session   - sort by session (order is: practice, qualify, race).
         session-1 - sort by session (order is: race, quialify, practice). 
     */
+
+    console.log(region, level, sort_by)
 
     
     var container;
@@ -319,7 +350,12 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
 
 
 
-create_race_list();
+// create_race_list();
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    loadFilters();
+})
+
 
 function open_race(server, redirect=true, change_tab=true){
     if (redirect){
