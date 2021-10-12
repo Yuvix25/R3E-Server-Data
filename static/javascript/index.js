@@ -190,8 +190,6 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
         session-1 - sort by session (order is: race, quialify, practice). 
     */
 
-    console.log(region, level, sort_by)
-
     
     var container;
     // await $.getJSON("/get_race_list", (rec) => {
