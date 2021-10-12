@@ -1,11 +1,11 @@
 import datetime, ssl
 import urllib.request, json, time, os
-from datetime import datetime
+from datetime import datetime, timedelta
 # import requests
 # import grequests
 import requests_cache
 
-SESSION = requests_cache.CachedSession("players_cache")
+SESSION = requests_cache.CachedSession("players_cache", expire_after=timedelta(days=1))
 
 # import grequests
 # from gevent import monkey
