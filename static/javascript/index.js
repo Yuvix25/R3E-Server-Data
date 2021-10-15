@@ -165,7 +165,8 @@ async function loadFilters(){
     var select = document.getElementById("sort-by-dropdown");
     select.value = sort_by;
 
-    await create_race_list(region, level, sort_by + (reverse ? "-1" : ""), true, true);
+    await create_race_list("all", "all", "players", true, false);
+    await create_race_list(region, level, sort_by + (reverse ? "-1" : ""), false, true);
 }
 
 
@@ -221,7 +222,6 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
         last_update_time = Date.now();
     }
     
-    
 
     var sessions = ["practice", "qualify", "race"];
 
@@ -257,7 +257,7 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
         time_lefts = [];
         sorted_races = [];
 
-        var new_inner = filtered_race_list.map(
+        var new_inner = race_list.map(
             (server, index) => {
 
                 var classes_thumbnails = '';
