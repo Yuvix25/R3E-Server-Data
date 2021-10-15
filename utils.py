@@ -1,13 +1,11 @@
 import datetime, ssl
 import urllib.request, json, time, os
 from datetime import datetime, timedelta
-# import requests_cache
-
-# SESSION = requests_cache.CachedSession("players_cache", expire_after=timedelta(days=1))
-
 import grequests
-from gevent import monkey
-monkey.patch_all()
+import requests_cache
+
+SESSION = requests_cache.CachedSession("players_cache", expire_after=timedelta(days=1))
+
 
 
 CONTEXT = ssl._create_unverified_context()
@@ -403,7 +401,7 @@ class Race:
 
     def get_player_data(self):
         # player_data = [get_player_data(pid) for pid in self.player_ids]
-        player_data = get_players(self.player_ids)
+        player_data = get_players_cached(self.player_ids)
 
         # if any([p is None for p in player_data]):
         #     update_local_db(update_full_every=0)
