@@ -137,6 +137,19 @@ async function loadFilters(){
     var sort_by = localStorage.getItem('sortby');
     var reverse = localStorage.getItem('reverse') == "true";
 
+    var auto_refresh_local_s = localStorage.getItem("auto-refresh") == "true";
+
+    if (auto_refresh_local_s != null) {
+        auto_refresh = auto_refresh_local_s;
+        document.getElementById("auto-refresh").checked = auto_refresh;
+        started_at = Date.now();
+    }
+    else {
+        localStorage.setItem("auto-refresh", auto_refresh);
+    }
+
+    
+
     if (region == null || level == null || sort_by == null || reverse == null){
         return applyFilters(true, true);
     }
@@ -497,5 +510,6 @@ function moveToSecond() {
 
 function autoRefreshEnableDisable(){
     auto_refresh = document.getElementById("auto-refresh").checked;
+    localStorage.setItem("auto-refresh", auto_refresh);
     started_at = Date.now();
 }
