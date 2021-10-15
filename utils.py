@@ -189,19 +189,18 @@ def get_players(pids):
 
 def get_players_cached(pids):
     urls = [f"https://game.raceroom.com/multiplayer-rating/user/{pid}.json" for pid in pids]
-    # requests = (grequests.get(u) for u in urls)
-    # results = grequests.map(requests)
-    results = (SESSION.get(u) for u in urls)
+    requests = (grequests.get(u, session=SESSION) for u in urls)
+    results = grequests.map(requests)
+    # results = (SESSION.get(u) for u in urls)
 
     users = []
     for i, res in enumerate(results):
         try:
             users.append(res.json())
         except Exception as e:
-            with urllib.request.urlopen(f"https://game.raceroom.com/utils/user-info/{pids[i]}", context=CONTEXT) as data:
-                user = json.loads(data.read().decode())
-                new_data = {"UserId": pids[i], "Username": user["username"], "Fullname": user["name"], "Rating": 1500, "ActivityPoints": 0, "RacesCompleted": 0, "Reputation": 70, "Country": user["country"]["code"].upper(), "Team": user["team"]}
-                users.append(new_data)
+            user = SESSION.get(f"https://game.raceroom.com/utils/user-info/{pids[i]}").json()
+            new_data = {"UserId": pids[i], "Username": user["username"], "Fullname": user["name"], "Rating": 1500, "ActivityPoints": 1, "RacesCompleted": 0, "Reputation": 70, "Country": user["country"]["code"].upper(), "Team": user["team"]}
+            users.append(new_data)
     return users
 
 def get_car_data_by_livery(lid):
