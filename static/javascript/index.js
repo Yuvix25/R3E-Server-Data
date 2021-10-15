@@ -102,7 +102,12 @@ async function open_race_sidebar(ip, port){
     var sidebar = document.getElementById("main-sidebar");
     sidebar.style.right = "calc(0px - var(--sidebar-width) - 25px)";
 
-    document.getElementById("race-list").style.width = "calc(100vw - var(--sidebar-width) + 25px)"
+    setTimeout(
+        () => {
+            document.getElementById("race-list").style.width = "calc(100vw - var(--sidebar-width) + 25px)"
+        }
+    , 500)
+    
 
     var loading_sidebar = document.getElementById("loading-sidebar");
     loading_sidebar.style.right = 0;
