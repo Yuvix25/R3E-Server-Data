@@ -391,7 +391,7 @@ function open_race(server, redirect=true, change_tab=true){
 
 
         var durations_div = document.getElementById("sidebar-duration-details");
-        if (durations_div.innerHTML.indexOf('<div id="sidebar-r0-dur-text"') != -1){
+        if (durations_div.innerHTML.includes('"sidebar-r0-dur-text"')){
             durations_div.innerHTML = durations_div.innerHTML.substring(0, durations_div.innerHTML.indexOf('<div id="sidebar-r0-dur-text"'));
         }
 
@@ -470,7 +470,10 @@ function close_sidebar(){
     var current_inner = document.getElementById("sidebar-duration-details").innerHTML;
     setTimeout(
         () => {
-            document.getElementById("sidebar-duration-details").innerHTML = current_inner.substring(0, current_inner.indexOf('<div id="sidebar-r0-dur-text"'));
+            var durations_div = document.getElementById("sidebar-duration-details")
+            if (durations_div.innerHTML.includes('"sidebar-r0-dur-text"')){
+                durations_div.innerHTML = current_inner.substring(0, current_inner.indexOf('<div id="sidebar-r0-dur-text"'));
+            }
         }
     , slide_time);
     
