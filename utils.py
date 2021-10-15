@@ -5,7 +5,7 @@ import grequests
 import requests_cache
 
 SESSION = requests_cache.CachedSession("players_cache", expire_after=timedelta(days=1))
-
+SHORT_SESSION = requests_cache.CachedSession("short_players_cache", expire_after=timedelta(hours=1))
 
 
 CONTEXT = ssl._create_unverified_context()
@@ -198,7 +198,7 @@ def get_players_cached(pids):
         try:
             users.append(res.json())
         except Exception as e:
-            user = SESSION.get(f"https://game.raceroom.com/utils/user-info/{pids[i]}").json()
+            user = SHORT_SESSION.get(f"https://game.raceroom.com/utils/user-info/{pids[i]}").json()
             new_data = {"UserId": pids[i], "Username": user["username"], "Fullname": user["name"], "Rating": 1500, "ActivityPoints": 1, "RacesCompleted": 0, "Reputation": 70, "Country": user["country"]["code"].upper(), "Team": user["team"]}
             users.append(new_data)
     return users
