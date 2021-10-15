@@ -102,6 +102,8 @@ async function open_race_sidebar(ip, port){
     var sidebar = document.getElementById("main-sidebar");
     sidebar.style.right = "calc(0px - var(--sidebar-width) - 25px)";
 
+    document.getElementById("race-list").style.width = "calc(100vw - var(--sidebar-width) + 25px)"
+
     var loading_sidebar = document.getElementById("loading-sidebar");
     loading_sidebar.style.right = 0;
 
@@ -165,8 +167,7 @@ async function loadFilters(){
     var select = document.getElementById("sort-by-dropdown");
     select.value = sort_by;
 
-    await create_race_list("all", "all", "players", true, false);
-    await create_race_list(region, level, sort_by + (reverse ? "-1" : ""), false, true);
+    await create_race_list(region, level, sort_by + (reverse ? "-1" : ""), true, true);
 }
 
 
@@ -479,6 +480,8 @@ function close_sidebar(){
     sidebar.style.right = "calc(0px - var(--sidebar-width) - 25px)";
     sidebar = document.getElementById("loading-sidebar");
     sidebar.style.right = "calc(0px - var(--sidebar-width) - 25px)";
+
+    document.getElementById("race-list").style.width = "100vw"
 
     var current_inner = document.getElementById("sidebar-duration-details").innerHTML;
     setTimeout(
