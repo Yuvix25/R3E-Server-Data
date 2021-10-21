@@ -588,6 +588,14 @@ input {
     font-weight: 600;
 }
 
+.link {
+    color:rgb(170, 170, 255);
+}
+
+.link:visited {
+    color:rgb(170, 170, 255);
+}
+
 #sidebar-classes {
     text-align: center;
     display: inline-block;

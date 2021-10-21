@@ -18,6 +18,26 @@ var race_list;
 var started_at = Date.now();
 var auto_refresh_every = 60;
 
+function openTeamUrl(ev, url){
+    console.log(url);
+    window.open(url, '_blank').focus();
+    ev.stopPropagation();
+}
+
+function urlify(text) {
+    var urlRegex = /(http(s)?:\/\/)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/ig;
+    return text.replace(urlRegex, function(url) {
+        url_text = url;
+        if (!url.startsWith("http")){
+            url = "https://" + url;
+        }
+        return '<a class="link" href="#" onclick="openTeamUrl(event, \'' + url + '\');">' + url_text + '</a>';
+    })
+    // or alternatively
+    // return text.replace(urlRegex, '<a href="$1">$1</a>')
+  }
+
+
 function update_times(){
     var countdown = document.getElementById("sidebar-countdown");
     var auto_refresh_countdown = document.getElementById("auto-refresh-countdown");
@@ -448,7 +468,7 @@ function open_race(server, redirect=true, change_tab=true){
 
                                         <div id="sidebar-track-text" style="flex: 1; padding-left: 30px !important;">
                                             <h2 class="driver-name" style="margin-bottom: 10px;">${driver.Fullname}</h2>
-                                            <h3 id="sidebar-track-layout" style="margin-top: 10px; text-align: left;">${driver.Team == "" ? "Privateer" : driver.Team}</h3>
+                                            <h3 id="sidebar-track-layout" style="margin-top: 10px; text-align: left;">${driver.Team == "" ? "Privateer" : urlify(driver.Team)}</h3>
                                         </div>
                                         
                                         <div class="driver-icon" style="flex: 1; justify-content: right;">
