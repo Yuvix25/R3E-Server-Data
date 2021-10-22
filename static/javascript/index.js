@@ -56,11 +56,12 @@ function update_times(){
                 await applyFilters(true, true);
 
                 if (sidebar_opened) {
-                    focused_server = await get_race(focused_server.ip, focused_server.port);
-                    // focused_server.session = "Race";
-
-                    if (sidebar_opened) {
-                        open_race(focused_server, false, false);
+                    var tmp_focused_server = await get_race(focused_server.ip, focused_server.port);
+                    if (tmp_focused_server != undefined){
+                        focused_server = tmp_focused_server;
+                        if (sidebar_opened) {
+                            open_race(focused_server, false, false);
+                        }
                     }
                 }
             }
@@ -117,6 +118,11 @@ async function get_race(ip, port){
 
     // data = await (await fetch("/get_race?name=" + name.replaceAll(" ", "_").replaceAll("#", "--h--").replaceAll("+", "--p--"))).json();
     data = await (await fetch("/get_race?ip=" + ip + "&port=" + port)).json()
+    
+    if (data == "closed") {
+        close_sidebar();
+        return;
+    }
 
     return data
 }
@@ -124,12 +130,6 @@ async function get_race(ip, port){
 async function open_race_sidebar(ip, port){
     var sidebar = document.getElementById("main-sidebar");
     sidebar.style.right = "calc(0px - var(--sidebar-width) - 25px)";
-
-    setTimeout(
-        () => {
-            document.getElementById("race-list").style.width = "calc(100vw - var(--sidebar-width) + 25px)"
-        }
-    , 500)
     
 
     var loading_sidebar = document.getElementById("loading-sidebar");
@@ -145,7 +145,16 @@ async function open_race_sidebar(ip, port){
     //     return data;
     // }
 
-    focused_server = await get_race(ip, port)
+    var tmp_focused_server = await get_race(ip, port)
+    
+    if (tmp_focused_server == undefined){
+        return;
+    }
+    
+    focused_server = tmp_focused_server;
+
+    document.getElementById("race-list").style.width = "calc(100vw - var(--sidebar-width) + 25px)"
+
     if (!sidebar_opened) {
         return focused_server
     }
@@ -399,7 +408,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 function open_race(server, redirect=true, change_tab=true){
     if (redirect){
-        location.href = "?ip=" + server.ip;
+        location.href = "?ip=" + server.ip + "&port=" + server.port;
     }
     else {
         // console.log(server);

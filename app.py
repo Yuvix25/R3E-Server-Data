@@ -34,7 +34,11 @@ def send_race_list():
 @app.route('/get_race', methods=['GET', 'POST'])
 def send_race():
     # return json.dumps(get_race(parse_race_name(request.args.get('name'))).__dict__)
-    return json.dumps(get_race(request.args.get('ip'), request.args.get('port')).__dict__)
+    race = get_race(request.args.get('ip'), request.args.get('port'))
+    if race is not None:
+        return json.dumps(race.__dict__)
+    else:
+        return json.dumps(["closed"])
 
 
 if __name__ == '__main__':
