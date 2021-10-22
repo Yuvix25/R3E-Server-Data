@@ -17,7 +17,7 @@ var race_list;
 
 var started_at = Date.now();
 var auto_refresh_every = 60; // seconds
-var disable_after = 20; // minutes
+var disable_after = 60; // minutes
 
 function openTeamUrl(ev, url){
     console.log(url);
