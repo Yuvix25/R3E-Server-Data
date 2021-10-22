@@ -16,7 +16,8 @@ var race_list;
 
 
 var started_at = Date.now();
-var auto_refresh_every = 60;
+var auto_refresh_every = 60; // seconds
+var disable_after = 20; // minutes
 
 function openTeamUrl(ev, url){
     console.log(url);
@@ -33,8 +34,6 @@ function urlify(text) {
         }
         return '<a class="link" href="#" onclick="openTeamUrl(event, \'' + url + '\');">' + url_text + '</a>';
     })
-    // or alternatively
-    // return text.replace(urlRegex, '<a href="$1">$1</a>')
   }
 
 
@@ -44,6 +43,10 @@ function update_times(){
 
     setInterval(async function() {
         
+        if ((Date.now() - started_at)/1000 > (disable_after*60)) {
+            document.getElementById("auto-refresh").checked = false;
+            auto_refresh = false;
+        }
 
         if (auto_refresh){
             auto_refresh_countdown.innerHTML = Math.floor(auto_refresh_every - (Date.now() - started_at)/1000) + "s";
