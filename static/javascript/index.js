@@ -169,14 +169,14 @@ async function loadFilters(){
 
     var auto_refresh_local_s = localStorage.getItem("auto-refresh") == "true";
 
-    if (auto_refresh_local_s != null) {
-        auto_refresh = auto_refresh_local_s;
-        document.getElementById("auto-refresh").checked = auto_refresh;
-        started_at = Date.now();
-    }
-    else {
-        localStorage.setItem("auto-refresh", auto_refresh);
-    }
+    // if (auto_refresh_local_s != null) {
+    //     auto_refresh = auto_refresh_local_s;
+    //     document.getElementById("auto-refresh").checked = auto_refresh;
+    //     started_at = Date.now();
+    // }
+    // else {
+    //     localStorage.setItem("auto-refresh", auto_refresh);
+    // }
 
     
 
