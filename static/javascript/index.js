@@ -14,10 +14,10 @@ var race_list;
 
 
 
-
+var refresh_activated_at = Date.now();
 var started_at = Date.now();
 var auto_refresh_every = 60; // seconds
-var disable_after = 60; // minutes
+var disable_after = 0.05; // minutes
 
 function openTeamUrl(ev, url){
     console.log(url);
@@ -43,7 +43,7 @@ function update_times(){
 
     setInterval(async function() {
         
-        if ((Date.now() - started_at)/1000 > (disable_after*60)) {
+        if ((Date.now() - refresh_activated_at)/1000 > (disable_after*60) && auto_refresh) {
             document.getElementById("auto-refresh").checked = false;
             auto_refresh = false;
         }
@@ -552,4 +552,5 @@ function autoRefreshEnableDisable(){
     auto_refresh = document.getElementById("auto-refresh").checked;
     localStorage.setItem("auto-refresh", auto_refresh);
     started_at = Date.now();
+    refresh_activated_at = Date.now();
 }
