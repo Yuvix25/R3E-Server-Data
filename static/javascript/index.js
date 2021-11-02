@@ -444,9 +444,10 @@ var specialUrls = {
 
 function testUrl(region) {
     return (region in specialUrls ?
-             specialUrls[region] : 'http://dynamodb.' + region + '.amazonaws.com/') + 
-           'does-not-exist?cache-break=' +
-              Math.floor(Math.random() * Math.pow(2, 52)).toString(36);
+             specialUrls[region] : 'http://dynamodb.' + region + '.amazonaws.com/');
+            //  + 
+            // 'does-not-exist?cache-break=' +
+            //  Math.floor(Math.random() * Math.pow(2, 52)).toString(36);
 }
 
 function callbackOnError(url, cb) {
