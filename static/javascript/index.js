@@ -508,7 +508,7 @@ function open_race(server, redirect=true, change_tab=true){
         else if (server.name.includes("Oceania")) {
             reg = "oc";
         }
-        else if (server.name.conincludestains("America")) {
+        else if (server.name.includes("America")) {
             reg = "am";
         }
         pingRegion(raceroomRegions[reg], (time) => {document.getElementById("sidebar-ping").innerHTML = time + "ms";});
