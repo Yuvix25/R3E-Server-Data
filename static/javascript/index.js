@@ -406,6 +406,74 @@ document.addEventListener('DOMContentLoaded', (event) => {
 })
 
 
+
+
+
+
+// AWS pinging
+
+
+var regions = {
+    'us-east-1': 'US-East (Virginia)',
+    'us-east-2': 'US East (Ohio)',
+    'us-west-1': 'US-West (California)',
+    'us-west-2': 'US-West (Oregon)', // America
+    'ca-central-1': 'Canada (Central)',
+    'eu-west-1': 'Europe (Ireland)',
+    'eu-west-2': 'Europe (London)',
+    'eu-central-1': 'Europe (Frankfurt)', // Europe
+    'ap-south-1': 'Asia Pacific (Mumbai)',
+    'ap-southeast-1': 'Asia Pacific (Singapore)',
+    'ap-southeast-2': 'Asia Pacific (Sydney)', // Oceania
+    'ap-northeast-1': 'Asia Pacific (Tokyo)',
+    'ap-northeast-2': 'Asia Pacific (Seoul)',
+    'sa-east-1': 'South America (São Paulo)',
+    'cn-north-1': 'China (Beijing)',
+};
+
+var raceroomRegions = {
+    'eu': 'eu-central-1',
+    'oc': 'ap-southeast-2',
+    'am': 'us-west-2'
+}
+
+var specialUrls = {
+    'cn-north-1': 'http://dynamodb.cn-north-1.amazonaws.com.cn/'
+};
+
+
+function testUrl(region) {
+    return (region in specialUrls ?
+             specialUrls[region] : 'http://dynamodb.' + region + '.amazonaws.com/') + 
+           'does-not-exist?cache-break=' +
+              Math.floor(Math.random() * Math.pow(2, 52)).toString(36);
+}
+
+function callbackOnError(url, cb) {
+    var img = new Image;
+    img.onerror = cb;
+    img.src = url;
+}
+
+function timestamp() {
+    return (new Date()).getTime();
+}
+
+function pingRegion(region, cb) {
+    var url = testUrl(region);
+    // First failed request to prime connection
+    callbackOnError(url, function() {
+        // Second for measuring duration
+        var start = timestamp();
+        callbackOnError(url, function() {
+            cb(timestamp() - start);
+        });
+    });
+}
+
+
+
+
 function open_race(server, redirect=true, change_tab=true){
     if (redirect){
         location.href = "?ip=" + server.ip + "&port=" + server.port;
@@ -431,6 +499,20 @@ function open_race(server, redirect=true, change_tab=true){
         document.getElementById("sidebar-rep").innerHTML = Math.round(server.rep * 1000) / 1000;
 
         document.getElementById("sidebar-session").innerHTML = server.session;
+
+        document.getElementById("sidebar-ping").innerHTML = "loading...";
+        var reg;
+        if (server.name.includes("Europe")) {
+            reg = "eu";
+        }
+        else if (server.name.includes("Oceania")) {
+            reg = "oc";
+        }
+        else if (server.name.conincludestains("America")) {
+            reg = "am";
+        }
+        pingRegion(raceroomRegions[reg], (time) => {document.getElementById("sidebar-ping").innerHTML = time + "ms";});
+        
 
         document.getElementById("sidebar-p-dur").innerHTML = server.p_duration;
         document.getElementById("sidebar-q-dur").innerHTML = server.q_duration;
@@ -554,3 +636,6 @@ function autoRefreshEnableDisable(){
     started_at = Date.now();
     refresh_activated_at = Date.now();
 }
+
+
+
