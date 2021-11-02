@@ -469,6 +469,11 @@ function pingRegion(region, cb) {
         callbackOnError(url, function() {
             cb(timestamp() - start);
         });
+
+        start = timestamp();
+        callbackOnError(url, function() {
+            cb(timestamp() - start);
+        });
     });
 }
 
