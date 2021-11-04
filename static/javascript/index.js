@@ -294,7 +294,7 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
     }
 
     filtered_race_list = filtered_race_list.filter(server => {
-        return (region == "all" || server.name.toLowerCase().includes(region.toLowerCase())) && (level == "all" || server.level.toLowerCase().includes(level.toLowerCase()))
+        return (region == "all" || server.name.toLowerCase().includes(region.toLowerCase())) && (level == "all" || server.level.toLowerCase().includes(level.toLowerCase()) || (level == "elite" && server.level.toLowerCase().includes("gold")))
     });
 
 
