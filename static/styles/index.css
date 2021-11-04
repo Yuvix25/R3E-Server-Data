@@ -588,6 +588,10 @@ input {
     font-weight: 600;
 }
 
+#sidebar-refresh-ping:hover {
+    cursor: pointer;
+}
+
 .link {
     color:rgb(170, 170, 255);
 }

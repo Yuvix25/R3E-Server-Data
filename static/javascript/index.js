@@ -268,34 +268,30 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
 
 
 
-    var filtered_race_list = race_list.slice();
+    var sorted_race_list = race_list.slice();
 
     if (sort_by.toLowerCase().includes("time")) {
-        filtered_race_list.sort(function(a, b){
+        sorted_race_list.sort(function(a, b){
             return (b.time_left - a.time_left) * (sort_by[sort_by.length-1] == "1" ? -1 : 1);
         });
     }
     else if (sort_by.toLowerCase().includes("players-1")) {
-        filtered_race_list.sort(function(a, b){
+        sorted_race_list.sort(function(a, b){
             return (a.player_ids.length - b.player_ids.length);
         });
     }
     else if (sort_by.toLowerCase().includes("session")) {
-        filtered_race_list.sort(function(a, b){
+        sorted_race_list.sort(function(a, b){
             return (sessions.indexOf(b.session.toLowerCase()) - sessions.indexOf(a.session.toLowerCase())) *
             (sort_by[sort_by.length-1] == "1" ? 1 : -1);
         });
     }
     else if (sort_by.toLowerCase().includes("level")) {
-        filtered_race_list.sort(function(a, b){
+        sorted_race_list.sort(function(a, b){
             return (levels.indexOf(b.level.toLowerCase()) - levels.indexOf(a.level.toLowerCase())) *
             (sort_by[sort_by.length-1] == "1" ? -1 : 1);
         });
     }
-
-    filtered_race_list = filtered_race_list.filter(server => {
-        return (region == "all" || server.name.toLowerCase().includes(region.toLowerCase())) && (level == "all" || server.level.toLowerCase().includes(level.toLowerCase()) || (level == "elite" && server.level.toLowerCase().includes("gold")))
-    });
 
 
     var current_races = document.getElementsByClassName("race-container");
@@ -305,7 +301,7 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
         time_lefts = [];
         sorted_races = [];
 
-        var new_inner = filtered_race_list.map(
+        var new_inner = sorted_race_list.map(
             (server, index) => {
 
                 var classes_thumbnails = '';
@@ -390,6 +386,9 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
         current_races = document.getElementsByClassName("race-container");
     }
 
+    var filtered_race_list = sorted_race_list.filter(server => {
+        return (region == "all" || server.name.toLowerCase().includes(region.toLowerCase())) && (level == "all" || server.level.toLowerCase().includes(level.toLowerCase()) || (level == "elite" && server.level.toLowerCase().includes("gold")))
+    });
 
     for (let server of current_races){
         var server_name = server.getElementsByClassName("name-level")[0].getElementsByTagName("h2")[0].innerHTML;
@@ -487,7 +486,23 @@ function pingRegion(region, cb) {
     });
 }
 
+function refreshPing(server, show_loading=true) {
+    if (show_loading) {
+        document.getElementById("sidebar-ping").innerHTML = "loading...";
+    }
 
+    var reg;
+    if (server.name.includes("Europe")) {
+        reg = "eu";
+    }
+    else if (server.name.includes("Oceania")) {
+        reg = "oc";
+    }
+    else if (server.name.includes("America")) {
+        reg = "am";
+    }
+    pingRegion(raceroomRegions[reg], (time) => {document.getElementById("sidebar-ping").innerHTML = time + "ms";});
+}
 
 
 function open_race(server, redirect=true, change_tab=true){
@@ -516,18 +531,7 @@ function open_race(server, redirect=true, change_tab=true){
 
         document.getElementById("sidebar-session").innerHTML = server.session;
 
-        document.getElementById("sidebar-ping").innerHTML = "loading...";
-        var reg;
-        if (server.name.includes("Europe")) {
-            reg = "eu";
-        }
-        else if (server.name.includes("Oceania")) {
-            reg = "oc";
-        }
-        else if (server.name.includes("America")) {
-            reg = "am";
-        }
-        pingRegion(raceroomRegions[reg], (time) => {document.getElementById("sidebar-ping").innerHTML = time + "ms";});
+        refreshPing(focused_server);
         
 
         document.getElementById("sidebar-p-dur").innerHTML = server.p_duration;

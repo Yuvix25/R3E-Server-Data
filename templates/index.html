@@ -203,7 +203,12 @@
 
                             <div id="sidebar-ping-text" class="two-line-data" style="flex: 1;">
                                 <h3 class="sidebar-header" style="text-align: center !important;">Ping</h3>
-                                <h3 id="sidebar-ping"></h3>
+                                <div style="display: flex; justify-content: center; height: 30px;">
+                                    <h3 id="sidebar-ping" style="margin: 0px;"></h3>
+                                    <div id="sidebar-refresh-ping" onclick="refreshPing(focused_server, false);">
+                                        <img src="{{ url_for('static',filename='images/redo.png') }}" alt="re-ping" style="margin-top: 0px; margin-left: 6px; height: 100%;"></img>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
