@@ -6,4 +6,4 @@ test/
 *.pptx
 test.py
 launch.json
-players_cache.sqlite
+*.sqlite

@@ -1,3 +1,7 @@
+const sessions = ["practice", "qualify", "race"];
+const levels = ["rookie", "amateur", "pro", "elite", "gold"];
+
+
 var initial_time_lefts = [];
 var time_lefts = [];
 var last_update_time = Date.now();
@@ -240,6 +244,8 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
         players-1 - sort by least players in server;
         session   - sort by session (order is: practice, qualify, race).
         session-1 - sort by session (order is: race, quialify, practice). 
+        level     - sort by level (order is: rookie, am, pro, elite, gold).
+        level-1   - sort by level (order is: gold, elite, pro, am, rookie).
     */
 
     
@@ -259,9 +265,6 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
         race_list = await (await fetch("/get_race_list")).json();
         last_update_time = Date.now();
     }
-    
-
-    var sessions = ["practice", "qualify", "race"];
 
 
 
@@ -279,7 +282,14 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
     }
     else if (sort_by.toLowerCase().includes("session")) {
         filtered_race_list.sort(function(a, b){
-            return (sessions.indexOf(b.session.toLowerCase()) - sessions.indexOf(a.session.toLowerCase())) * (sort_by[sort_by.length-1] == "1" ? 1 : -1);
+            return (sessions.indexOf(b.session.toLowerCase()) - sessions.indexOf(a.session.toLowerCase())) *
+            (sort_by[sort_by.length-1] == "1" ? 1 : -1);
+        });
+    }
+    else if (sort_by.toLowerCase().includes("level")) {
+        filtered_race_list.sort(function(a, b){
+            return (levels.indexOf(b.level.toLowerCase()) - levels.indexOf(a.level.toLowerCase())) *
+            (sort_by[sort_by.length-1] == "1" ? -1 : 1);
         });
     }
 
@@ -295,7 +305,7 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
         time_lefts = [];
         sorted_races = [];
 
-        var new_inner = race_list.map(
+        var new_inner = filtered_race_list.map(
             (server, index) => {
 
                 var classes_thumbnails = '';

@@ -18,10 +18,15 @@ SESSIONS = {
 }
 
 LEVELS = {
-    0 : "Rookie",
-    75 : "Amateur",
-    80 : "Pro",
-    85 : "Gold",
+    0 : {
+        0 : "Rookie",
+        75 : "Amateur",
+        80 : "Pro",
+        85 : "Elite",
+    },
+    1700 : {
+        85 : "Gold",
+    },
 }
 
 MULTIPLIERS = {
@@ -360,7 +365,12 @@ class Race:
         self.livery_ids = self.data["Settings"]["LiveryId"]
         self.player_ids = self.data["Players"]
         self.session = SESSIONS[self.data["CurrentSession"]]
-        self.level = LEVELS[self.data["Settings"]["MinReputation"]]
+
+        if self.data["Settings"]["MinRating"] in LEVELS:
+            self.level = LEVELS[self.data["Settings"]["MinRating"]][self.data["Settings"]["MinReputation"]]
+        else:
+            self.level = LEVELS[0][self.data["Settings"]["MinReputation"]]
+        
         self.time_left_string = time.strftime('%M:%S', time.gmtime(self.data["TimeLeft"]//1000))
         self.time_left = self.data["TimeLeft"]//1000
         self.p_duration = self.data["Settings"]["PracticeDuration"]
