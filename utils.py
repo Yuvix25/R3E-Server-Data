@@ -15,6 +15,8 @@ SESSIONS = {
     0 : "Practice",
     256 : "Qualify",
     768 : "Race",
+    769 : "Race #2",
+    780 : "Race #3",
 }
 
 LEVELS = {
@@ -364,7 +366,15 @@ class Race:
         self.track_layout_id = self.data["Settings"]["TrackLayoutId"][0]
         self.livery_ids = self.data["Settings"]["LiveryId"]
         self.player_ids = self.data["Players"]
+
+        self.p_duration = self.data["Settings"]["PracticeDuration"]
+        self.q_duration = self.data["Settings"]["QualifyDuration"]
+        self.r_duration = [self.data["Settings"][f"Race{i+1}Duration"] for i in range(3) if self.data["Settings"][f"Race{i+1}Duration"] != 0]
+
         self.session = SESSIONS[self.data["CurrentSession"]]
+        if len(self.r_duration) > 1 and self.session == "Race":
+            self.session += " #1"
+        
 
         if self.data["Settings"]["MinRating"] in LEVELS:
             self.level = LEVELS[self.data["Settings"]["MinRating"]][self.data["Settings"]["MinReputation"]]
@@ -373,9 +383,7 @@ class Race:
         
         self.time_left_string = time.strftime('%M:%S', time.gmtime(self.data["TimeLeft"]//1000))
         self.time_left = self.data["TimeLeft"]//1000
-        self.p_duration = self.data["Settings"]["PracticeDuration"]
-        self.q_duration = self.data["Settings"]["QualifyDuration"]
-        self.r_duration = [self.data["Settings"][f"Race{i+1}Duration"] for i in range(3) if self.data["Settings"][f"Race{i+1}Duration"] != 0]
+        
 
         self.tire_wear = MULTIPLIERS[self.data["Settings"]["TireWear"]]
         self.fuel_usage = MULTIPLIERS[self.data["Settings"]["FuelUsage"]]
