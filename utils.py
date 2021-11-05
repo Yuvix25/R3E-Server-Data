@@ -352,7 +352,7 @@ def get_track_layout_data(tid):
 
 
 def name_as_path(name):
-    return name.lower().replace(' ', '-').replace('ü', 'u').replace('å', 'a').replace('ó', 'o')
+    return name.lower().replace(' ', '-').replace('ü', 'u').replace('å', 'a').replace('ó', 'o').replace('é', 'e').replace('á', 'a').replace('í', 'i').replace('ö', 'o').replace('ç', 'c').replace('ñ', 'n')
 
 
 
