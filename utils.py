@@ -15,8 +15,8 @@ SESSIONS = {
     0 : "Practice",
     256 : "Qualify",
     768 : "Race",
-    769 : "Race #2",
-    780 : "Race #3",
+    769 : "Race #1",
+    770 : "Race #2",
 }
 
 LEVELS = {
