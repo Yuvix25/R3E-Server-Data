@@ -17,6 +17,7 @@ SESSIONS = {
     768 : "Race",
     769 : "Race #1",
     770 : "Race #2",
+    771 : "Race #3"
 }
 
 LEVELS = {
