@@ -546,9 +546,7 @@ def get_all_races():
         race = Race(i)
         race.get_track_data()
         race.get_first_livery()
-        s = time.perf_counter()
         race.get_car_data()
-        print(time.perf_counter() - s)
         races.append(race)
     
     return sorted(races, key = lambda x: len(x.player_ids))[::-1]
