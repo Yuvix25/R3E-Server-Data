@@ -62,15 +62,29 @@ SERVERS_FILE = "servers.json"
 
 # RATINGS_PATH = os.path.join(DB_LOCATION, RATINGS_FILE)
 R3E_PATH = os.path.join(DB_LOCATION, R3E_FILE)
+R3E_DB = None
 SMALL_R3E_PATH = os.path.join(DB_LOCATION, SMALL_R3E_FILE)
 SERVERS_PATH = os.path.join(DB_LOCATION, SERVERS_FILE)
 # SMALL_PLAYERS_PATH = os.path.join(DB_LOCATION, SMALL_PLAYERS_FILE)
+
+
+def load_r3e_db():
+    global R3E_DB
+    f = open(R3E_PATH, encoding="utf-8")
+    R3E_DB = f.read()
+    f.close()
+
+    R3E_DB = R3E_DB[R3E_DB.find("\n"):]
+    R3E_DB = json.loads(R3E_DB)
+
+    return R3E_DB
 
 def update_local_db(update_full_every=3, reset_small_every="friday"):
     """
     update_full_every - update full databse every ${update_full_every} days.
     reset_small_every - reset small database evrey ${reset_small_every}.
     """
+    global R3E_DB
 
     now = int(time.time())
 
@@ -115,6 +129,8 @@ def update_local_db(update_full_every=3, reset_small_every="friday"):
             f = open(R3E_PATH, "w", encoding="utf-8")
             f.write(f"{now}\n" + data)
             f.close()
+
+            R3E_DB = json.loads(data)
     
 
     # Small DBs:
@@ -128,7 +144,6 @@ def update_local_db(update_full_every=3, reset_small_every="friday"):
         f = open(SMALL_R3E_PATH, "w")
         f.write(json.dumps({"cars":dict(), "classes":dict(), "tracks":dict()}))
         f.close()
-
 
 
 def get_player_data_old(pid):
@@ -413,8 +428,6 @@ class Race:
             self.get_first_livery()
         if self.cars is None:
             self.get_car_data()
-        if self.name == "Long NSU Race Europe #2":
-            print(self.data)
 
 
     def get_player_data(self):
@@ -464,21 +477,24 @@ class Race:
         car_names, car_classes_names = set(), set()
 
         found_liveries = set()
+
+        if R3E_DB is None:
+            load_r3e_db()
         
         for lid in self.livery_ids:
             if lid not in found_liveries:
                 car, car_class = get_car_data_by_livery(lid)
 
-                f = open(R3E_PATH, encoding="utf-8")
-                db = f.read()
-                f.close()
+                # f = open(R3E_PATH, encoding="utf-8")
+                # db = f.read()
+                # f.close()
 
-                db = db[db.find("\n"):]
-                db = json.loads(db)
+                # db = db[db.find("\n"):]
+                # db = json.loads(db)
 
                 for car_id in car_class["Cars"]:
                     car_id = str(car_id["Id"])
-                    liveries = db["cars"][car_id]["liveries"]
+                    liveries = R3E_DB["cars"][car_id]["liveries"]
                     
                     for livery in liveries:
                         found_liveries.add(livery["Id"])
@@ -530,7 +546,9 @@ def get_all_races():
         race = Race(i)
         race.get_track_data()
         race.get_first_livery()
+        s = time.perf_counter()
         race.get_car_data()
+        print(time.perf_counter() - s)
         races.append(race)
     
     return sorted(races, key = lambda x: len(x.player_ids))[::-1]
