@@ -50,13 +50,11 @@ function urlify(text) {
             new_element += `<div class="twitch-embed-container" onclick="openTeamUrl(event, \'` + url + `\');"><div class="twitch-embed">
                             <iframe
                                 style="margin-top: 15px; box-shadow: 3px 3px 30px #000000;"
-                                id="twitch-embed-${channel}"
                                 src="https://player.twitch.tv/?channel=${channel}&parent=r3e-server-data.herokuapp.com&muted=true"
                                 width="355"
                                 height="200"
                                 allowfullscreen="true">
                             </iframe></div></div>`;
-            console.log(new_element);
         }
         else {
             new_element = '<a class="link" href="#" onclick="openTeamUrl(event, \'' + url + '\');">' + url_text + '</a>';
