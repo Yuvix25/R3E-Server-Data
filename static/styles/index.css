@@ -592,11 +592,11 @@ input {
     cursor: pointer;
 }
 
-.link {
+.link, .twitch-link {
     color:rgb(170, 170, 255);
 }
 
-.link:visited {
+.link:visited, .twitch-link:visited {
     color:rgb(170, 170, 255);
 }
 
