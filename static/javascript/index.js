@@ -49,10 +49,10 @@ function urlify(text) {
             new_element = `<a class="twitch-link" id="twitch-link-${channel}" href="#" onclick="openTeamUrl(event, \'` + url + '\');">' + url_text + '</a>';
             new_element += `<div class="twitch-embed-container" onclick="openTeamUrl(event, \'` + url + `\');"><div class="twitch-embed">
                             <iframe
-                                style="margin-top: 15px; box-shadow: 3px 3px 30px #000000;"
+                                style="margin-top: 15px; box-shadow: 3px 3px 30px #000000; border: 0px;"
                                 src="https://player.twitch.tv/?channel=${channel}&parent=r3e-server-data.herokuapp.com&muted=true"
-                                width="355"
-                                height="200"
+                                width="100%"
+                                height="100%"
                                 allowfullscreen="true">
                             </iframe></div></div>`;
         }
@@ -133,7 +133,6 @@ function update_times(){
 
 function joinFocusedServer(){
     var url = 'rrre://multiplayer/join?data={"MultiplayerJoin":{"Address":"' + focused_server.ip + ':' + focused_server.port + '"}}';
-    console.log(url);
     window.open(url, '_blank').focus()
 }
 
