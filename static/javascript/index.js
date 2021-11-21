@@ -7,6 +7,8 @@ var time_lefts = [];
 var last_update_time = Date.now();
 
 var sorted_races = [];
+var server_ips = [];
+var fetched_servers = new Map();
 var focused_server;
 var sidebar_opened = false;
 var statics_url;
@@ -104,7 +106,7 @@ function update_times(){
             time_lefts[i] = initial_time_lefts[i] - (Date.now() - last_update_time)/1000
         }
     
-    }, 10)
+    }, 100)
 }
 
 
@@ -114,30 +116,45 @@ function joinFocusedServer(){
     window.open(url, '_blank').focus()
 }
 
-async function get_race(ip, port){
+async function get_race(ip, port, force_update=false){
     var data;
     // await $.getJSON("/get_race?name=" + name.replaceAll(" ", "-").replaceAll("#", ""), (rec) => {
     //     data = rec;
     // });
 
     // data = await (await fetch("/get_race?name=" + name.replaceAll(" ", "_").replaceAll("#", "--h--").replaceAll("+", "--p--"))).json();
-    data = await (await fetch("/get_race?ip=" + ip + "&port=" + port)).json()
+    var url = "/get_race?ip=" + ip + "&port=" + port;
+    if (fetched_servers.has(url) && (!force_update)) {
+        data = fetched_servers.get(url);
+        get_race(ip, port, true);
+    }
+    else {
+        data = await (await fetch(url)).json()
+        fetched_servers.set(url, data);
+    }
     
     if (data == "closed") {
         close_sidebar();
         return;
     }
 
+    if (force_update) {
+        setTimeout(() => {
+            open_race_sidebar(ip, port, data); 
+        }, 300);
+    }
+
     return data
 }
 
-async function open_race_sidebar(ip, port){
+async function open_race_sidebar(ip, port, server=undefined){
     var sidebar = document.getElementById("main-sidebar");
-    sidebar.style.right = "calc(0px - var(--sidebar-width) - 25px)";
     
-
     var loading_sidebar = document.getElementById("loading-sidebar");
-    loading_sidebar.style.right = 0;
+    if (server == undefined) {
+        sidebar.style.right = "calc(0px - var(--sidebar-width) - 25px)";
+        // loading_sidebar.style.right = 0;
+    }
 
     sidebar_opened = true;
 
@@ -149,7 +166,13 @@ async function open_race_sidebar(ip, port){
     //     return data;
     // }
 
-    var tmp_focused_server = await get_race(ip, port)
+    if (server == undefined) {
+        var tmp_focused_server = await get_race(ip, port)
+    }
+    else {
+        console.log("reload");
+        var tmp_focused_server = server;
+    }
     
     if (tmp_focused_server == undefined){
         return;
@@ -300,6 +323,7 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
         initial_time_lefts = [];
         time_lefts = [];
         sorted_races = [];
+        server_ips = [];
 
         var new_inner = sorted_race_list.map(
             (server, index) => {
@@ -326,6 +350,8 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
                 initial_time_lefts.push(server.time_left);
                 time_lefts.push(server.time_left);
                 sorted_races.push(server.name);
+                server_ips.push([server.ip, server.port]);
+                get_race(server.ip, server.port);
 
                 var race_html = `<div class="race-container" onclick='open_race_sidebar("${server.ip}", ${server.port});'>
                                     

@@ -539,6 +539,7 @@ def get_all_races():
 
     # with urllib.request.urlopen("https://game.raceroom.com/multiplayer-rating/servers/", context=CONTEXT) as web_data:
     #     ranked = json.loads(web_data.read().decode())["result"]
+
     ranked = update_local_servers()
 
     races = []
