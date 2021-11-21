@@ -174,7 +174,7 @@ async function open_race_sidebar(ip, port, server=undefined){
     var loading_sidebar = document.getElementById("loading-sidebar");
     if (server == undefined) {
         sidebar.style.right = "calc(0px - var(--sidebar-width) - 25px)";
-        // loading_sidebar.style.right = 0;
+        loading_sidebar.style.right = 0;
     }
 
     sidebar_opened = true;
@@ -371,7 +371,6 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
                 time_lefts.push(server.time_left);
                 sorted_races.push(server.name);
                 server_ips.push([server.ip, server.port]);
-                get_race(server.ip, server.port);
 
                 var race_html = `<div class="race-container" onclick='open_race_sidebar("${server.ip}", ${server.port});'>
                                     
@@ -425,6 +424,10 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
                 return race_html;
             }
         );
+
+        for (const server of server_ips) {
+            get_race(server[0], server[1]);
+        }
         
         container.innerHTML = '';
         container.insertAdjacentHTML('afterbegin', new_inner.join('\n'));
