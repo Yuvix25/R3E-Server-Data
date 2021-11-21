@@ -51,7 +51,7 @@ function urlify(text) {
                             <iframe
                                 style="margin-top: 15px; box-shadow: 3px 3px 30px #000000;"
                                 id="twitch-embed-${channel}"
-                                src="https://player.twitch.tv/?channel=${channel}&parent=r3e-server-data.herokuapp.com/&muted=true"
+                                src="https://player.twitch.tv/?channel=${channel}&parent=r3e-server-data.herokuapp.com&muted=true"
                                 width="355"
                                 height="200"
                                 allowfullscreen="true">
