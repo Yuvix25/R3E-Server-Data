@@ -170,7 +170,6 @@ async function open_race_sidebar(ip, port, server=undefined){
         var tmp_focused_server = await get_race(ip, port)
     }
     else {
-        console.log("reload");
         var tmp_focused_server = server;
     }
     
@@ -186,7 +185,7 @@ async function open_race_sidebar(ip, port, server=undefined){
         return focused_server
     }
 
-    open_race(focused_server, false);
+    open_race(focused_server, false, false);
 
     setTimeout(
         () => {
@@ -563,7 +562,7 @@ function open_race(server, redirect=true, change_tab=true){
 
         document.getElementById("sidebar-session").innerHTML = server.session;
 
-        refreshPing(focused_server);
+        refreshPing(focused_server, change_tab);
         
 
         document.getElementById("sidebar-p-dur").innerHTML = server.p_duration;
