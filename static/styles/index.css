@@ -866,3 +866,31 @@ input:checked+.slider:before {
 .slider.round:before {
     border-radius: 50%;
 }
+
+
+.sidebar-team {
+    position: relative;
+}
+
+.twitch-embed-container {
+    display: block;
+    position: absolute;
+    top: 0px;
+    height: 20px;
+    width: 100%;
+}
+
+.twitch-embed {
+    position: absolute;
+    top: 19px;
+    border: 0px;
+    display: none;
+}
+
+.twitch-embed-container:hover .twitch-embed {
+    display: block;
+}
+
+.twitch-embed:hover {
+    display: block;
+}

@@ -26,7 +26,6 @@ var auto_refresh_every = 60; // seconds
 var disable_after = 60; // minutes
 
 function openTeamUrl(ev, url){
-    console.log(url);
     window.open(url, '_blank').focus();
     ev.stopPropagation();
 }
@@ -38,7 +37,31 @@ function urlify(text) {
         if (!url.startsWith("http")){
             url = "https://" + url;
         }
-        return '<a class="link" href="#" onclick="openTeamUrl(event, \'' + url + '\');">' + url_text + '</a>';
+        var twitch_regex = /(twitch\.tv\/[a-zA-Z0-9_]+)/ig;
+        var new_element;
+        if (twitch_regex.test(url)){
+            var channel;
+            var tmp_url = url.slice();
+            tmp_url.replace(twitch_regex, function(twitch_url) {
+                channel = twitch_url.replace("twitch.tv/", "");
+            });
+            
+            new_element = `<a class="twitch-link" id="twitch-link-${channel}" href="#" onclick="openTeamUrl(event, \'` + url + '\');">' + url_text + '</a>';
+            new_element += `<div class="twitch-embed-container" onclick="openTeamUrl(event, \'` + url + `\');"><div class="twitch-embed">
+                            <iframe
+                                style="margin-top: 15px; box-shadow: 3px 3px 30px #000000;"
+                                id="twitch-embed-${channel}"
+                                src="https://player.twitch.tv/?channel=${channel}&parent=r3e-server-data.herokuapp.com/&muted=true"
+                                width="355"
+                                height="200"
+                                allowfullscreen="true">
+                            </iframe></div></div>`;
+            console.log(new_element);
+        }
+        else {
+            new_element = '<a class="link" href="#" onclick="openTeamUrl(event, \'' + url + '\');">' + url_text + '</a>';
+        }
+        return new_element;
     })
   }
 
@@ -613,7 +636,9 @@ function open_race(server, redirect=true, change_tab=true){
 
                                         <div id="sidebar-track-text" style="flex: 1; padding-left: 30px !important;">
                                             <h2 class="driver-name" style="margin-bottom: 10px;">${driver.Fullname}</h2>
-                                            <h3 id="sidebar-track-layout" style="margin-top: 10px; text-align: left;">${driver.Team == "" ? "Privateer" : urlify(driver.Team)}</h3>
+                                            <div class="sidebar-team">
+                                            <h3 style="margin-top: 10px; text-align: left;">${driver.Team == "" ? "Privateer" : urlify(driver.Team)}</h3>
+                                            </div>
                                         </div>
                                         
                                         <div class="driver-icon" style="flex: 1; justify-content: right;">
