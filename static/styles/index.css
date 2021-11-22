@@ -480,6 +480,19 @@ input {
     filter: drop-shadow(2px 2px 8px rgb(50, 50, 50));
 }
 
+.twitch-logo {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 15%;
+    -webkit-filter: drop-shadow(2px 2px 8px rgb(50, 50, 50));
+    filter: drop-shadow(2px 2px 8px rgb(50, 50, 50));
+}
+
+.no-twitch {
+    display: none;
+}
+
 .class-img {
     margin: 0;
     -webkit-filter: drop-shadow(2px 2px 8px rgb(50, 50, 50));
@@ -884,14 +897,16 @@ input:checked+.slider:before {
     position: absolute;
     left: calc(-0.15 * var(--sidebar-width));
     top: 19px;
-    display: none;
     width: calc(var(--sidebar-width) * 0.6);
     height: calc(var(--sidebar-width) * 0.6 / 1.77);
+    transition: transform 0.2s;
+    transform: scale(0,0);
+    transform-origin: top;
 }
 
 .twitch-embed-container:hover .twitch-embed {
-    display: block;
     z-index: 3;
+    transform: scale(1,1);
 }
 
 .twitch-embed:hover {

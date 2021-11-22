@@ -32,7 +32,8 @@ function openTeamUrl(ev, url){
 
 function urlify(text) {
     var urlRegex = /(http(s)?:\/\/)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/ig;
-    return text.replace(urlRegex, function(url) {
+    var contains_twitch = false;
+    text = text.replace(urlRegex, function(url) {
         url_text = url;
         if (!url.startsWith("http")){
             url = "https://" + url;
@@ -40,6 +41,7 @@ function urlify(text) {
         var twitch_regex = /(twitch\.tv\/[a-zA-Z0-9_]+)/ig;
         var new_element;
         if (twitch_regex.test(url)){
+            contains_twitch = true;
             var channel;
             var tmp_url = url.slice();
             tmp_url.replace(twitch_regex, function(twitch_url) {
@@ -60,7 +62,9 @@ function urlify(text) {
             new_element = '<a class="link" href="#" onclick="openTeamUrl(event, \'' + url + '\');">' + url_text + '</a>';
         }
         return new_element;
-    })
+    });
+
+    return [contains_twitch, text];
   }
 
 
@@ -163,6 +167,22 @@ async function get_race(ip, port, force_update=false){
             open_race_sidebar(ip, port, data); 
         }, 300);
     }
+
+    var found_twitch = false;
+    for (const driver of data.players){
+        var urlified = urlify(driver.Team)
+        var twitch_icon = document.getElementById("twitch-" + data.ip + "-" + data.port);
+        if (urlified[0]) {
+            found_twitch = true;
+            if (twitch_icon.classList.contains("no-twitch")) {
+                twitch_icon.classList.remove("no-twitch");
+            }
+        }
+        else if (!urlified[0] && !twitch_icon.classList.contains("no-twitch") && !found_twitch) {
+            twitch_icon.classList.add("no-twitch");
+        }
+    }
+    
 
     return data
 }
@@ -379,6 +399,7 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
                                             <img src="${server.track_logo}" alt="track_logo" class="track-logo logo-row-item"></img>
                                             <img src="${server.track_map}" alt="track_map" class="track-logo logo-row-item"></img>
                                         </div>
+                                        <img src="${statics_url + 'images/twitch-icon.png'}" alt="twitch_logo" class="twitch-logo no-twitch" id="twitch-${server.ip}-${server.port}" title="Race might be live-streamed, click and go to drivers tab to watch! (hover on twitch link)"></img>
                                         <div style="display: flex; position: absolute; bottom: 0px; left: 5px; height: 48%; width: calc(100% - 10px); align-items: center;">
                                             ${classes_thumbnails}
                                         </div>
@@ -625,9 +646,11 @@ function open_race(server, redirect=true, change_tab=true){
         driver_container.innerHTML = "";
 
         server.players.sort(function(a, b){return b.Rating - a.Rating;})
-        
+
         for (let i=0; i<server.players.length; i++){
             var driver = server.players[i];
+            var urlified = urlify(driver.Team);
+
             var driver_element = `<div class="sidebar-section sidebar-driver-details" onclick="window.open('https://game.raceroom.com/users/${driver.UserId}/career', '_blank').focus();">
                                     <div class="driver-line">
                                         <div class="driver-icon" style="flex: 1;">
@@ -637,7 +660,7 @@ function open_race(server, redirect=true, change_tab=true){
                                         <div id="sidebar-track-text" style="flex: 1; padding-left: 30px !important;">
                                             <h2 class="driver-name" style="margin-bottom: 10px;">${driver.Fullname}</h2>
                                             <div class="sidebar-team">
-                                            <h3 style="margin-top: 10px; text-align: left;">${driver.Team == "" ? "Privateer" : urlify(driver.Team)}</h3>
+                                            <h3 style="margin-top: 10px; text-align: left;">${driver.Team == "" ? "Privateer" : urlified[1]}</h3>
                                             </div>
                                         </div>
                                         

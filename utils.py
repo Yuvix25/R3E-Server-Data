@@ -219,7 +219,8 @@ def get_players_cached(pids):
     users = []
     for i, res in enumerate(results):
         try:
-            users.append(res.json())
+            user_json = res.json()
+            users.append(user_json)
         except Exception as e:
             user = SHORT_SESSION.get(f"https://game.raceroom.com/utils/user-info/{pids[i]}").json()
             new_data = {"UserId": pids[i], "Username": user["username"], "Fullname": user["name"], "Rating": 1500, "ActivityPoints": 1, "RacesCompleted": 0, "Reputation": 70, "Country": user["country"]["code"].upper(), "Team": user["team"]}
