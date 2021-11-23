@@ -1,6 +1,7 @@
 __pycache__/
 db/
 test/
+screenshots/
 .vscode
 
 *.pptx
