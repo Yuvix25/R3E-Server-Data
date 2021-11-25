@@ -30,9 +30,89 @@ function openTeamUrl(ev, url){
     ev.stopPropagation();
 }
 
+function twitch_hover(element_string, url=undefined) {
+    var twitch_regex = /(twitch\.tv\/[a-zA-Z0-9_]+)/ig;
+        if (twitch_regex.test(url) || url==undefined){
+
+            if (url==undefined){
+                url = "<URL>";
+            }
+
+            contains_twitch = true;
+            var channel;
+            var tmp_url = url.slice();
+
+            tmp_url.replace(twitch_regex, function(twitch_url) {
+                channel = twitch_url.replace("twitch.tv/", "");
+            });
+
+            var element = document.createElement('div');
+            element.innerHTML = element_string;
+            element = element.firstChild;
+
+            element.classList.add("twitch-hover");
+            element.innerHTML += `<div class="twitch-embed-container" onclick="openTeamUrl(event, \'` + url + `\');"><div class="twitch-embed">
+                                    <iframe
+                                        style="margin-top: 15px; box-shadow: 3px 3px 30px #000000; border: 0px;"
+                                        src="https://player.twitch.tv/?channel=${channel}&parent=r3e-server-data.herokuapp.com&muted=true"
+                                        width="100%"
+                                        height="100%"
+                                        allowfullscreen="true">
+                                    </iframe></div>
+                                </div>`
+            
+            return element.outerHTML;
+    }
+}
+
+function twitch_icon_hover(element_string, url=undefined) {
+    var twitch_regex = /(twitch\.tv\/[a-zA-Z0-9_]+)/ig;
+        if (twitch_regex.test(url) || url==undefined){
+
+            
+
+            contains_twitch = true;
+            var channel;
+            
+
+            if (url != undefined){
+                var tmp_url = url.slice();
+
+                tmp_url.replace(twitch_regex, function(twitch_url) {
+                    channel = twitch_url.replace("twitch.tv/", "");
+                });
+            }
+            else {
+                channel = "<URL>"
+            }
+
+            var element = document.createElement('div');
+            element.innerHTML = element_string;
+            element = element.firstChild;
+            var id = element.id;
+            element.id = "";
+
+            element.classList.add("twitch-expand-disappear");
+            element.classList.remove("no-twitch");
+            return `
+            <div class="twitch-hover-expand no-twitch" id="${id}">
+                ${element.outerHTML}
+                <div class="twitch-expand-appear">
+                    <iframe
+                        style="box-shadow: 3px 3px 30px #000000; border: 0px;"
+                        src="https://player.twitch.tv/?channel=${channel}&parent=r3e-server-data.herokuapp.com&muted=true"
+                        width="100%"
+                        height="100%"
+                        allowfullscreen="false">
+                    </iframe>
+                </div>
+            </div>`
+    }
+}
+
 function urlify(text) {
     var urlRegex = /(http(s)?:\/\/)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/ig;
-    var contains_twitch = false;
+    var found_channel = false;
     text = text.replace(urlRegex, function(url) {
         url_text = url;
         if (!url.startsWith("http")){
@@ -46,17 +126,19 @@ function urlify(text) {
             var tmp_url = url.slice();
             tmp_url.replace(twitch_regex, function(twitch_url) {
                 channel = twitch_url.replace("twitch.tv/", "");
+                found_channel = channel;
             });
             
             new_element = `<a class="twitch-link" id="twitch-link-${channel}" href="#" onclick="openTeamUrl(event, \'` + url + '\');">' + url_text + '</a>';
-            new_element += `<div class="twitch-embed-container" onclick="openTeamUrl(event, \'` + url + `\');"><div class="twitch-embed">
-                            <iframe
-                                style="margin-top: 15px; box-shadow: 3px 3px 30px #000000; border: 0px;"
-                                src="https://player.twitch.tv/?channel=${channel}&parent=r3e-server-data.herokuapp.com&muted=true"
-                                width="100%"
-                                height="100%"
-                                allowfullscreen="true">
-                            </iframe></div></div>`;
+            // new_element += `<div class="twitch-embed-container" onclick="openTeamUrl(event, \'` + url + `\');"><div class="twitch-embed">
+            //                 <iframe
+            //                     style="margin-top: 15px; box-shadow: 3px 3px 30px #000000; border: 0px;"
+            //                     src="https://player.twitch.tv/?channel=${channel}&parent=r3e-server-data.herokuapp.com&muted=true"
+            //                     width="100%"
+            //                     height="100%"
+            //                     allowfullscreen="true">
+            //                 </iframe></div></div>`;
+            new_element = twitch_hover(new_element, url);
         }
         else {
             new_element = '<a class="link" href="#" onclick="openTeamUrl(event, \'' + url + '\');">' + url_text + '</a>';
@@ -64,7 +146,7 @@ function urlify(text) {
         return new_element;
     });
 
-    return [contains_twitch, text];
+    return [found_channel, text];
   }
 
 
@@ -172,13 +254,14 @@ async function get_race(ip, port, force_update=false){
     for (const driver of data.players){
         var urlified = urlify(driver.Team)
         var twitch_icon = document.getElementById("twitch-" + data.ip + "-" + data.port);
-        if (urlified[0]) {
-            found_twitch = true;
+        if (urlified[0] != false && !found_twitch) {
             if (twitch_icon.classList.contains("no-twitch")) {
                 twitch_icon.classList.remove("no-twitch");
             }
+            twitch_icon.innerHTML = twitch_icon.innerHTML.replace("<URL>", urlified[0]);
+            found_twitch = true;
         }
-        else if (!urlified[0] && !twitch_icon.classList.contains("no-twitch") && !found_twitch) {
+        else if (urlified[0] == false && !twitch_icon.classList.contains("no-twitch") && !found_twitch) {
             twitch_icon.classList.add("no-twitch");
         }
     }
@@ -391,6 +474,9 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
                 sorted_races.push(server.name);
                 server_ips.push([server.ip, server.port]);
 
+                var twitch_element = `<img src="${statics_url + 'images/twitch-icon.png'}" alt="twitch_logo" class="twitch-logo no-twitch" id="twitch-${server.ip}-${server.port}" title="Race might be live-streamed, click and go to drivers tab to watch! (hover on twitch link)"></img>`;
+                // twitch_element = twitch_icon_hover(twitch_element);
+
                 var race_html = `<div class="race-container" onclick='open_race_sidebar("${server.ip}", ${server.port});'>
                                     
                                     <div class="track-car">
@@ -399,7 +485,7 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
                                             <img src="${server.track_logo}" alt="track_logo" class="track-logo logo-row-item"></img>
                                             <img src="${server.track_map}" alt="track_map" class="track-logo logo-row-item"></img>
                                         </div>
-                                        <img src="${statics_url + 'images/twitch-icon.png'}" alt="twitch_logo" class="twitch-logo no-twitch" id="twitch-${server.ip}-${server.port}" title="Race might be live-streamed, click and go to drivers tab to watch! (hover on twitch link)"></img>
+                                        ${twitch_element}
                                         <div style="display: flex; position: absolute; bottom: 0px; left: 5px; height: 48%; width: calc(100% - 10px); align-items: center;">
                                             ${classes_thumbnails}
                                         </div>
@@ -444,10 +530,6 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
                 return race_html;
             }
         );
-
-        for (const server of server_ips) {
-            get_race(server[0], server[1]);
-        }
         
         container.innerHTML = '';
         container.insertAdjacentHTML('afterbegin', new_inner.join('\n'));
@@ -479,8 +561,11 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
 
 // create_race_list();
 
-document.addEventListener('DOMContentLoaded', (event) => {
-    loadFilters();
+document.addEventListener('DOMContentLoaded', async (event) => {
+    await loadFilters();
+    for (const server of server_ips) {
+        get_race(server[0], server[1]);
+    }
 })
 
 
@@ -653,19 +738,19 @@ function open_race(server, redirect=true, change_tab=true){
 
             var driver_element = `<div class="sidebar-section sidebar-driver-details" onclick="window.open('https://game.raceroom.com/users/${driver.UserId}/career', '_blank').focus();">
                                     <div class="driver-line">
-                                        <div class="driver-icon" style="flex: 1;">
-                                            <img src="https://game.raceroom.com/game/user_avatar/${driver.UserId}" alt="drvier_icon" class="driver-icon" height="120vh" style="margin-right: 8px;">
+                                        <div class="driver-icon" style="flex: 3;">
+                                            <img src="https://game.raceroom.com/game/user_avatar/${driver.UserId}" alt="drvier_icon" class="driver-icon" style="margin-right: 8px; max-height: 60vh; max-width: 70%;">
                                         </div>
 
-                                        <div id="sidebar-track-text" style="flex: 1; padding-left: 30px !important;">
+                                        <div id="sidebar-track-text" style="flex: 4; padding-left: 30px !important; padding-right: 20px !important;">
                                             <h2 class="driver-name" style="margin-bottom: 10px;">${driver.Fullname}</h2>
                                             <div class="sidebar-team">
                                             <h3 style="margin-top: 10px; text-align: left;">${driver.Team == "" ? "Privateer" : urlified[1]}</h3>
                                             </div>
                                         </div>
                                         
-                                        <div class="driver-icon" style="flex: 1; justify-content: right;">
-                                            <img src="https://static1.beta.game.raceroom.com/static/img/flags/${driver.Country.toLowerCase()}.svg" alt="${driver.Country.toLowerCase()}_country_flag" class="driver-country" height="60vh" style="aspect-ratio: 7 / 6; margin-right: 20px;">
+                                        <div class="driver-icon" style="flex: 2; justify-content: right;">
+                                            <img src="https://static1.beta.game.raceroom.com/static/img/flags/${driver.Country.toLowerCase()}.svg" alt="${driver.Country.toLowerCase()}_country_flag" class="driver-country" style="aspect-ratio: 7 / 6; margin-right: 20px; max-height: 60vh; max-width: 70%;">
                                         </div>
                                     </div>
 
