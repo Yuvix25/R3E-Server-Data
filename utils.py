@@ -225,7 +225,7 @@ def get_players_cached(pids):
             user = SHORT_SESSION.get(f"https://game.raceroom.com/utils/user-info/{pids[i]}").json()
             new_data = {"UserId": pids[i], "Username": user["username"], "Fullname": user["name"], "Rating": 1500, "ActivityPoints": 1, "RacesCompleted": 0, "Reputation": 70, "Country": user["country"]["code"].upper(), "Team": user["team"]}
             users.append(new_data)
-    return users #+ ([{"UserId": 123, "Username": "hi", "Fullname": "hello", "Rating": 2500, "ActivityPoints": 1, "RacesCompleted": 0, "Reputation": 70, "Country": "IL", "Team": "https://www.twitch.tv/dan_suzuki"}] if len(pids) == 11 else [])
+    return users# + ([{"UserId": 123, "Username": "hi", "Fullname": "hello", "Rating": 2500, "ActivityPoints": 1, "RacesCompleted": 0, "Reputation": 70, "Country": "IL", "Team": "https://www.twitch.tv/dan_suzuki"}])
 
 def get_car_data_by_livery(lid):
     """

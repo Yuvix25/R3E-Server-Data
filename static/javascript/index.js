@@ -30,6 +30,11 @@ function openTeamUrl(ev, url){
     ev.stopPropagation();
 }
 
+function openSidebarTab(ev, ip, port, server=undefined, tab=0) {
+    ev.stopPropagation();
+    open_race_sidebar(ip, port, server, tab);
+}
+
 function twitch_hover(element_string, url=undefined) {
     var twitch_regex = /(twitch\.tv\/[a-zA-Z0-9_]+)/ig;
         if (twitch_regex.test(url) || url==undefined){
@@ -270,7 +275,7 @@ async function get_race(ip, port, force_update=false){
     return data
 }
 
-async function open_race_sidebar(ip, port, server=undefined){
+async function open_race_sidebar(ip, port, server=undefined, tab=-1){
     var sidebar = document.getElementById("main-sidebar");
     
     var loading_sidebar = document.getElementById("loading-sidebar");
@@ -308,7 +313,7 @@ async function open_race_sidebar(ip, port, server=undefined){
         return focused_server
     }
 
-    open_race(focused_server, false, false);
+    open_race(focused_server, false, (tab==-1 ? false : true), tab);
 
     setTimeout(
         () => {
@@ -474,7 +479,7 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
                 sorted_races.push(server.name);
                 server_ips.push([server.ip, server.port]);
 
-                var twitch_element = `<img src="${statics_url + 'images/twitch-icon.png'}" alt="twitch_logo" class="twitch-logo no-twitch" id="twitch-${server.ip}-${server.port}" title="Race might be live-streamed, click and go to drivers tab to watch! (hover on twitch link)"></img>`;
+                var twitch_element = `<img src="${statics_url + 'images/twitch-icon.png'}" alt="twitch_logo" onclick='openSidebarTab(event, "${server.ip}", ${server.port}, undefined, 1);' class="twitch-logo no-twitch" id="twitch-${server.ip}-${server.port}" title="Race might be live-streamed, click to watch! (hover on twitch link)"></img>`;
                 // twitch_element = twitch_icon_hover(twitch_element);
 
                 var race_html = `<div class="race-container" onclick='open_race_sidebar("${server.ip}", ${server.port});'>
@@ -665,7 +670,7 @@ function refreshPing(server, show_loading=true) {
 }
 
 
-function open_race(server, redirect=true, change_tab=true){
+function open_race(server, redirect=true, change_tab=true, to=0){
     if (redirect){
         location.href = "?ip=" + server.ip + "&port=" + server.port;
     }
@@ -675,7 +680,12 @@ function open_race(server, redirect=true, change_tab=true){
         var sidebar = document.getElementById("main-sidebar");
 
         if (change_tab) {
-            moveToFirst();
+            if (to == 0) {
+                moveToFirst();
+            }
+            else if (to == 1) {
+                moveToSecond();
+            }
         }
         
         sidebar.style.right = 0;
