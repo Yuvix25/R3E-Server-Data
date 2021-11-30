@@ -73,9 +73,6 @@ function twitch_hover(element_string, url=undefined) {
 function twitch_icon_hover(element_string, url=undefined) {
     var twitch_regex = /(twitch\.tv\/[a-zA-Z0-9_]+)/ig;
         if (twitch_regex.test(url) || url==undefined){
-
-            
-
             contains_twitch = true;
             var channel;
             
@@ -134,19 +131,11 @@ function urlify(text) {
                 found_channel = channel;
             });
             
-            new_element = `<a class="twitch-link" id="twitch-link-${channel}" href="#" onclick="openTeamUrl(event, \'` + url + '\');">' + url_text + '</a>';
-            // new_element += `<div class="twitch-embed-container" onclick="openTeamUrl(event, \'` + url + `\');"><div class="twitch-embed">
-            //                 <iframe
-            //                     style="margin-top: 15px; box-shadow: 3px 3px 30px #000000; border: 0px;"
-            //                     src="https://player.twitch.tv/?channel=${channel}&parent=r3e-server-data.herokuapp.com&muted=true"
-            //                     width="100%"
-            //                     height="100%"
-            //                     allowfullscreen="true">
-            //                 </iframe></div></div>`;
+            new_element = `<a class="twitch-link" id="twitch-link-${channel}" href="${url}" onclick="event.stopPropagation();">` + url_text + '</a>';
             new_element = twitch_hover(new_element, url);
         }
         else {
-            new_element = '<a class="link" href="#" onclick="openTeamUrl(event, \'' + url + '\');">' + url_text + '</a>';
+            new_element = `<a class="link" href="${url}" onclick="event.stopPropagation();">` + url_text + '</a>';
         }
         return new_element;
     });
