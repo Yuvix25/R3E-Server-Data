@@ -1,7 +1,7 @@
-import json
+import json, threading
 from flask import Flask, render_template, request
 from utils import get_all_races, get_race, parse_race_name
-
+# from firebase_interaction import *
 
 app = Flask(__name__)
 
@@ -25,6 +25,18 @@ def index():
     
     return render_template('index.html', errors=errors, focused_server=focused_server)
 
+# @app.route('/user_history', methods=['GET', 'POST'])
+# def user_history():
+#     errors = []
+#     data = []
+
+#     try:
+#         data = get_user_data()
+#     except Exception as e:
+#         print(e)
+#         errors.append(e)
+
+#     return render_template('user_history.html', errors=errors, data=data)
 
 
 @app.route('/get_race_list', methods=['GET', 'POST'])
@@ -36,6 +48,8 @@ def send_race():
     # return json.dumps(get_race(parse_race_name(request.args.get('name'))).__dict__)
     race = get_race(request.args.get('ip'), request.args.get('port'))
     if race is not None:
+        # t = threading.Thread(target=update_user_data, args=(race.players,))
+        # t.start()
         return json.dumps(race.__dict__)
     else:
         return json.dumps(["closed"])

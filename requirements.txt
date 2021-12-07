@@ -4,3 +4,5 @@ gunicorn
 grequests
 gevent
 requests_cache
+firebase-admin
+# grpcio

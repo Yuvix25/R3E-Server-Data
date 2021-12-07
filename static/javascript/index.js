@@ -25,6 +25,11 @@ var started_at = Date.now();
 var auto_refresh_every = 60; // seconds
 var disable_after = 60; // minutes
 
+
+
+const twitch_regex = /(twitch\.tv\/[a-zA-Z0-9_]+)/ig;
+const urlRegex = /(http(s)?:\/\/)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9]{1,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)?/ig;
+
 function openTeamUrl(ev, url){
     window.open(url, '_blank').focus();
     ev.stopPropagation();
@@ -36,91 +41,87 @@ function openSidebarTab(ev, ip, port, server=undefined, tab=0) {
 }
 
 function twitch_hover(element_string, url=undefined) {
-    var twitch_regex = /(twitch\.tv\/[a-zA-Z0-9_]+)/ig;
-        if (twitch_regex.test(url) || url==undefined){
+    if (twitch_regex.test(url) || url==undefined){
 
-            if (url==undefined){
-                url = "<URL>";
-            }
+        if (url==undefined){
+            url = "<URL>";
+        }
 
-            contains_twitch = true;
-            var channel;
+        contains_twitch = true;
+        var channel;
+        var tmp_url = url.slice();
+
+        tmp_url.replace(twitch_regex, function(twitch_url) {
+            channel = twitch_url.replace("twitch.tv/", "");
+        });
+
+        var element = document.createElement('div');
+        element.innerHTML = element_string;
+        element = element.firstChild;
+
+        element.classList.add("twitch-hover");
+        element.innerHTML += `<div class="twitch-embed-container" onclick="openTeamUrl(event, \'` + url + `\');"><div class="twitch-embed">
+                                <iframe
+                                    style="margin-top: 15px; box-shadow: 3px 3px 30px #000000; border: 0px;"
+                                    src="https://player.twitch.tv/?channel=${channel}&parent=r3e-server-data.herokuapp.com&muted=true"
+                                    width="100%"
+                                    height="100%"
+                                    allowfullscreen="true">
+                                </iframe></div>
+                            </div>`
+        
+        return element.outerHTML;
+    }
+}
+
+function twitch_icon_hover(element_string, url=undefined) {
+    if (twitch_regex.test(url) || url==undefined){
+        contains_twitch = true;
+        var channel;
+        
+
+        if (url != undefined){
             var tmp_url = url.slice();
 
             tmp_url.replace(twitch_regex, function(twitch_url) {
                 channel = twitch_url.replace("twitch.tv/", "");
             });
+        }
+        else {
+            channel = "<URL>"
+        }
 
-            var element = document.createElement('div');
-            element.innerHTML = element_string;
-            element = element.firstChild;
+        var element = document.createElement('div');
+        element.innerHTML = element_string;
+        element = element.firstChild;
+        var id = element.id;
+        element.id = "";
 
-            element.classList.add("twitch-hover");
-            element.innerHTML += `<div class="twitch-embed-container" onclick="openTeamUrl(event, \'` + url + `\');"><div class="twitch-embed">
-                                    <iframe
-                                        style="margin-top: 15px; box-shadow: 3px 3px 30px #000000; border: 0px;"
-                                        src="https://player.twitch.tv/?channel=${channel}&parent=r3e-server-data.herokuapp.com&muted=true"
-                                        width="100%"
-                                        height="100%"
-                                        allowfullscreen="true">
-                                    </iframe></div>
-                                </div>`
-            
-            return element.outerHTML;
-    }
-}
-
-function twitch_icon_hover(element_string, url=undefined) {
-    var twitch_regex = /(twitch\.tv\/[a-zA-Z0-9_]+)/ig;
-        if (twitch_regex.test(url) || url==undefined){
-            contains_twitch = true;
-            var channel;
-            
-
-            if (url != undefined){
-                var tmp_url = url.slice();
-
-                tmp_url.replace(twitch_regex, function(twitch_url) {
-                    channel = twitch_url.replace("twitch.tv/", "");
-                });
-            }
-            else {
-                channel = "<URL>"
-            }
-
-            var element = document.createElement('div');
-            element.innerHTML = element_string;
-            element = element.firstChild;
-            var id = element.id;
-            element.id = "";
-
-            element.classList.add("twitch-expand-disappear");
-            element.classList.remove("no-twitch");
-            return `
-            <div class="twitch-hover-expand no-twitch" id="${id}">
-                ${element.outerHTML}
-                <div class="twitch-expand-appear">
-                    <iframe
-                        style="box-shadow: 3px 3px 30px #000000; border: 0px;"
-                        src="https://player.twitch.tv/?channel=${channel}&parent=r3e-server-data.herokuapp.com&muted=true"
-                        width="100%"
-                        height="100%"
-                        allowfullscreen="false">
-                    </iframe>
-                </div>
-            </div>`
+        element.classList.add("twitch-expand-disappear");
+        element.classList.remove("no-twitch");
+        return `
+        <div class="twitch-hover-expand no-twitch" id="${id}">
+            ${element.outerHTML}
+            <div class="twitch-expand-appear">
+                <iframe
+                    style="box-shadow: 3px 3px 30px #000000; border: 0px;"
+                    src="https://player.twitch.tv/?channel=${channel}&parent=r3e-server-data.herokuapp.com&muted=true"
+                    width="100%"
+                    height="100%"
+                    allowfullscreen="false">
+                </iframe>
+            </div>
+        </div>`
     }
 }
 
 function urlify(text) {
-    var urlRegex = /(http(s)?:\/\/)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/ig;
     var found_channel = false;
     text = text.replace(urlRegex, function(url) {
         url_text = url;
         if (!url.startsWith("http")){
             url = "https://" + url;
         }
-        var twitch_regex = /(twitch\.tv\/[a-zA-Z0-9_]+)/ig;
         var new_element;
         if (twitch_regex.test(url)){
             contains_twitch = true;
@@ -131,7 +132,7 @@ function urlify(text) {
                 found_channel = channel;
             });
             
-            new_element = `<a class="twitch-link" id="twitch-link-${channel}" href="${url}" onclick="event.stopPropagation();">` + url_text + '</a>';
+            new_element = `<a class="twitch-link" id="twitch-link-${channel}" href="${url}" target="_blank" onclick="event.stopPropagation();">` + url_text + '</a>';
             new_element = twitch_hover(new_element, url);
         }
         else {
