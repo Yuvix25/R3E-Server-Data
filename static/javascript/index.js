@@ -533,7 +533,7 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
     }
 
     var filtered_race_list = sorted_race_list.filter(server => {
-        return (region == "all" || server.name.toLowerCase().includes(region.toLowerCase()) || server.name.toLowerCase().includes(specailNamedRegions[region.toLowerCase()])) && (level == "all" || server.level.toLowerCase().includes(level.toLowerCase()) || (level == "elite" && server.level.toLowerCase().includes("gold")))
+        return (region == "all" || server.name.toLowerCase().includes(region.toLowerCase()) || server.name.toLowerCase().includes(specialNamedRegions[region.toLowerCase()])) && (level == "all" || server.level.toLowerCase().includes(level.toLowerCase()) || (level == "elite" && server.level.toLowerCase().includes("gold")))
     });
 
     for (let server of current_races){
@@ -595,7 +595,7 @@ var raceroomRegions = {
     'am': 'us-west-2'
 }
 
-var specailNamedRegions = {
+var specialNamedRegions = {
     'europe' : 'eu',
     'america' : 'america',
     'oceania' : 'oceania',
@@ -646,14 +646,15 @@ function refreshPing(server, show_loading=true) {
         document.getElementById("sidebar-ping").innerHTML = "loading...";
     }
 
+    var tmp_name = server.name.toLowerCase()
     var reg;
-    if (server.name.includes("Europe")) {
+    if (tmp_name.includes("europe") || tmp_name.includes(specialNamedRegions["europe"])) {
         reg = "eu";
     }
-    else if (server.name.includes("Oceania")) {
+    else if (tmp_name.includes("oceania") || tmp_name.includes(specialNamedRegions["oceania"])) {
         reg = "oc";
     }
-    else if (server.name.includes("America")) {
+    else if (tmp_name.includes("america") || tmp_name.includes(specialNamedRegions["america"])) {
         reg = "am";
     }
     pingRegion(raceroomRegions[reg], (time) => {document.getElementById("sidebar-ping").innerHTML = time + "ms";});
