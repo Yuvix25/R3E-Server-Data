@@ -30,6 +30,51 @@ var disable_after = 60; // minutes
 const twitch_regex = /(twitch\.tv\/[a-zA-Z0-9_]+)/ig;
 const urlRegex = /(http(s)?:\/\/)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9]{1,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)?/ig;
 
+
+
+function pushState(data, unused, url) {
+    if (location.href != url) {
+        console.log(location.href + " " + url);
+        history.pushState(data, unused, url);
+    }
+}
+
+function getParam(key) {
+    var urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(key);
+}
+
+function clearQueryString() {
+    var url = window.location.href;
+    var url_parts = url.split("?");
+    if (url_parts.length > 1) {
+        url = url_parts[0];
+    }
+    pushState({change:'main'}, '', url);
+}
+
+function updateQueryStringParameter(uri, key, value) {
+    var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+    var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+    if (uri.match(re)) {
+        return uri.replace(re, '$1' + key + "=" + value + '$2');
+    }
+    else {
+        return uri + separator + key + "=" + value;
+    }
+}
+
+function queryExists(key) {
+    var url = window.location.href;
+    if(url.indexOf('?' + key + '=') != -1)
+        return true;
+    else if(url.indexOf('&' + key + '=') != -1)
+        return true;
+    return false
+}
+
+
+
 function openTeamUrl(ev, url){
     window.open(url, '_blank').focus();
     ev.stopPropagation();
@@ -136,7 +181,7 @@ function urlify(text) {
             new_element = twitch_hover(new_element, url);
         }
         else {
-            new_element = `<a class="link" href="${url}" onclick="event.stopPropagation();">` + url_text + '</a>';
+            new_element = `<a class="link" href="${url}" target="_blank" onclick="event.stopPropagation();">` + url_text + '</a>';
         }
         return new_element;
     });
@@ -241,7 +286,7 @@ async function get_race(ip, port, force_update=false){
 
     if (force_update) {
         setTimeout(() => {
-            open_race_sidebar(ip, port, data); 
+            open_race_sidebar(ip, port, data, -1, false); 
         }, 300);
     }
 
@@ -265,7 +310,22 @@ async function get_race(ip, port, force_update=false){
     return data
 }
 
-async function open_race_sidebar(ip, port, server=undefined, tab=-1){
+async function open_race_sidebar(ip, port, server=undefined, tab=-1, push_state=true){
+    if (server == undefined){
+        sidebar_opened = true;
+    }
+
+    if (push_state) {
+        var new_url = updateQueryStringParameter(window.location.href, 'ip', ip);
+        new_url = updateQueryStringParameter(new_url, 'port', port);
+        if (tab != -1){
+            new_url = updateQueryStringParameter(new_url, 'tab', tab);
+        }
+        
+        pushState({change:'open'}, '', new_url);
+    }
+
+
     var sidebar = document.getElementById("main-sidebar");
     
     var loading_sidebar = document.getElementById("loading-sidebar");
@@ -274,7 +334,7 @@ async function open_race_sidebar(ip, port, server=undefined, tab=-1){
         loading_sidebar.style.right = 0;
     }
 
-    sidebar_opened = true;
+    
 
     // var data;
 
@@ -297,10 +357,11 @@ async function open_race_sidebar(ip, port, server=undefined, tab=-1){
     
     focused_server = tmp_focused_server;
 
-    document.getElementById("race-list").style.width = "calc(100vw - var(--sidebar-width) + 25px)"
+    document.getElementById("race-list").style.width = "calc(100vw - var(--sidebar-width) + 25px)";
 
     if (!sidebar_opened) {
-        return focused_server
+        close_sidebar(false);
+        return focused_server;
     }
 
     open_race(focused_server, false, (tab==-1 ? false : true), tab);
@@ -553,11 +614,56 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
 }
 
 
-
 // create_race_list();
+
+function openSidebarFromQuery(push_state=true) {
+    if (queryExists('ip') && queryExists('port')) {
+        if (queryExists('tab')) {
+            open_race_sidebar(getParam('ip'), getParam('port'), undefined, parseInt(getParam('tab')), push_state);
+        }
+        else {
+            open_race_sidebar(getParam('ip'), getParam('port'), undefined, 1, push_state);
+        }
+    }
+}
+
+window.onpopstate = function(event) {
+    console.log(history.state)
+    if (history.state == null) {
+        if (queryExists('ip') && queryExists('port')) {
+            history.state.change = 'open';
+        }
+        else {
+            history.state.change = 'main';
+        }
+    }
+
+    console.log(history.state.change)
+    if (history.state.change == 'tab') { 
+        if (getParam('tab') == '1') { 
+            moveToFirst(false);
+        }
+        else if (getParam('tab') == '2') { 
+            moveToSecond(false);
+        }
+    }
+    else if (history.state.change == 'main') {
+        close_sidebar(false);
+    }
+    else if (history.state.change == 'open') {
+        openSidebarFromQuery(false);
+    }
+    else {
+        location.reload();
+    }
+};
+
 
 document.addEventListener('DOMContentLoaded', async (event) => {
     await loadFilters();
+    
+    openSidebarFromQuery(false);
+
     for (const server of server_ips) {
         get_race(server[0], server[1]);
     }
@@ -671,11 +777,11 @@ function open_race(server, redirect=true, change_tab=true, to=0){
         var sidebar = document.getElementById("main-sidebar");
 
         if (change_tab) {
-            if (to == 0) {
-                moveToFirst();
+            if (to == 1) {
+                moveToFirst(false);
             }
-            else if (to == 1) {
-                moveToSecond();
+            else if (to == 2) {
+                moveToSecond(false);
             }
         }
         
@@ -778,8 +884,13 @@ function open_race(server, redirect=true, change_tab=true, to=0){
     }
 }
 
-function close_sidebar(){
+function close_sidebar(push_state=true){
     sidebar_opened = false;
+
+    if (push_state){
+        clearQueryString();
+    }
+    
     var sidebar = document.getElementById("main-sidebar");
     sidebar.style.right = "calc(0px - var(--sidebar-width) - 25px)";
     sidebar = document.getElementById("loading-sidebar");
@@ -800,13 +911,23 @@ function close_sidebar(){
 }
 
 
-function moveToFirst() {
+function moveToFirst(push_state=true) {
+    if ((!queryExists('tab') || getParam('tab') == '2') && push_state) {
+        var new_url = updateQueryStringParameter(window.location.href, 'tab', '1');
+        pushState({change:'tab'}, '', new_url);
+    }
+
     document.getElementById("slide").className = "move-to-first";
     document.getElementById("tab2").className = "tab";
     document.getElementById("tab1").className = "tab selected";
 }
 
-function moveToSecond() {
+function moveToSecond(push_state=true) {
+    if ((!queryExists('tab') || getParam('tab') == '1') && push_state) {
+        var new_url = updateQueryStringParameter(window.location.href, 'tab', '2');
+        pushState({change:'tab'}, '', new_url);
+    }
+
     document.getElementById("slide").className = "move-to-second";
     document.getElementById("tab1").className = "tab";
     document.getElementById("tab2").className = "tab selected";

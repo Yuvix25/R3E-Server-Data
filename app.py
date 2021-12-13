@@ -46,7 +46,11 @@ def send_race_list():
 @app.route('/get_race', methods=['GET', 'POST'])
 def send_race():
     # return json.dumps(get_race(parse_race_name(request.args.get('name'))).__dict__)
-    race = get_race(request.args.get('ip'), request.args.get('port'))
+    race = None
+    try:
+        race = get_race(request.args.get('ip'), request.args.get('port'))
+    except Exception as e:
+        print(e)
     if race is not None:
         # t = threading.Thread(target=update_user_data, args=(race.players,))
         # t.start()
