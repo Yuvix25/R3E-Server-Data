@@ -34,7 +34,6 @@ const urlRegex = /(http(s)?:\/\/)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9]{1,6
 
 function pushState(data, unused, url) {
     if (location.href != url) {
-        console.log(location.href + " " + url);
         history.pushState(data, unused, url);
     }
 }
@@ -628,18 +627,20 @@ function openSidebarFromQuery(push_state=true) {
 }
 
 window.onpopstate = function(event) {
-    console.log(history.state)
+    var state;
     if (history.state == null) {
         if (queryExists('ip') && queryExists('port')) {
-            history.state.change = 'open';
+            state = {change:'open'};
         }
         else {
-            history.state.change = 'main';
+            state = {change:'main'};
         }
     }
-
-    console.log(history.state.change)
-    if (history.state.change == 'tab') { 
+    else {
+        state = history.state;
+    }
+    
+    if (state.change == 'tab') { 
         if (getParam('tab') == '1') { 
             moveToFirst(false);
         }
@@ -647,10 +648,10 @@ window.onpopstate = function(event) {
             moveToSecond(false);
         }
     }
-    else if (history.state.change == 'main') {
+    else if (state.change == 'main') {
         close_sidebar(false);
     }
-    else if (history.state.change == 'open') {
+    else if (state.change == 'open') {
         openSidebarFromQuery(false);
     }
     else {
