@@ -267,8 +267,12 @@ def get_car_data_by_livery(lid):
                 for livery in db["cars"][car_id]["liveries"]:
                     if livery["Id"] == lid:
                         return db["cars"][car_id], car_id
-
-        car, car_id = livery_find_loop()
+        try:
+            car, car_id = livery_find_loop()
+        except Exception as e:
+            print(f"Livery {lid} not found")
+            return None, None
+        
         if car is None:
             update_local_db(update_full_every=0)
             car, car_id = livery_find_loop()
@@ -366,6 +370,9 @@ def get_track_layout_data(tid):
 
 
                 return track, layout
+    
+    print(f"Track {tid} not found")
+    return None, None
 
 
 def name_as_path(name):
@@ -461,6 +468,8 @@ class Race:
 
     def get_track_data(self):
         self.track, self.track_layout = get_track_layout_data(self.track_layout_id)
+        if self.track is None or self.track_layout is None:
+            return None, None
         # self.track_thumbnail = f"https://prod.r3eassets.com/assets/content/track/{name_as_path(self.track['Name'])}-{self.track['Id']}-signature-original.webp"
         self.track_thumbnail = f"https://prod.r3eassets.com/assets/content/track/{name_as_path(self.track['Name'])}-{self.track['Id']}-image-full.webp"
         self.track_logo = f"https://prod.r3eassets.com/assets/content/track/{name_as_path(self.track['Name'])}-{self.track['Id']}-logo-original.webp"
@@ -485,6 +494,8 @@ class Race:
         for lid in self.livery_ids:
             if lid not in found_liveries:
                 car, car_class = get_car_data_by_livery(lid)
+                if car is None or car_class is None:
+                    continue
 
                 # f = open(R3E_PATH, encoding="utf-8")
                 # db = f.read()
@@ -546,10 +557,12 @@ def get_all_races():
     races = []
     for i in ranked:
         race = Race(i)
+        print(race.name)
         race.get_track_data()
         race.get_first_livery()
         race.get_car_data()
         races.append(race)
+        print("Done")
     
     return sorted(races, key = lambda x: len(x.player_ids))[::-1]
 

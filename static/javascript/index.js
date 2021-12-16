@@ -31,7 +31,6 @@ const twitch_regex = /(twitch\.tv\/[a-zA-Z0-9_]+)/ig;
 const urlRegex = /(http(s)?:\/\/)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9]{1,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)?/ig;
 
 
-
 function pushState(data, unused, url) {
     if (location.href != url) {
         history.pushState(data, unused, url);
@@ -71,6 +70,75 @@ function queryExists(key) {
         return true;
     return false
 }
+
+
+
+
+
+
+
+
+/**
+ * Convert absolute CSS numerical values to pixels.
+ *
+ * @link https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Values_and_units#numbers_lengths_and_percentages
+ *
+ * @param {string} cssValue
+ * @param {null|HTMLElement} target Used for relative units.
+ * @return {*}
+ */
+ window.convertCssUnit = function( cssValue, target ) {
+
+    target = target || document.body;
+
+    const supportedUnits = {
+
+        // Absolute sizes
+        'px': value => value,
+        'cm': value => value * 38,
+        'mm': value => value * 3.8,
+        'q': value => value * 0.95,
+        'in': value => value * 96,
+        'pc': value => value * 16,
+        'pt': value => value * 1.333333,
+
+        // Relative sizes
+        'rem': value => value * parseFloat( getComputedStyle( document.documentElement ).fontSize ),
+        'em': value => value * parseFloat( getComputedStyle( target ).fontSize ),
+        'vw': value => value / 100 * window.innerWidth,
+        'vh': value => value / 100 * window.innerHeight,
+
+        // Times
+        'ms': value => value,
+        's': value => value * 1000,
+
+        // Angles
+        'deg': value => value,
+        'rad': value => value * ( 180 / Math.PI ),
+        'grad': value => value * ( 180 / 200 ),
+        'turn': value => value * 360
+
+    };
+
+    // Match positive and negative numbers including decimals with following unit
+    const pattern = new RegExp( `^([\-\+]?(?:\\d+(?:\\.\\d+)?))(${ Object.keys( supportedUnits ).join( '|' ) })$`, 'i' );
+
+    // If is a match, return example: [ "-2.75rem", "-2.75", "rem" ]
+    const matches = String.prototype.toString.apply( cssValue ).trim().match( pattern );
+
+    if ( matches ) {
+        const value = Number( matches[ 1 ] );
+        const unit = matches[ 2 ].toLocaleLowerCase();
+
+        // Sanity check, make sure unit conversion function exists
+        if ( unit in supportedUnits ) {
+            return supportedUnits[ unit ]( value );
+        }
+    }
+
+    return cssValue;
+
+};
 
 
 
@@ -501,14 +569,32 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
         time_lefts = [];
         sorted_races = [];
         server_ips = [];
+        
+        var track_car_width = getComputedStyle(document.body).getPropertyValue('--race-container-width');
+        track_car_width = window.convertCssUnit(track_car_width) - window.convertCssUnit("12px");
+        console.log(track_car_width);
+
+        var track_car_height = getComputedStyle(document.body).getPropertyValue('--track-car-height');
+        track_car_height = window.convertCssUnit(track_car_height);
+
+        console.log(track_car_width, track_car_height);
 
         var new_inner = sorted_race_list.map(
             (server, index) => {
 
+                var base = "0";
+                var growth = "0";
+                if (server.classes_thumbnails.length > 4) {
+                    base = 100 / server.classes_thumbnails.length * 1.3 + "%";
+                }
+                else {
+                    growth = "calc(0.48 * var(--track-car-height) / (var(--race-container-width) - 12px))";
+                    console.log(growth)
+                }
                 var classes_thumbnails = '';
                 server.classes_thumbnails.forEach(
                     (thumb) => {
-                        classes_thumbnails += `<img src="${thumb}" alt="class_thumbnail" class="class-img logo-row-item"></img>`;
+                        classes_thumbnails += `<img src="${thumb}" alt="class_thumbnail" class="class-img logo-row-item" style="flex: ${growth} 1 ${base} !important;"></img>`;
                     }
                 )
 
@@ -541,7 +627,7 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
                                             <img src="${server.track_map}" alt="track_map" class="track-logo logo-row-item"></img>
                                         </div>
                                         ${twitch_element}
-                                        <div style="display: flex; position: absolute; bottom: 0px; left: 5px; height: 48%; width: calc(100% - 10px); align-items: center;">
+                                        <div class="car-classes">
                                             ${classes_thumbnails}
                                         </div>
                                     </div>

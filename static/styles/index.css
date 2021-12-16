@@ -43,6 +43,7 @@ div {
 :root {
     --sidebar-width: 40vw;
     --race-container-width: 98vw;
+    --track-car-height: 400px;
 }
 
 
@@ -53,6 +54,7 @@ div {
 @media only screen and (max-width: 1400px) {
     :root {
         --sidebar-width: 50vw;
+        --track-car-height: 250px;
     }
     .thumbnail {
         display: none;
@@ -68,9 +70,6 @@ div {
     }
     #sidebar-footer {
         display: none !important;
-    }
-    .track-car {
-        height: 250px !important;
     }
     #sidebar-track-details {
         height: 18vh !important;
@@ -151,20 +150,14 @@ div {
     } */
     :root {
         --race-container-width: 23vw !important;
-    }
-
-    .track-car {
-        height: 230px !important;
+        --track-car-height: 230px;
     }
 }
 
 @media only screen and (min-width: 1581px) and (max-width: 2039px) {
     :root {
         --race-container-width: 18vw;
-    }
-
-    .track-car {
-        height: 250px !important;
+        --track-car-height: 250px;
     }
 
     /* .race-container {
@@ -178,9 +171,7 @@ div {
     } */
     :root {
         --race-container-width: 18vw;
-    }
-    .track-car {
-        height: 230px !important;
+        --track-car-height: 230px;
     }
 }
 
@@ -190,10 +181,7 @@ div {
     } */
     :root {
         --race-container-width: 13.4vw;
-    }
-
-    .track-car {
-        height: 200px !important;
+        --track-car-height: 200px;
     }
 
     .race-container {
@@ -451,7 +439,7 @@ input {
 .track-car {
     position: relative;
     width: 100%;
-    height: 400px;
+    height: var(--track-car-height);
 }
 
 .track-img {
@@ -462,6 +450,23 @@ input {
     height: 100%;
 }
 
+.car-classes {
+    display: flex;
+    position: absolute;
+    bottom: 0px;
+    left: 5px;
+    height: 48%;
+    width: calc(100% - 10px);
+    align-items: center;
+    /* flex-flow: row wrap; */
+}
+
+.class-img {
+    margin: 0px;
+    flex: calc(1 / 10) 1 calc(10% - 0px);
+    -webkit-filter: drop-shadow(2px 2px 8px rgb(50, 50, 50));
+    filter: drop-shadow(2px 2px 8px rgb(50, 50, 50));
+}
 
 .logo-row-item {
     flex: 0 1 auto;
@@ -491,12 +496,6 @@ input {
 
 .no-twitch {
     display: none;
-}
-
-.class-img {
-    margin: 0;
-    -webkit-filter: drop-shadow(2px 2px 8px rgb(50, 50, 50));
-    filter: drop-shadow(2px 2px 8px rgb(50, 50, 50));
 }
 
 .circle {
