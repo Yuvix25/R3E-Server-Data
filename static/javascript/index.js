@@ -572,12 +572,9 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
         
         var track_car_width = getComputedStyle(document.body).getPropertyValue('--race-container-width');
         track_car_width = window.convertCssUnit(track_car_width) - window.convertCssUnit("12px");
-        console.log(track_car_width);
 
         var track_car_height = getComputedStyle(document.body).getPropertyValue('--track-car-height');
         track_car_height = window.convertCssUnit(track_car_height);
-
-        console.log(track_car_width, track_car_height);
 
         var new_inner = sorted_race_list.map(
             (server, index) => {
@@ -589,7 +586,6 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
                 }
                 else {
                     growth = "calc(0.48 * var(--track-car-height) / (var(--race-container-width) - 12px))";
-                    console.log(growth)
                 }
                 var classes_thumbnails = '';
                 server.classes_thumbnails.forEach(

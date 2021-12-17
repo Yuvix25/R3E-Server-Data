@@ -122,7 +122,7 @@ def update_local_db(update_full_every=3, reset_small_every="friday"):
 
         diff = (now - last_save) / (60*60*24)
     
-
+    updated_r3e_data = False
     if (not os.path.isfile(R3E_PATH)) or diff > update_full_every:
         with urllib.request.urlopen("https://raw.githubusercontent.com/sector3studios/r3e-spectator-overlay/master/r3e-data.json", context=CONTEXT) as web_data:
             data = web_data.read().decode()
@@ -131,6 +131,7 @@ def update_local_db(update_full_every=3, reset_small_every="friday"):
             f.close()
 
             R3E_DB = json.loads(data)
+            updated_r3e_data = True
     
 
     # Small DBs:
@@ -139,11 +140,14 @@ def update_local_db(update_full_every=3, reset_small_every="friday"):
     #     f = open(SMALL_PLAYERS_PATH, "w")
     #     f.write("[]")
     #     f.close()
-    
+    resetted_small_db = False
     if datetime.today().strftime('%A').lower == reset_small_every or (not os.path.isfile(SMALL_R3E_PATH)):
         f = open(SMALL_R3E_PATH, "w")
         f.write(json.dumps({"cars":dict(), "classes":dict(), "tracks":dict()}))
         f.close()
+        resetted_small_db = True
+    
+    return updated_r3e_data, resetted_small_db
 
 
 def get_player_data_old(pid):
@@ -267,15 +271,20 @@ def get_car_data_by_livery(lid):
                 for livery in db["cars"][car_id]["liveries"]:
                     if livery["Id"] == lid:
                         return db["cars"][car_id], car_id
-        try:
-            car, car_id = livery_find_loop()
-        except Exception as e:
-            print(f"Livery {lid} not found")
             return None, None
         
+
+        car, car_id = livery_find_loop()
+        
         if car is None:
-            update_local_db(update_full_every=0)
+            print(f"Livery {lid} not found")
+            updated, _ = update_local_db(update_full_every=2/24/60) # 2 minutes
+            if updated:
+                print("Updated content database")
+            
             car, car_id = livery_find_loop()
+            if car is None:
+                return None, None
         
         car_class = db["classes"][str(car["Class"])]
 
@@ -372,6 +381,11 @@ def get_track_layout_data(tid):
                 return track, layout
     
     print(f"Track {tid} not found")
+    updated, _ = update_local_db(update_full_every=2/24/60)
+    if updated:
+        print("Updated content database")
+        get_track_layout_data(tid)
+    
     return None, None
 
 
