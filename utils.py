@@ -52,6 +52,7 @@ CUT_RULES = {
 }
 
 
+LID_BLACKLIST = {9301, 9303, 10374, 10375, 10376, 10377, 10379, 10380, 10381, 10382, 10404, 10405, 10406, 10407, 10408, 10409, 10412, 10413, 10421, 10422, 10423, 10424, 10425, 10426, 10427, 10580, 10581, 10582, 10583, 10584, 10585, 10586, 10587, 10588, 10589, 10590, 10617, 10618, 10619, 10620, 10621, 10623, 10624, 10625, 10626, 10627, 10628, 10629, 10630, 10631, 10632, 10633, 10634, 10635, 10636, 10637, 10639, 10640, 10641, 10642, 10643, 10644, 10645, 10646, 10647, 10648, 10649, 10652, 10653, 10654, 10655, 10656, 10657, 10658, 10659, 10660, 10661, 10662, 10663, 10664, 10665, 10666, 10667, 10668, 10669, 10670, 10671, 10672, 10673, 10677, 10682, 10688, 10689}
 
 DB_LOCATION = "./db"
 # RATINGS_FILE = "ratings.json"
@@ -278,6 +279,7 @@ def get_car_data_by_livery(lid):
         
         if car is None:
             print(f"Livery {lid} not found")
+            LID_BLACKLIST.add(lid)
             updated, _ = update_local_db(update_full_every=2/24/60) # 2 minutes
             if updated:
                 print("Updated content database")
@@ -390,7 +392,7 @@ def get_track_layout_data(tid):
 
 
 def name_as_path(name):
-    return name.lower().replace(' ', '-').replace('ü', 'u').replace('å', 'a').replace('ó', 'o').replace('é', 'e').replace('á', 'a').replace('í', 'i').replace('ö', 'o').replace('ç', 'c').replace('ñ', 'n')
+    return name.lower().replace(' ', '-').replace('ü', 'u').replace('å', 'a').replace('ó', 'o').replace('é', 'e').replace('á', 'a').replace('í', 'i').replace('ö', 'o').replace('ç', 'c').replace('ñ', 'n').replace('(', '').replace(')', '')
 
 
 
@@ -506,7 +508,7 @@ class Race:
             load_r3e_db()
         
         for lid in self.livery_ids:
-            if lid not in found_liveries:
+            if lid not in found_liveries and lid not in LID_BLACKLIST:
                 car, car_class = get_car_data_by_livery(lid)
                 if car is None or car_class is None:
                     continue
@@ -577,7 +579,7 @@ def get_all_races():
         race.get_car_data()
         races.append(race)
         print("Done")
-    
+    # print(LID_BLACKLIST)
     return sorted(races, key = lambda x: len(x.player_ids))[::-1]
 
 
