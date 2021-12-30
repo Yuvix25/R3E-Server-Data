@@ -879,6 +879,9 @@ function open_race(server, redirect=true, change_tab=true, to=0){
         document.getElementById("sidebar-sof").innerHTML = Math.round(server.sof * 1000) / 1000;
         document.getElementById("sidebar-rep").innerHTML = Math.round(server.rep * 1000) / 1000;
 
+        document.getElementById("sidebar-min-rep").innerHTML = server.min_rep;
+        document.getElementById("sidebar-min-rating").innerHTML = server.min_rating;
+
         document.getElementById("sidebar-session").innerHTML = server.session;
 
         refreshPing(focused_server, change_tab);

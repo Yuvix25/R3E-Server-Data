@@ -28,6 +28,7 @@ LEVELS = {
         85 : "Elite",
     },
     1700 : {
+        75 : "Amateur",
         85 : "Gold",
     },
 }
@@ -415,8 +416,9 @@ class Race:
         if len(self.r_duration) > 1 and self.session == "Race":
             self.session += " #1"
         
-
-        if self.data["Settings"]["MinRating"] in LEVELS:
+        self.min_rating = self.data["Settings"]["MinRating"]
+        self.min_rep = self.data["Settings"]["MinReputation"]
+        if self.data["Settings"]["MinRating"] in LEVELS and self.data["Settings"]["MinReputation"] in LEVELS[self.data["Settings"]["MinRating"]]:
             self.level = LEVELS[self.data["Settings"]["MinRating"]][self.data["Settings"]["MinReputation"]]
         else:
             self.level = LEVELS[0][self.data["Settings"]["MinReputation"]]
