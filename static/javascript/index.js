@@ -345,6 +345,9 @@ async function get_race(ip, port, force_update=false, do_backend_update=false){
     else {
         data = await (await fetch(url + (do_backend_update ? "&update=1" : ""))).json();
         fetched_servers.set(url, data);
+        if (do_backend_update) {
+            applyFilters(true, true);
+        }
     }
     
     if (data == "closed") {

@@ -49,9 +49,9 @@ def send_race():
     race = None
     try:
         update = False
-        print(request.args)
         if request.args.get('update') is not None:
             update = True
+        
         race = get_race(request.args.get('ip'), request.args.get('port'), update)
     except Exception as e:
         print(e)
