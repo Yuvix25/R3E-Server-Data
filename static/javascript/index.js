@@ -935,10 +935,10 @@ function open_race(server, redirect=true, change_tab=true, to=0){
                                             <img src="https://game.raceroom.com/game/user_avatar/${driver.UserId}" alt="drvier_icon" class="driver-icon" style="margin-right: 8px; max-height: 60vh; max-width: 70%;">
                                         </div>
 
-                                        <div id="sidebar-track-text" style="flex: 4; padding-left: 30px !important; padding-right: 20px !important;">
+                                        <div id="sidebar-driver" style="flex: 4; padding-left: 30px !important; padding-right: 20px !important;">
                                             <h2 class="driver-name" style="margin-bottom: 10px;">${driver.Fullname}</h2>
                                             <div class="sidebar-team">
-                                            <h3 style="margin-top: 10px; text-align: left;">${driver.Team == "" ? "Privateer" : urlified[1]}</h3>
+                                            <h3 style="margin-top: 10px; text-align: left; max-width: calc((var(--sidebar-width) * 0.9 - 30px) * 4 / (3 + 4 + 2)); word-wrap: break-word;">${driver.Team == "" ? "Privateer" : urlified[1]}</h3>
                                             </div>
                                         </div>
                                         
