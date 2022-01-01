@@ -61,9 +61,10 @@
         </script>
         
         <div id="search-tools-wrapper">
-            <div id="search-tools" style="display: flex; flex-flow: row wrap; min-height: 4vh; width: 100%;">
-                <div style="display: flex; margin: 5px;">
-                    <label for="regions" style="min-width: 86px;">Region:</label>
+            {# <div id="search-tools" style="display: flex; flex-flow: row wrap; min-height: 4vh;"> #}
+            {# <div id="search-tools" style="min-height: 4vh; height: 100%;"> #}
+                <div class="search-tool">
+                    <label for="regions" style="min-width: 86px; line-height: 4vh;">Region:</label>
                     <div class="dropdown">
                         <select name="regions" id="regions-dropdown" class="dropdown-select" onchange="applyFilters();">
                             <option value="all">All</option>
@@ -74,8 +75,8 @@
                     </div>
                 </div>
                 
-                <div style="display: flex; margin: 5px;">
-                    <label for="levels" style="min-width: 86px;">Level:</label>
+                <div class="search-tool">
+                    <label for="levels" style="min-width: 86px; line-height: 4vh;">Level:</label>
                     <div class="dropdown">
                         <select name="levels" id="levels-dropdown" class="dropdown-select" onchange="applyFilters();">
                             <option value="all">All</option>
@@ -87,8 +88,8 @@
                     </div>
                 </div>
                 
-                <div style="display: flex; margin: 5px;">
-                    <label for="sort-by" style="min-width: 86px;">Sort By:</label>
+                <div class="search-tool">
+                    <label for="sort-by" style="min-width: 86px; line-height: 4vh;">Sort By:</label>
                     <div class="dropdown">
                         <select name="sort-by" id="sort-by-dropdown" class="dropdown-select" onchange="applyFilters(false, true);">
                             <option value="players">Player Count</option>
@@ -97,15 +98,15 @@
                             <option value="level">Level</option>
                         </select>
                     </div>
-
-                    <label id="reverse-label" style="margin-left: 20px;">
-                        <input id="reverse-order-checkbox" type="checkbox" onchange="applyFilters(false, true);"/>
-                        <img src="{{ url_for('static',filename='/images/reverse_order.png') }}" alt="reverse_order" style="height: 4vh;" id="reverse-order">
-                    </label>
                 </div>
+
+                <label id="reverse-label" style="margin-right: 40px; margin-top: 4px; float: left;">
+                    <input id="reverse-order-checkbox" type="checkbox" onchange="applyFilters(false, true);"/>
+                    <img src="{{ url_for('static',filename='/images/reverse_order.png') }}" alt="reverse_order" style="height: 4vh;" id="reverse-order">
+                </label>
                 
                 
-            </div>
+            {# </div> #}
             <!-- <img src="{{ url_for('static',filename='/images/search_icon.png') }}" alt="search_icon" style="height: 4vh; position: absolute; right: 40px;" id="search_icon" onclick="applyFilters();"> -->
         </div>
 

@@ -638,7 +638,7 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
                                         <div style="margin-left: 20px; position: relative;" class="server-details">
 
                                             <div class="name-level">
-                                                <h2 style="margin-right: 4px !important;">${server.name}</h2>
+                                                <h2 style="margin-right: 10px !important;">${server.name}</h2>
                                                     ${level_img}
                                             </div>
 

@@ -251,7 +251,7 @@ div {
 }
 
 .level-img {
-    height: 90%;
+    height: 80%;
 }
 
 .countdown p {
@@ -267,19 +267,28 @@ div {
     background-color: white;
     padding: 1vh !important;
     border-radius: 5px;
-    min-height: 6vh;
+    min-height: 5vh;
     margin: 20px;
-    display : flex;
-    align-items : center;
+    display: inline-block;
+    position: relative;
+    /* display : flex; */
+    /* align-items : center; */
+    /* max-width: 1000px; */
 }
 
 #search-tools {
-    align-items : center;
+    align-items: center;
 }
 
 #search-tools label {
     display: flex;
     align-items: center;
+}
+
+.search-tool {
+    display: flex;
+    margin: 5px;
+    float: left;
 }
 
 .dropdown {
