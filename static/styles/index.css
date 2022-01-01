@@ -264,13 +264,14 @@ div {
 #search-tools-wrapper {
     font-family: 'Roboto', sans-serif;
     font-size: 25px;
-    background-color: white;
+    background-color: rgb(255, 255, 255);
     padding: 1vh !important;
     border-radius: 5px;
     min-height: 5vh;
     margin: 20px;
     display: inline-block;
     position: relative;
+    box-shadow: 5px 5px 50px rgb(22, 22, 22);
     /* display : flex; */
     /* align-items : center; */
     /* max-width: 1000px; */
@@ -301,8 +302,8 @@ div {
     width: 150px;
     height: 4vh;
     background: #d8d8d8;
-    border: 1px solid;
-    border-color: white #f7f7f7 whitesmoke;
+    border: 0px solid;
+    /* border-color: white #f7f7f7 whitesmoke; */
     border-radius: 3px;
 }
 
