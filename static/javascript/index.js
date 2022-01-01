@@ -329,7 +329,7 @@ function joinFocusedServer(){
     window.open(url, '_blank').focus()
 }
 
-async function get_race(ip, port, force_update=false){
+async function get_race(ip, port, force_update=false, do_backend_update=false){
     var data;
     // await $.getJSON("/get_race?name=" + name.replaceAll(" ", "-").replaceAll("#", ""), (rec) => {
     //     data = rec;
@@ -337,12 +337,13 @@ async function get_race(ip, port, force_update=false){
 
     // data = await (await fetch("/get_race?name=" + name.replaceAll(" ", "_").replaceAll("#", "--h--").replaceAll("+", "--p--"))).json();
     var url = "/get_race?ip=" + ip + "&port=" + port;
+
     if (fetched_servers.has(url) && (!force_update)) {
         data = fetched_servers.get(url);
-        get_race(ip, port, true);
+        get_race(ip, port, true, do_backend_update);
     }
     else {
-        data = await (await fetch(url)).json()
+        data = await (await fetch(url + (do_backend_update ? "&update=1" : ""))).json();
         fetched_servers.set(url, data);
     }
     
@@ -377,7 +378,7 @@ async function get_race(ip, port, force_update=false){
     return data
 }
 
-async function open_race_sidebar(ip, port, server=undefined, tab=-1, push_state=true){
+async function open_race_sidebar(ip, port, server=undefined, tab=-1, push_state=true, do_backend_update=false){
     if (server == undefined){
         sidebar_opened = true;
     }
@@ -412,7 +413,7 @@ async function open_race_sidebar(ip, port, server=undefined, tab=-1, push_state=
     // }
 
     if (server == undefined) {
-        var tmp_focused_server = await get_race(ip, port)
+        var tmp_focused_server = await get_race(ip, port, false, do_backend_update);
     }
     else {
         var tmp_focused_server = server;
@@ -614,7 +615,7 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
                 var twitch_element = `<img src="${statics_url + 'images/twitch-icon.png'}" alt="twitch_logo" onclick='openSidebarTab(event, "${server.ip}", ${server.port}, undefined, 1);' class="twitch-logo no-twitch" id="twitch-${server.ip}-${server.port}" title="Race might be live-streamed, click to watch! (hover on twitch link)"></img>`;
                 // twitch_element = twitch_icon_hover(twitch_element);
 
-                var race_html = `<div class="race-container" onclick='open_race_sidebar("${server.ip}", ${server.port});'>
+                var race_html = `<div class="race-container" onclick='open_race_sidebar("${server.ip}", ${server.port}, undefined, -1, true, true);'>
                                     
                                     <div class="track-car">
                                         <img src="${server.track_thumbnail}" alt="track_thumbnail" class="track-img"></img>

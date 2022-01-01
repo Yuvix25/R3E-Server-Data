@@ -585,13 +585,18 @@ def get_all_races():
     return sorted(races, key = lambda x: len(x.player_ids))[::-1]
 
 
-def get_race(ip, port):
+def get_race(ip, port, update=False):
     port = int(port)
     update_local_db()
 
     # with urllib.request.urlopen("https://game.raceroom.com/multiplayer-rating/servers/", context=CONTEXT) as web_data:
     #     ranked = json.loads(web_data.read().decode())["result"]
-    ranked = get_local_servers()
+
+    print(update)
+    if update:
+        ranked = update_local_servers()
+    else:
+        ranked = get_local_servers()
 
     for i in ranked:
         if i["Server"]["ServerIp"] == ip and i["Server"]["Port"] == port:
