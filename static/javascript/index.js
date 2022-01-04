@@ -363,20 +363,21 @@ async function get_race(ip, port, force_update=false, do_backend_update=false){
         await applyFilters(true, true);
     }
 
-    var found_twitch = false;
-    for (const driver of data.players){
-        var urlified = urlify(driver.Team)
-        var twitch_icon = document.getElementById("twitch-" + data.ip + "-" + data.port);
-        if (urlified[0] != false && !found_twitch) {
-            console.log("found twitch");
-            if (twitch_icon.classList.contains("no-twitch")) {
-                twitch_icon.classList.remove("no-twitch");
+    for (const race of fetched_servers.values()){
+        var found_twitch = false;
+        for (const driver of race.players){
+            var urlified = urlify(driver.Team)
+            var twitch_icon = document.getElementById("twitch-" + race.ip + "-" + race.port);
+            if (urlified[0] != false && !found_twitch) {
+                if (twitch_icon.classList.contains("no-twitch")) {
+                    twitch_icon.classList.remove("no-twitch");
+                }
+                twitch_icon.innerHTML = twitch_icon.innerHTML.replace("<URL>", urlified[0]);
+                found_twitch = true;
             }
-            twitch_icon.innerHTML = twitch_icon.innerHTML.replace("<URL>", urlified[0]);
-            found_twitch = true;
-        }
-        else if (urlified[0] == false && !twitch_icon.classList.contains("no-twitch") && !found_twitch) {
-            twitch_icon.classList.add("no-twitch");
+            else if (urlified[0] == false && !twitch_icon.classList.contains("no-twitch") && !found_twitch) {
+                twitch_icon.classList.add("no-twitch");
+            }
         }
     }
     
