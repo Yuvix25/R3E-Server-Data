@@ -329,6 +329,7 @@ function joinFocusedServer(){
     window.open(url, '_blank').focus()
 }
 
+
 async function get_race(ip, port, force_update=false, do_backend_update=false){
     var data;
     // await $.getJSON("/get_race?name=" + name.replaceAll(" ", "-").replaceAll("#", ""), (rec) => {
@@ -345,9 +346,6 @@ async function get_race(ip, port, force_update=false, do_backend_update=false){
     else {
         data = await (await fetch(url + (do_backend_update ? "&update=1" : ""))).json();
         fetched_servers.set(url, data);
-        if (do_backend_update) {
-            applyFilters(true, true);
-        }
     }
     
     if (data == "closed") {
@@ -361,11 +359,16 @@ async function get_race(ip, port, force_update=false, do_backend_update=false){
         }, 300);
     }
 
+    if (do_backend_update && (!fetched_servers.has(url) || force_update)) {
+        await applyFilters(true, true);
+    }
+
     var found_twitch = false;
     for (const driver of data.players){
         var urlified = urlify(driver.Team)
         var twitch_icon = document.getElementById("twitch-" + data.ip + "-" + data.port);
         if (urlified[0] != false && !found_twitch) {
+            console.log("found twitch");
             if (twitch_icon.classList.contains("no-twitch")) {
                 twitch_icon.classList.remove("no-twitch");
             }
