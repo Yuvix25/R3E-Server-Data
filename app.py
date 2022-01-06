@@ -41,7 +41,11 @@ def index():
 
 @app.route('/get_race_list', methods=['GET', 'POST'])
 def send_race_list():
-    return json.dumps([race.__dict__ for race in get_all_races()])
+    update = True
+    if request.args.get('dontupdate') is not None:
+        update = False
+    
+    return json.dumps([race.__dict__ for race in get_all_races(update)])
 
 @app.route('/get_race', methods=['GET', 'POST'])
 def send_race():

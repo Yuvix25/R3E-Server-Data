@@ -564,13 +564,17 @@ def get_local_servers():
         return update_local_servers()
 
 
-def get_all_races():
+def get_all_races(update=True):
     update_local_db()
 
     # with urllib.request.urlopen("https://game.raceroom.com/multiplayer-rating/servers/", context=CONTEXT) as web_data:
     #     ranked = json.loads(web_data.read().decode())["result"]
 
-    ranked = update_local_servers()
+    print(update)
+    if update:
+        ranked = update_local_servers()
+    else:
+        ranked = get_local_servers()
 
     races = []
     for i in ranked:

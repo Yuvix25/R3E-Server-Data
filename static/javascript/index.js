@@ -10,6 +10,7 @@ var sorted_races = [];
 var server_ips = [];
 var fetched_servers = new Map();
 var focused_server;
+var current_server;
 var sidebar_opened = false;
 var statics_url;
 
@@ -330,7 +331,7 @@ function joinFocusedServer(){
 }
 
 
-async function get_race(ip, port, force_update=false, do_backend_update=false){
+async function get_race(ip, port, force_update=false, do_backend_update=false, update_current_server=true){
     var data;
     // await $.getJSON("/get_race?name=" + name.replaceAll(" ", "-").replaceAll("#", ""), (rec) => {
     //     data = rec;
@@ -338,6 +339,10 @@ async function get_race(ip, port, force_update=false, do_backend_update=false){
 
     // data = await (await fetch("/get_race?name=" + name.replaceAll(" ", "_").replaceAll("#", "--h--").replaceAll("+", "--p--"))).json();
     var url = "/get_race?ip=" + ip + "&port=" + port;
+
+    if (update_current_server) {
+        current_server = [ip, port];
+    }
 
     if (fetched_servers.has(url) && (!force_update)) {
         data = fetched_servers.get(url);
@@ -353,6 +358,10 @@ async function get_race(ip, port, force_update=false, do_backend_update=false){
         return;
     }
 
+    if (current_server != undefined && current_server[0] != ip && current_server[1] != port){
+        return;
+    }
+
     if (force_update) {
         setTimeout(() => {
             open_race_sidebar(ip, port, data, -1, false); 
@@ -360,7 +369,7 @@ async function get_race(ip, port, force_update=false, do_backend_update=false){
     }
 
     if (do_backend_update && (!fetched_servers.has(url) || force_update)) {
-        await applyFilters(true, true);
+        await applyFilters(true, true, false);
     }
 
     for (const race of fetched_servers.values()){
@@ -470,7 +479,7 @@ async function loadFilters(){
     
 
     if (region == null || level == null || sort_by == null || reverse == null){
-        return applyFilters(true, true);
+        return applyFilters(true, true, false);
     }
 
     document.getElementById("reverse-order-checkbox").checked = reverse;
@@ -488,7 +497,7 @@ async function loadFilters(){
 }
 
 
-async function applyFilters(reload_data=false, reorder=false){
+async function applyFilters(reload_data=false, reorder=false, update_backend=true){
     var reverse = document.getElementById("reverse-order-checkbox").checked;
 
     var select = document.getElementById("regions-dropdown");
@@ -505,11 +514,11 @@ async function applyFilters(reload_data=false, reorder=false){
     localStorage.setItem('sortby', sort_by);
     localStorage.setItem('reverse', reverse);
 
-    await create_race_list(region, level, sort_by + (reverse ? "-1" : ""), reload_data, reorder);
+    await create_race_list(region, level, sort_by + (reverse ? "-1" : ""), reload_data, reorder, update_backend);
 }
 
 
-async function create_race_list(region="all", level="all", sort_by="", reload_data=false, reorder=false){
+async function create_race_list(region="all", level="all", sort_by="", reload_data=false, reorder=false, update_backend=true){
     /*
     region: show only races form this region (options: all, europe, america, oceania).
     level : show only races of this level (options: all, rookie, am, pro).
@@ -538,7 +547,7 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
     }
     
     if (reload_data || race_list == undefined) {
-        race_list = await (await fetch("/get_race_list")).json();
+        race_list = await (await fetch("/get_race_list" + (update_backend ? "" : "?dontupdate"))).json();
         last_update_time = Date.now();
     }
 
@@ -756,7 +765,7 @@ document.addEventListener('DOMContentLoaded', async (event) => {
     openSidebarFromQuery(false);
 
     for (const server of server_ips) {
-        get_race(server[0], server[1]);
+        get_race(server[0], server[1], false, false, false);
     }
 })
 
