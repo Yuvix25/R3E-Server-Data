@@ -358,6 +358,7 @@ async function get_race(ip, port, force_update=false, do_backend_update=false, u
         return;
     }
 
+    console.log(current_server)
     if (current_server != undefined && current_server[0] != ip && current_server[1] != port){
         return;
     }
@@ -377,15 +378,17 @@ async function get_race(ip, port, force_update=false, do_backend_update=false, u
         for (const driver of race.players){
             var urlified = urlify(driver.Team)
             var twitch_icon = document.getElementById("twitch-" + race.ip + "-" + race.port);
-            if (urlified[0] != false && !found_twitch) {
-                if (twitch_icon.classList.contains("no-twitch")) {
-                    twitch_icon.classList.remove("no-twitch");
+            if (twitch_icon != undefined) {
+                if (urlified[0] != false && !found_twitch) {
+                    if (twitch_icon.classList.contains("no-twitch")) {
+                        twitch_icon.classList.remove("no-twitch");
+                    }
+                    twitch_icon.innerHTML = twitch_icon.innerHTML.replace("<URL>", urlified[0]);
+                    found_twitch = true;
                 }
-                twitch_icon.innerHTML = twitch_icon.innerHTML.replace("<URL>", urlified[0]);
-                found_twitch = true;
-            }
-            else if (urlified[0] == false && !twitch_icon.classList.contains("no-twitch") && !found_twitch) {
-                twitch_icon.classList.add("no-twitch");
+                else if (urlified[0] == false && !twitch_icon.classList.contains("no-twitch") && !found_twitch) {
+                    twitch_icon.classList.add("no-twitch");
+                }
             }
         }
     }
@@ -814,7 +817,7 @@ var specialUrls = {
 
 function testUrl(region) {
     return (region in specialUrls ?
-             specialUrls[region] : 'http://dynamodb.' + region + '.amazonaws.com/');
+             specialUrls[region] : 'https://dynamodb.' + region + '.amazonaws.com/');
             //  + 
             // 'does-not-exist?cache-break=' +
             //  Math.floor(Math.random() * Math.pow(2, 52)).toString(36);
