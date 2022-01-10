@@ -23,6 +23,7 @@ SESSIONS = {
 LEVELS = {
     0 : {
         0 : "Rookie",
+        75 : "Amateur",
         80 : "Amateur",
         85 : "Pro",
         90 : "Elite",
