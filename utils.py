@@ -25,7 +25,7 @@ LEVELS = {
         0 : "Rookie",
         80 : "Amateur",
         85 : "Pro",
-        # 85 : "Elite",
+        90 : "Elite",
     },
     1700 : {
         75 : "Amateur",
