@@ -23,6 +23,7 @@ SESSIONS = {
 LEVELS = {
     0 : {
         0 : "Rookie",
+        71 : "Amateur",
         75 : "Amateur",
         80 : "Amateur",
         85 : "Pro",
@@ -419,10 +420,13 @@ class Race:
         
         self.min_rating = self.data["Settings"]["MinRating"]
         self.min_rep = self.data["Settings"]["MinReputation"]
-        if self.data["Settings"]["MinRating"] in LEVELS and self.data["Settings"]["MinReputation"] in LEVELS[self.data["Settings"]["MinRating"]]:
-            self.level = LEVELS[self.data["Settings"]["MinRating"]][self.data["Settings"]["MinReputation"]]
+        if self.min_rating in LEVELS and self.min_rep in LEVELS[self.min_rating]:
+            self.level = LEVELS[self.min_rating][self.min_rep]
         else:
-            self.level = LEVELS[0][self.data["Settings"]["MinReputation"]]
+            if self.min_rep in LEVELS[0]:
+                self.level = LEVELS[0][self.data["Settings"]["MinReputation"]]
+            else:
+                self.level = "Rookie"
         
         self.time_left_string = time.strftime('%M:%S', time.gmtime(self.data["TimeLeft"]//1000))
         self.time_left = self.data["TimeLeft"]//1000
