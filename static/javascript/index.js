@@ -557,6 +557,9 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
     if (typeof race_list[0] === 'string' || race_list[0] instanceof String){
         document.getElementById('main-message').style.fontSize = '1.6em';
         document.getElementById('main-message').innerHTML = race_list[0];
+
+        document.getElementById('race-list').style.minHeight = '0px';
+        console.log(document.getElementById('race-list').style)
         return null;
     }
 
