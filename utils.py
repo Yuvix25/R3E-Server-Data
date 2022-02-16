@@ -22,8 +22,9 @@ SESSIONS = {
 
 LEVELS = {
     0 : {
-        0 : "Rookie",
-        71 : "Amateur",
+        0  : "Rookie",
+        71 : "Rookie",
+        72 : "Rookie",
         75 : "Amateur",
         80 : "Amateur",
         85 : "Pro",
@@ -549,14 +550,17 @@ class Race:
         return self.cars, self.car_classes
 
 def update_local_servers():
-    with urllib.request.urlopen("https://game.raceroom.com/multiplayer-rating/servers/", context=CONTEXT) as web_data:
-        res = json.loads(web_data.read().decode())["result"]
+    try:
+        with urllib.request.urlopen("https://game.raceroom.com/multiplayer-rating/servers/", context=CONTEXT) as web_data:
+            res = json.loads(web_data.read().decode())["result"]
 
-        f = open(SERVERS_PATH, "w")
-        f.write(json.dumps(res))
-        f.close()
+            f = open(SERVERS_PATH, "w")
+            f.write(json.dumps(res))
+            f.close()
 
-        return res
+            return res
+    except:
+        return None
 
 
 def get_local_servers():
@@ -580,17 +584,20 @@ def get_all_races(update=True):
     else:
         ranked = get_local_servers()
 
-    races = []
-    for i in ranked:
-        race = Race(i)
-        print(race.name)
-        race.get_track_data()
-        race.get_first_livery()
-        race.get_car_data()
-        races.append(race)
-        print("Done")
-    # print(LID_BLACKLIST)
-    return sorted(races, key = lambda x: len(x.player_ids))[::-1]
+    if ranked is not None:
+        races = []
+        for i in ranked:
+            race = Race(i)
+            print(race.name)
+            race.get_track_data()
+            race.get_first_livery()
+            race.get_car_data()
+            races.append(race)
+            print("Done")
+        # print(LID_BLACKLIST)
+        return sorted(races, key = lambda x: len(x.player_ids))[::-1]
+    else:
+        return None
 
 
 def get_race(ip, port, update=False):
@@ -605,12 +612,15 @@ def get_race(ip, port, update=False):
     else:
         ranked = get_local_servers()
 
-    for i in ranked:
-        if i["Server"]["ServerIp"] == ip and i["Server"]["Port"] == port:
-            race = Race(i)
-            race.get_extra_data()
-            
-            return race
+    if ranked is not None:
+        for i in ranked:
+            if i["Server"]["ServerIp"] == ip and i["Server"]["Port"] == port:
+                race = Race(i)
+                race.get_extra_data()
+                
+                return race
+    else:
+        return None
 
 
 

@@ -554,7 +554,10 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
         last_update_time = Date.now();
     }
 
-
+    if (typeof race_list[0] === 'string' || race_list[0] instanceof String){
+        document.getElementById('main-message').style.fontSize = '1.6em';
+        document.getElementById('main-message').innerHTML = race_list[0];
+    }
 
     var sorted_race_list = race_list.slice();
 

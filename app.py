@@ -45,7 +45,11 @@ def send_race_list():
     if request.args.get('dontupdate') is not None:
         update = False
     
-    return json.dumps([race.__dict__ for race in get_all_races(update)])
+    races = get_all_races(update)
+    if races is not None:
+        return json.dumps([race.__dict__ for race in races])
+    else:
+        return json.dumps(['A required RaceRoom service is temporarily down, this website will go back up once RaceRoom fixes that issue.'])
 
 @app.route('/get_race', methods=['GET', 'POST'])
 def send_race():
