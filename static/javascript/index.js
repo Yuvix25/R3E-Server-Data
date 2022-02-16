@@ -557,6 +557,7 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
     if (typeof race_list[0] === 'string' || race_list[0] instanceof String){
         document.getElementById('main-message').style.fontSize = '1.6em';
         document.getElementById('main-message').innerHTML = race_list[0];
+        return null;
     }
 
     var sorted_race_list = race_list.slice();
@@ -766,12 +767,14 @@ window.onpopstate = function(event) {
 
 
 document.addEventListener('DOMContentLoaded', async (event) => {
-    await loadFilters();
+    var res = await loadFilters();
     
-    openSidebarFromQuery(false);
+    if (res != null) {
+        openSidebarFromQuery(false);
 
-    for (const server of server_ips) {
-        get_race(server[0], server[1], false, false, false);
+        for (const server of server_ips) {
+            get_race(server[0], server[1], false, false, false);
+        }
     }
 })
 
