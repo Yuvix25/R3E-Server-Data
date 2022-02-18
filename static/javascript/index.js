@@ -358,7 +358,6 @@ async function get_race(ip, port, force_update=false, do_backend_update=false, u
         return;
     }
 
-    console.log(current_server)
     if (current_server != undefined && current_server[0] != ip && current_server[1] != port){
         return;
     }
@@ -496,7 +495,7 @@ async function loadFilters(){
     var select = document.getElementById("sort-by-dropdown");
     select.value = sort_by;
 
-    await create_race_list(region, level, sort_by + (reverse ? "-1" : ""), true, true);
+    return await create_race_list(region, level, sort_by + (reverse ? "-1" : ""), true, true);
 }
 
 
@@ -559,7 +558,6 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
         document.getElementById('main-message').innerHTML = race_list[0];
 
         document.getElementById('race-list').style.minHeight = '0px';
-        console.log(document.getElementById('race-list').style)
         return null;
     }
 
@@ -719,6 +717,7 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
             server.className = "race-container invisible";
         }
     }
+    return true;
 }
 
 
@@ -771,7 +770,6 @@ window.onpopstate = function(event) {
 
 document.addEventListener('DOMContentLoaded', async (event) => {
     var res = await loadFilters();
-    
     if (res != null) {
         openSidebarFromQuery(false);
 
