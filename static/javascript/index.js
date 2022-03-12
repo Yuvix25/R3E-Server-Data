@@ -32,6 +32,12 @@ const twitch_regex = /(twitch\.tv\/[a-zA-Z0-9_]+)/ig;
 const urlRegex = /(http(s)?:\/\/)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9]{1,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)?/ig;
 
 
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
+
 function pushState(data, unused, url) {
     if (location.href != url) {
         history.pushState(data, unused, url);
@@ -857,7 +863,7 @@ function pingRegion(region, cb) {
     });
 }
 
-function refreshPing(server, show_loading=true) {
+async function refreshPing(server, show_loading=true) {
     if (show_loading) {
         document.getElementById("sidebar-ping").innerHTML = "loading...";
     }
@@ -873,7 +879,19 @@ function refreshPing(server, show_loading=true) {
     else if (tmp_name.includes("america") || tmp_name.includes(specialNamedRegions["america"])) {
         reg = "am";
     }
-    pingRegion(raceroomRegions[reg], (time) => {document.getElementById("sidebar-ping").innerHTML = time + "ms";});
+
+    var ms = await (await fetch('/tcping?port=60001&host=' + server.ip)).json();
+    if (ms != -1) {
+        await sleep(500);
+        ms = await (await fetch('/tcping?port=60001&host=' + server.ip)).json();
+    }
+    
+    if (ms == -1) {
+        pingRegion(raceroomRegions[reg], (time) => {document.getElementById("sidebar-ping").innerHTML = time + "ms";});
+    }
+    else {
+        document.getElementById("sidebar-ping").innerHTML = Math.round(ms) + "ms";
+    }
 }
 
 

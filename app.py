@@ -1,3 +1,4 @@
+import tcping
 import json, threading
 from flask import Flask, render_template, request
 from utils import get_all_races, get_race, parse_race_name
@@ -69,6 +70,17 @@ def send_race():
         return json.dumps(race.__dict__)
     else:
         return json.dumps(["closed"])
+
+@app.route('/tcping')
+def ping():
+    try:
+        if (request.args.get('host') is not None) and (request.args.get('port') is not None):
+            host = request.args.get('host')
+            port = request.args.get('port')
+            # tcping.ping(host, port)
+            return json.dumps(tcping.ping(host, port))
+    except Exception as e:
+        print(e)
 
 
 if __name__ == '__main__':
