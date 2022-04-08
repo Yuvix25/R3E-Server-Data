@@ -27,6 +27,10 @@ var auto_refresh_every = 60; // seconds
 var disable_after = 60; // minutes
 
 
+function htmlDecode(input) {
+    var doc = new DOMParser().parseFromString(input, "text/html");
+    return doc.documentElement.textContent;
+}
 
 const twitch_regex = /(twitch\.tv\/[a-zA-Z0-9_]+)/ig;
 const urlRegex = /(http(s)?:\/\/)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9]{1,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)?/ig;
@@ -708,9 +712,8 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
     var filtered_race_list = sorted_race_list.filter(server => {
         return (region == "all" || server.name.toLowerCase().includes(region.toLowerCase()) || server.name.toLowerCase().includes(specialNamedRegions[region.toLowerCase()])) && (level == "all" || server.level.toLowerCase().includes(level.toLowerCase()) || (level == "elite" && server.level.toLowerCase().includes("gold")))
     });
-
     for (let server of current_races){
-        var server_name = server.getElementsByClassName("name-level")[0].getElementsByTagName("h2")[0].innerHTML;
+        var server_name = htmlDecode(server.getElementsByClassName("name-level")[0].getElementsByTagName("h2")[0].innerHTML);
         var found = false
         for (let i=0; i<filtered_race_list.length; i++){
             if (filtered_race_list[i].name == server_name){
