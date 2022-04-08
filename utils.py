@@ -23,17 +23,13 @@ SESSIONS = {
 LEVELS = {
     0 : {
         0  : "Rookie",
-        71 : "Rookie",
-        72 : "Rookie",
         75 : "Amateur",
-        80 : "Amateur",
-        85 : "Pro",
-        90 : "Elite",
+        80 : "Pro",
     },
-    1700 : {
-        75 : "Amateur",
-        85 : "Gold",
-    },
+    # 1700 : {
+    #     70 : "Amateur",
+    #     80 : "Gold",
+    # },
 }
 
 MULTIPLIERS = {
