@@ -284,11 +284,12 @@
         <script>
             update_times();
 
-            if (location.host.endsWith("herokuapp.com")) {
+            if (location.host.endsWith("herokuapp.com") || true) {
                 const newDomainMessage = document.createElement("p");
-                newDomainMessage.innerHTML = "This site will no longer be available on this domain starting November 28th.<br>Instead it would be available <a href='https://r3e-server-data.onrender.com/' style='text-decoration: none;'>here</a>.";
-                newDomainMessage.style = "color: red; height: 50px; line-height: 22px; margin-top: 22px; font-size: 18px;";
-                document.getElementById("list-tools").appendChild(newDomainMessage);
+                newDomainMessage.innerHTML = "This site will no longer be available on this domain starting November 28th.<br>It would instead be available <a href='https://r3e-server-data.onrender.com/' style='text-decoration: none; color: blue !important;'>here</a>.";
+                newDomainMessage.style = "color: red; height: 50px; margin-left: 20px; font-size: 18px;";
+                const listTools = document.getElementById("list-tools");
+                listTools.parentNode.insertBefore(newDomainMessage, listTools.nextSibling);
             }
         </script>
 
