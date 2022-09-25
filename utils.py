@@ -212,10 +212,10 @@ def get_players(pids):
 
 
 def get_players_cached(pids):
+    s = time.perf_counter()
     urls = [f"https://game.raceroom.com/multiplayer-rating/user/{pid}.json" for pid in pids]
     requests = (grequests.get(u, session=SESSION) for u in urls)
     results = grequests.map(requests)
-    # results = (SESSION.get(u) for u in urls)
 
     users = []
     for i, res in enumerate(results):
@@ -226,7 +226,8 @@ def get_players_cached(pids):
             user = SHORT_SESSION.get(f"https://game.raceroom.com/utils/user-info/{pids[i]}").json()
             new_data = {"UserId": pids[i], "Username": user["username"], "Fullname": user["name"], "Rating": 1500, "ActivityPoints": 1, "RacesCompleted": 0, "Reputation": 70, "Country": user["country"]["code"].upper(), "Team": user["team"]}
             users.append(new_data)
-    return users# + ([{"UserId": 123, "Username": "hi", "Fullname": "hello", "Rating": 2500, "ActivityPoints": 1, "RacesCompleted": 0, "Reputation": 70, "Country": "IL", "Team": "https://www.twitch.tv/dan_suzuki"}])
+    e = time.perf_counter()
+    return users # + ([{"UserId": 123, "Username": "hi", "Fullname": "hello", "Rating": 2500, "ActivityPoints": 1, "RacesCompleted": 0, "Reputation": 70, "Country": "IL", "Team": "https://www.twitch.tv/dan_suzuki"}])
 
 def get_car_data_by_livery(lid):
     """

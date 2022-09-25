@@ -284,7 +284,7 @@
         <script>
             update_times();
 
-            if (location.host.endsWith("herokuapp.com") || true) {
+            if (location.host.endsWith("herokuapp.com")) {
                 const newDomainMessage = document.createElement("p");
                 newDomainMessage.innerHTML = "This site will no longer be available on this domain starting November 28th.<br>It would instead be available <a href='https://r3e-server-data.onrender.com/' style='text-decoration: none; color: blue !important;'>here</a>.";
                 newDomainMessage.style = "color: red; height: 50px; margin-left: 20px; font-size: 18px;";

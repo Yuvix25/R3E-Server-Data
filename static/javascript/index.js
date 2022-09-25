@@ -340,15 +340,59 @@ function joinFocusedServer(){
     window.open(url, '_blank').focus()
 }
 
+function get_get_race_url(ip, port) {
+    return "/get_race?ip=" + ip + "&port=" + port;
+}
 
-async function get_race(ip, port, force_update=false, do_backend_update=false, update_current_server=true){
-    var data;
-    // await $.getJSON("/get_race?name=" + name.replaceAll(" ", "-").replaceAll("#", ""), (rec) => {
-    //     data = rec;
-    // });
+async function post_get_race(data, ip, port, force_update=false, do_backend_update=false, update_current_server=true) {
+    const url = get_get_race_url(ip, port);
+    fetched_servers.set(url, data);
 
-    // data = await (await fetch("/get_race?name=" + name.replaceAll(" ", "_").replaceAll("#", "--h--").replaceAll("+", "--p--"))).json();
-    var url = "/get_race?ip=" + ip + "&port=" + port;
+    if (data == "closed") {
+        close_sidebar();
+        return;
+    }
+
+    if (current_server != undefined && current_server[0] != ip && current_server[1] != port){
+        return;
+    }
+
+    if (force_update) {
+        setTimeout(() => {
+            open_race_sidebar(ip, port, data, -1, false); 
+        }, 300);
+    }
+
+    if (do_backend_update && (!fetched_servers.has(url) || force_update)) {
+        await applyFilters(true, true, false);
+    }
+
+    for (const race of fetched_servers.values()){
+        var found_twitch = false;
+        for (const driver of race.players){
+            var urlified = urlify(driver.Team)
+            var twitch_icon = document.getElementById("twitch-" + race.ip + "-" + race.port);
+            if (twitch_icon != undefined) {
+                if (urlified[0] != false && !found_twitch) {
+                    if (twitch_icon.classList.contains("no-twitch")) {
+                        twitch_icon.classList.remove("no-twitch");
+                    }
+                    twitch_icon.innerHTML = twitch_icon.innerHTML.replace("<URL>", urlified[0]);
+                    found_twitch = true;
+                }
+                else if (urlified[0] == false && !twitch_icon.classList.contains("no-twitch") && !found_twitch) {
+                    twitch_icon.classList.add("no-twitch");
+                }
+            }
+        }
+    }
+
+    return data
+}
+
+async function get_race(ip, port, force_update=false, do_backend_update=false, update_current_server=true) {
+    let data;
+    const url = get_get_race_url(ip, port);
 
     if (update_current_server) {
         current_server = [ip, port];
@@ -357,11 +401,11 @@ async function get_race(ip, port, force_update=false, do_backend_update=false, u
     if (fetched_servers.has(url) && (!force_update)) {
         data = fetched_servers.get(url);
         get_race(ip, port, true, do_backend_update);
-    }
-    else {
+    } else {
         data = await (await fetch(url + (do_backend_update ? "&update=1" : ""))).json();
-        fetched_servers.set(url, data);
+        // fetched_servers.set(url, data);
     }
+    return post_get_race(data, ip, port, force_update, do_backend_update, update_current_server);
     
     if (data == "closed") {
         close_sidebar();
@@ -778,12 +822,27 @@ window.onpopstate = function(event) {
 
 
 document.addEventListener('DOMContentLoaded', async (event) => {
-    var res = await loadFilters();
+    const res = await loadFilters();
     if (res != null) {
         openSidebarFromQuery(false);
 
-        for (const server of server_ips) {
-            get_race(server[0], server[1], false, false, false);
+        // for (const server of server_ips) {
+        //     get_race(server[0], server[1], false, false, false);
+        // }
+        const body = server_ips.map((server) => {
+            return {
+                method: "GET",
+                path: "/get_race?ip=" + server[0] + "&port=" + server[1],
+            };
+        });
+        const res = await (await fetch("/batch_request", {
+            method: "POST",
+            body: JSON.stringify(body),
+        })).json();
+
+        for (let i = 0; i < res.length; i++) {
+            const resp = res[i];
+            post_get_race(resp.response, server_ips[i][0], server_ips[i][1], false, false, false);
         }
     }
 })
