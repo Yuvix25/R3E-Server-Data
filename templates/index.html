@@ -60,7 +60,7 @@
             statics_url = {{ url_for('static', filename='') }};
         </script>
         
-        <div style="display: flex; flex-wrap: wrap; algin-items: center;">
+        <div style="display: flex; flex-wrap: wrap; algin-items: center;" id="list-tools">
             <div id="search-tools-wrapper" style="float: left;">
                 {# <div id="search-tools" style="display: flex; flex-flow: row wrap; min-height: 4vh;"> #}
                 {# <div id="search-tools" style="min-height: 4vh; height: 100%;"> #}
@@ -283,8 +283,14 @@
 
         <script>
             update_times();
-        </script>
 
+            if (location.href.endsWith("herokuapp.com")) {
+                const newDomainMessage = document.createElement("p");
+                newDomainMessage.innerHTML = "This site will no longer be available on this domain starting November 28th.<br>Instead it would be available <a href='https://r3e-server-data.onrender.com/' style='text-decoration: none;'>here</a>.";
+                newDomainMessage.style = "color: red; height: 50px; line-height: 22px; margin-top: 22px; font-size: 18px;";
+                document.getElementById("list-tools").appendChild(newDomainMessage);
+            }
+        </script>
 
 
         <br>

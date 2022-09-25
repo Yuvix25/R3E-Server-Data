@@ -26,10 +26,6 @@ LEVELS = {
         75 : "Amateur",
         80 : "Pro",
     },
-    # 1700 : {
-    #     70 : "Amateur",
-    #     80 : "Gold",
-    # },
 }
 
 MULTIPLIERS = {
@@ -572,9 +568,6 @@ def get_local_servers():
 def get_all_races(update=True):
     update_local_db()
 
-    # with urllib.request.urlopen("https://game.raceroom.com/multiplayer-rating/servers/", context=CONTEXT) as web_data:
-    #     ranked = json.loads(web_data.read().decode())["result"]
-
     if update:
         ranked = update_local_servers()
     else:
@@ -584,13 +577,10 @@ def get_all_races(update=True):
         races = []
         for i in ranked:
             race = Race(i)
-            print(race.name)
             race.get_track_data()
             race.get_first_livery()
             race.get_car_data()
             races.append(race)
-            print("Done")
-        # print(LID_BLACKLIST)
         return sorted(races, key = lambda x: len(x.player_ids))[::-1]
     else:
         return None

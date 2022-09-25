@@ -19,25 +19,12 @@ def index():
         if (request.args.get('ip') is not None) and (request.args.get('port') is not None):
             # focused_server = get_race(parse_race_name(request.args.get('name')))
             focused_server = get_race(request.args.get('ip'), request.args.get('port'))
-        
+    
     except Exception as e:
         print(e)
         errors.append(e)
     
     return render_template('index.html', errors=errors, focused_server=focused_server)
-
-# @app.route('/user_history', methods=['GET', 'POST'])
-# def user_history():
-#     errors = []
-#     data = []
-
-#     try:
-#         data = get_user_data()
-#     except Exception as e:
-#         print(e)
-#         errors.append(e)
-
-#     return render_template('user_history.html', errors=errors, data=data)
 
 
 @app.route('/get_race_list', methods=['GET', 'POST'])
@@ -54,7 +41,6 @@ def send_race_list():
 
 @app.route('/get_race', methods=['GET', 'POST'])
 def send_race():
-    # return json.dumps(get_race(parse_race_name(request.args.get('name'))).__dict__)
     race = None
     try:
         update = False
@@ -65,8 +51,6 @@ def send_race():
     except Exception as e:
         print(e)
     if race is not None:
-        # t = threading.Thread(target=update_user_data, args=(race.players,))
-        # t.start()
         return json.dumps(race.__dict__)
     else:
         return json.dumps(["closed"])
@@ -77,7 +61,6 @@ def ping():
         if (request.args.get('host') is not None) and (request.args.get('port') is not None):
             host = request.args.get('host')
             port = request.args.get('port')
-            # tcping.ping(host, port)
             return json.dumps(tcping.ping(host, port))
     except Exception as e:
         print(e)

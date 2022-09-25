@@ -5,6 +5,7 @@ body {
     padding: 0;
     overflow-x: hidden;
     min-height: 100vh;
+    font-family: 'Roboto', sans-serif;
 }
 
 body {
@@ -13,7 +14,6 @@ body {
 
 h1 {
     text-align: left !important;
-    font-family: 'Roboto', sans-serif;
     font-weight: 500;
     font-size: 70px;
     color: white;
@@ -21,7 +21,6 @@ h1 {
 
 h2 {
     text-align: left !important;
-    font-family: 'Roboto', sans-serif;
     font-weight: 400;
     font-size: 55px;
     color: white;
@@ -29,7 +28,6 @@ h2 {
 
 h3 {
     /* text-align: left; */
-    font-family: 'Roboto', sans-serif;
     font-weight: 300;
     font-size: 40px;
     color: white;
@@ -200,7 +198,6 @@ div {
 }
 
 .race-container {
-    font-family: 'Roboto', sans-serif;
     background-color: rgb(19, 19, 19);
     color: white;
     padding: 0px;
@@ -262,7 +259,6 @@ div {
 /* Search tools: */
 
 #search-tools-wrapper {
-    font-family: 'Roboto', sans-serif;
     font-size: 25px;
     background-color: rgb(255, 255, 255);
     padding: 1vh !important;
@@ -698,7 +694,6 @@ input {
 #sidebar-footer button {
     color: white;
     background-color: black;
-    font-family: 'Roboto', sans-serif;
     font-size: 40px;
     border: none;
     width: 40%;
@@ -732,7 +727,6 @@ height: 20px - close-button top,
 
 .tabs {
     width: 100%;
-    font-family: 'Roboto', sans-serif;
     margin-top: 20px;
     margin-bottom: 10px;
     display: inline-block;
