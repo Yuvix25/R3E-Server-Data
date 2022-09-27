@@ -1,5 +1,5 @@
 # RaceRoom Ranked Server Data
-This webstie will allow you to view information about the current live R3E ranked servers, live [here](https://r3e-server-data.herokuapp.com/).
+This webstie will allow you to view information about the current live R3E ranked servers, live [here](https://r3e-server-data.web.app/).
 
 ## Features
 - [x] View online players

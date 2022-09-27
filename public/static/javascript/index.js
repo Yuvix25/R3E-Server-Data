@@ -179,7 +179,7 @@ function twitch_hover(element_string, url=undefined) {
     element.innerHTML += "<div class=\"twitch-embed-container\" onclick=\"openTeamUrl(event, \'" + url + `\');"><div class="twitch-embed">
                                 <iframe
                                     style="margin-top: 15px; box-shadow: 3px 3px 30px #000000; border: 0px;"
-                                    src="https://player.twitch.tv/?channel=${channel}&parent=r3e-server-data.herokuapp.com&muted=true"
+                                    src="https://player.twitch.tv/?channel=${channel}&parent=${location.host}&muted=true"
                                     width="100%"
                                     height="100%"
                                     allowfullscreen="true">
@@ -220,7 +220,7 @@ function twitch_icon_hover(element_string, url=undefined) {
             <div class="twitch-expand-appear">
                 <iframe
                     style="box-shadow: 3px 3px 30px #000000; border: 0px;"
-                    src="https://player.twitch.tv/?channel=${channel}&parent=r3e-server-data.herokuapp.com&muted=true"
+                    src="https://player.twitch.tv/?channel=${channel}&parent=${location.host}&muted=true"
                     width="100%"
                     height="100%"
                     allowfullscreen="false">
@@ -892,6 +892,10 @@ async function refreshPing(server, show_loading=true) {
     reg = "oc";
   } else if (tmp_name.includes("america") || tmp_name.includes(specialNamedRegions["america"])) {
     reg = "am";
+  }
+
+  if (!reg) {
+    reg = "eu";
   }
 
   pingRegion(raceroomRegions[reg], (time) => {
