@@ -5,7 +5,9 @@ screenshots/
 private_keys/
 .vscode/
 
-templates/user_history.html
+*-debug.log
+.firebaserc
+public/user_history.html
 firebase_interaction.py
 *.pptx
 test.py

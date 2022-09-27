@@ -1,0 +1,26 @@
+{
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**",
+      "**/*.py",
+      "**/*.pyc",
+      "**/requirements.txt",
+      "**/*.sqlite",
+      "**/Procfile",
+      "**/runtime.txt",
+      "**/screenshots/**",
+      "**/db/**",
+      "**/private_keys/**",
+      "**/.vscode/**"
+    ],
+    "rewrites": [
+      {
+        "source": "/",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

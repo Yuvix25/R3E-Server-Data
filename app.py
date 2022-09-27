@@ -1,11 +1,10 @@
 import tcping
 import json
-from io import StringIO
 from flask import Flask, render_template, request, abort, make_response
 from utils import get_all_races, get_race
 # from firebase_interaction import *
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="public/static", template_folder="public")
 
 
 

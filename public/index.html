@@ -11,8 +11,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
-        <link rel="icon" type="image/png" href="{{ url_for('static',filename='images/favicon.png') }}"/>
-        <link rel="apple-touch-icon" href="{{ url_for('static',filename='images/favicon.png') }}">
+        <link rel="icon" type="image/png" href="static/images/favicon.png"/>
+        <link rel="apple-touch-icon" href="static/images/favicon.png">
 
         <!-- <script src="//code.jquery.com/jquery-2.2.1.min.js"></script>
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> -->
@@ -28,8 +28,9 @@
         </script>
 
 
-
-        <script src="{{ url_for('static',filename='javascript/index.js') }}"></script>
+        <script src="static/javascript/xhrCache.js"></script>
+        <script src="static/javascript/r3e_api.js"></script>
+        <script src="static/javascript/index.js"></script>
         <!-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" media="screen"> -->
         <style>
             .container {
@@ -40,7 +41,7 @@
     </head>
 
     <body>
-        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/index.css') }}">
+        <link rel= "stylesheet" type= "text/css" href= "static/styles/index.css">
 
         <script>
             let elem = document.createElement('div');
@@ -52,63 +53,53 @@
             slide_time = parseFloat(slide_time.substring(0, slide_time.indexOf('s'))) * 1000 + 100;
         </script>
 
-
-
-        <!-- <h1 style="margin-left: 20px;">Live Ranked Servers:</h1> -->
-
         <script>
-            statics_url = {{ url_for('static', filename='') }};
+            statics_url = "static/";
         </script>
         
         <div style="display: flex; flex-wrap: wrap; algin-items: center;" id="list-tools">
             <div id="search-tools-wrapper" style="float: left;">
-                {# <div id="search-tools" style="display: flex; flex-flow: row wrap; min-height: 4vh;"> #}
-                {# <div id="search-tools" style="min-height: 4vh; height: 100%;"> #}
-                    <div class="search-tool">
-                        <label for="regions" style="min-width: 86px; line-height: 4vh;">Region:</label>
-                        <div class="dropdown">
-                            <select name="regions" id="regions-dropdown" class="dropdown-select" onchange="applyFilters();">
-                                <option value="all">All</option>
-                                <option value="europe">Europe</option>
-                                <option value="america">America</option>
-                                <option value="oceania">Oceania</option>
-                            </select>
-                        </div>
+                <div class="search-tool">
+                    <label for="regions" style="min-width: 86px; line-height: 4vh;">Region:</label>
+                    <div class="dropdown">
+                        <select name="regions" id="regions-dropdown" class="dropdown-select" onchange="applyFilters();">
+                            <option value="all">All</option>
+                            <option value="europe">Europe</option>
+                            <option value="america">America</option>
+                            <option value="oceania">Oceania</option>
+                        </select>
                     </div>
-                    
-                    <div class="search-tool">
-                        <label for="levels" style="min-width: 86px; line-height: 4vh;">Level:</label>
-                        <div class="dropdown">
-                            <select name="levels" id="levels-dropdown" class="dropdown-select" onchange="applyFilters();">
-                                <option value="all">All</option>
-                                <option value="rookie">Rookie</option>
-                                <option value="am">Amateur</option>
-                                <option value="pro">Pro</option>
-                                <option value="elite">Elite</option>
-                            </select>
-                        </div>
+                </div>
+                
+                <div class="search-tool">
+                    <label for="levels" style="min-width: 86px; line-height: 4vh;">Level:</label>
+                    <div class="dropdown">
+                        <select name="levels" id="levels-dropdown" class="dropdown-select" onchange="applyFilters();">
+                            <option value="all">All</option>
+                            <option value="rookie">Rookie</option>
+                            <option value="am">Amateur</option>
+                            <option value="pro">Pro</option>
+                            <option value="elite">Elite</option>
+                        </select>
                     </div>
-                    
-                    <div class="search-tool">
-                        <label for="sort-by" style="min-width: 86px; line-height: 4vh;">Sort By:</label>
-                        <div class="dropdown">
-                            <select name="sort-by" id="sort-by-dropdown" class="dropdown-select" onchange="applyFilters(false, true);">
-                                <option value="players">Player Count</option>
-                                <option value="time">Time Left</option>
-                                <option value="session">Session</option>
-                                <option value="level">Level</option>
-                            </select>
-                        </div>
+                </div>
+                
+                <div class="search-tool">
+                    <label for="sort-by" style="min-width: 86px; line-height: 4vh;">Sort By:</label>
+                    <div class="dropdown">
+                        <select name="sort-by" id="sort-by-dropdown" class="dropdown-select" onchange="applyFilters(false, true);">
+                            <option value="players">Player Count</option>
+                            <option value="time">Time Left</option>
+                            <option value="session">Session</option>
+                            <option value="level">Level</option>
+                        </select>
                     </div>
+                </div>
 
-                    <label id="reverse-label" style="margin-right: 10px; margin-top: 4px; float: left;">
-                        <input id="reverse-order-checkbox" type="checkbox" onchange="applyFilters(false, true);"/>
-                        <img src="{{ url_for('static',filename='/images/reverse_order.png') }}" alt="reverse_order" style="height: 4vh;" id="reverse-order">
-                    </label>
-                    
-                    
-                {# </div> #}
-                <!-- <img src="{{ url_for('static',filename='/images/search_icon.png') }}" alt="search_icon" style="height: 4vh; position: absolute; right: 40px;" id="search_icon" onclick="applyFilters();"> -->
+                <label id="reverse-label" style="margin-right: 10px; margin-top: 4px; float: left;">
+                    <input id="reverse-order-checkbox" type="checkbox" onchange="applyFilters(false, true);"/>
+                    <img src="static/images/reverse_order.png" alt="reverse_order" style="height: 4vh;" id="reverse-order">
+                </label>
             </div>
 
 
@@ -133,7 +124,7 @@
 
         <div class="sidebar" id="loading-sidebar">
             <center>
-                <img class="close-button" onclick="close_sidebar();" src="{{ url_for('static',filename='images/close_button.png') }}" alt="close_button">
+                <img class="close-button" onclick="close_sidebar();" src="static/images/close_button.png" alt="close_button">
             </center>
             <h1 style="text-align: center !important; margin-top: 40%;">Loading...</h1>
         </div>
@@ -143,7 +134,7 @@
 
             <div style="height: var(--sidebar-header-height);">
                 <center>
-                    <img class="close-button" onclick="close_sidebar();" src="{{ url_for('static',filename='images/close_button.png') }}" alt="close_button">
+                    <img class="close-button" onclick="close_sidebar();" src="static/images/close_button.png" alt="close_button">
                 </center>
                 
                 <br>
@@ -221,7 +212,7 @@
                                 <div style="display: flex; justify-content: center; height: 30px;">
                                     <h3 id="sidebar-ping" style="margin: 0px;"></h3>
                                     <div id="sidebar-refresh-ping" onclick="refreshPing(focused_server, false);">
-                                        <img src="{{ url_for('static',filename='images/redo.png') }}" alt="re-ping" style="margin-top: 0px; margin-left: 6px; height: 100%;"></img>
+                                        <img src="static/images/redo.png" alt="re-ping" style="margin-top: 0px; margin-left: 6px; height: 100%;"></img>
                                     </div>
                                 </div>
                             </div>
@@ -284,22 +275,14 @@
         <script>
             update_times();
 
-            if (location.host.endsWith("herokuapp.com")) {
+            if (!location.host.endsWith("web.app") && !location.host.endsWith("firebaseapp.com")) {
                 const newDomainMessage = document.createElement("p");
-                newDomainMessage.innerHTML = "This site will no longer be available on this domain starting November 28th.<br>It would instead be available <a href='https://r3e-server-data.onrender.com/' style='text-decoration: none; color: blue !important;'>here</a>.";
+                newDomainMessage.innerHTML = "<span style='font-weight: bold; font-size: 23px;'>NOTE: MOVED AGAIN</span><br>This site will no longer be available on this domain starting November 28th.<br>It would instead be available <a href='https://r3e-server-data.web.app' style='text-decoration: none; color: blue !important;'>here</a>.";
                 newDomainMessage.style = "color: red; height: 50px; margin-left: 20px; font-size: 18px;";
                 const listTools = document.getElementById("list-tools");
                 listTools.parentNode.insertBefore(newDomainMessage, listTools.nextSibling);
             }
         </script>
-
-
-        <br>
-        {% for error in errors %}
-        <h4>{{ error }}</h4>
-        {% endfor %}
-
-        
     </body>
 
 </html>

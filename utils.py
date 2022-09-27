@@ -87,26 +87,6 @@ def update_local_db(update_full_every=3, reset_small_every="friday"):
 
     if not os.path.isdir("db"):
         os.mkdir("db")
-
-    # Users DB:
-
-    # if os.path.isfile(RATINGS_PATH):
-    #     f = open(RATINGS_PATH, encoding="utf-8")
-    #     content = f.read()
-    #     f.close()
-
-    #     last_save = int(content.split()[0])
-
-    #     diff = (now - last_save) / (60*60*24)
-    
-
-    # if (not os.path.isfile(RATINGS_PATH)) or diff > update_full_every:
-    #     with urllib.request.urlopen("https://game.raceroom.com/multiplayer-rating/ratings.json", context=CONTEXT) as web_data:
-    #         data = web_data.read().decode()
-    #         f = open(RATINGS_PATH, "w", encoding="utf-8")
-    #         f.write(f"{now}\n" + data)
-    #         f.close()
-    
     
     # Content DB:
 
@@ -133,10 +113,6 @@ def update_local_db(update_full_every=3, reset_small_every="friday"):
 
     # Small DBs:
 
-    # if datetime.today().strftime('%A').lower == reset_small_every or (not os.path.isfile(SMALL_PLAYERS_PATH)):
-    #     f = open(SMALL_PLAYERS_PATH, "w")
-    #     f.write("[]")
-    #     f.close()
     resetted_small_db = False
     if datetime.today().strftime('%A').lower == reset_small_every or (not os.path.isfile(SMALL_R3E_PATH)):
         f = open(SMALL_R3E_PATH, "w")
@@ -212,7 +188,6 @@ def get_players(pids):
 
 
 def get_players_cached(pids):
-    s = time.perf_counter()
     urls = [f"https://game.raceroom.com/multiplayer-rating/user/{pid}.json" for pid in pids]
     requests = (grequests.get(u, session=SESSION) for u in urls)
     results = grequests.map(requests)
@@ -226,7 +201,6 @@ def get_players_cached(pids):
             user = SHORT_SESSION.get(f"https://game.raceroom.com/utils/user-info/{pids[i]}").json()
             new_data = {"UserId": pids[i], "Username": user["username"], "Fullname": user["name"], "Rating": 1500, "ActivityPoints": 1, "RacesCompleted": 0, "Reputation": 70, "Country": user["country"]["code"].upper(), "Team": user["team"]}
             users.append(new_data)
-    e = time.perf_counter()
     return users # + ([{"UserId": 123, "Username": "hi", "Fullname": "hello", "Rating": 2500, "ActivityPoints": 1, "RacesCompleted": 0, "Reputation": 70, "Country": "IL", "Team": "https://www.twitch.tv/dan_suzuki"}])
 
 def get_car_data_by_livery(lid):
@@ -338,7 +312,7 @@ def get_livery(lid):
 
 def get_track_layout_data(tid):
     """
-    lid - track layout Id.
+    tid - track layout Id.
 
     returns: track, track_layout dicts.
     """
