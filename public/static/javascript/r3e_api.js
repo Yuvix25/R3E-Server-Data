@@ -175,11 +175,12 @@ async function getPlayersCached(pids) {
   for (const pid of pids) {
     const url = `https://game.raceroom.com/multiplayer-rating/user/${pid}.json`;
     try {
-      res.push(await xhrCache(url, {
+      const requestResult = await xhrCache(url, {
         method: "GET",
         ttl: 1000 * 60 * 60 * 24, // 1 day
-      }));
-    } catch (e) {
+      });
+      res.push(requestResult);
+    } catch (e) { // 404 usually
       const userInfoUrl = `https://game.raceroom.com/utils/user-info/${pid}`;
       const user = await xhrCache(userInfoUrl, {
         method: "GET",
@@ -195,7 +196,7 @@ async function getPlayersCached(pids) {
         ActivityPoints: 1,
         RacesCompleted: 0,
         Country: user.country.code.toUpperCase(),
-        Team: user.Team,
+        Team: user.team,
       });
     }
   }
