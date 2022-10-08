@@ -27,6 +27,7 @@ let xhrCache = (url, options) => { // eslint-disable-line no-unused-vars
       method = "GET",
       ttl = undefined,
       reload = false,
+      cacheBust = false,
     } = options;
 
     if (!reload && cacheMap.has(url)) {
@@ -48,7 +49,7 @@ let xhrCache = (url, options) => { // eslint-disable-line no-unused-vars
 
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
-      xhr.open(method, url);
+      xhr.open(method, url + (cacheBust ? "?cacheBust=" + Date.now() : ""));
       xhr.onload = () => {
         if (xhr.status === 200) {
           let resp;
