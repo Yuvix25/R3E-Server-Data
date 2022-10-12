@@ -13,3 +13,4 @@ firebase_interaction.py
 test.py
 launch.json
 *.sqlite
+.firebase/
