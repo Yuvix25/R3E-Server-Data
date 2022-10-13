@@ -443,21 +443,18 @@ class RankedServer {
  * @return {Promise<ServerData[]>}
  */
 async function getCachedServers(reload=true) {
-  const cors = "https://api.allorigins.win/get?url=";
-  const servers = await xhrCache(cors + encodeURI("https://game.raceroom.com/multiplayer-rating/servers/"), {
-    method: "GET",
-    reload: reload,
-    cacheBust: true,
-  }); // no ttl - never expire
-  let res;
   try {
-    res = JSON.parse(servers.contents).result;
+    const servers = await xhrCache("https://game.raceroom.com/multiplayer-rating/servers/", {
+      method: "GET",
+      reload: reload,
+      cacheBust: true,
+    }); // no ttl - never expire
+    return servers.result;
   } catch (e) {
     document.getElementById("main-message").innerHTML =
         "RaceRoom's API does not seem to be available at the moment.<br>Please try again later.";
     throw e;
   }
-  return res;
 }
 
 /**
