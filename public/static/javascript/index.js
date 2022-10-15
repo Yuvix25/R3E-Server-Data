@@ -332,15 +332,18 @@ function get_get_race_url(ip, port) {
 }
 
 async function post_get_race(data, ip, port, force_update=false, do_backend_update=false, update_current_server=true) {
+  if (data == undefined) {
+    return;
+  }
   const url = get_get_race_url(ip, port);
   fetched_servers.set(url, data);
 
   if (data == "closed") {
-    close_sidebar();
+    update_current_server && close_sidebar();
     return;
   }
 
-  if (current_server != undefined && current_server[0] != ip && current_server[1] != port) {
+  if (update_current_server && current_server != undefined && current_server[0] != ip && current_server[1] != port) {
     return;
   }
 
@@ -391,52 +394,9 @@ async function get_race(ip, port, force_update=false, do_backend_update=false, u
     data = fetched_servers.get(url);
     get_race(ip, port, true, do_backend_update);
   } else {
-    // data = await (await fetch(url + (do_backend_update ? "&update=1" : ""))).json();
     data = await getServer(ip, port, do_backend_update);
-    // fetched_servers.set(url, data);
   }
   return post_get_race(data, ip, port, force_update, do_backend_update, update_current_server);
-
-  if (data == "closed") {
-    close_sidebar();
-    return;
-  }
-
-  if (current_server != undefined && current_server[0] != ip && current_server[1] != port) {
-    return;
-  }
-
-  if (force_update) {
-    setTimeout(() => {
-      open_race_sidebar(ip, port, data, -1, false);
-    }, 300);
-  }
-
-  if (do_backend_update && (!fetched_servers.has(url) || force_update)) {
-    await applyFilters(true, true, false);
-  }
-
-  for (const race of fetched_servers.values()) {
-    let found_twitch = false;
-    for (const driver of race.players) {
-      const urlified = urlify(driver.Team);
-      const twitch_icon = document.getElementById("twitch-" + race.ip + "-" + race.port);
-      if (twitch_icon != undefined) {
-        if (urlified[0] != false && !found_twitch) {
-          if (twitch_icon.classList.contains("no-twitch")) {
-            twitch_icon.classList.remove("no-twitch");
-          }
-          twitch_icon.innerHTML = twitch_icon.innerHTML.replace("<URL>", urlified[0]);
-          found_twitch = true;
-        } else if (urlified[0] == false && !twitch_icon.classList.contains("no-twitch") && !found_twitch) {
-          twitch_icon.classList.add("no-twitch");
-        }
-      }
-    }
-  }
-
-
-  return data;
 }
 
 async function open_race_sidebar(ip, port, server=undefined, tab=-1, push_state=true, do_backend_update=false) {
@@ -464,13 +424,6 @@ async function open_race_sidebar(ip, port, server=undefined, tab=-1, push_state=
   }
 
 
-  // var data;
-
-  // data = await (await fetch("/get_race?name=" + name.replaceAll(" ", "_").replaceAll("#", "--h--"))).json();
-
-  // if (!sidebar_opened) {
-  //     return data;
-  // }
 
   if (server == undefined) {
     var tmp_focused_server = await get_race(ip, port, false, do_backend_update);
