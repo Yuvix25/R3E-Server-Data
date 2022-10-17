@@ -57,7 +57,11 @@
             statics_url = "static/";
         </script>
         
-        <div style="display: flex; flex-wrap: wrap; align-items: center;" id="list-tools">
+        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px;" id="list-tools">
+            <div style="height: 5vh;">
+                <img src="static/images/redo.png" alt="reload-servers" class="reload-servers" onclick="showMessage('Loading...', true); applyFilters(true, true, true);"></img>
+            </div>
+
             <div id="search-tools-wrapper" style="float: left;">
                 <div class="search-tool">
                     <label for="regions" style="min-width: 86px; line-height: 4vh;">Region:</label>
@@ -102,7 +106,6 @@
                 </label>
             </div>
 
-
             <div style="display: flex; align-items: center; margin: 20px;" class="auto-refresh">
                 <h3 style="margin: 0; margin-right: 20px; font-size: 35px; font-weight: 400;">Auto-Refresh</h3>
                 <label class="switch">
@@ -116,10 +119,11 @@
         <br>
         
 
-
+        <center><h2 id="main-message" style="font-weight: 400; text-align: center !important; margin-top: 15%; max-width: 70%;">Loading...</h2></body></center>
         <div id="race-list" style="width: 100vw;">
-            <center><h2 id="main-message" style="font-weight: 400; text-align: center !important; margin-top: 20%; max-width: 70%;">Loading...</h2><center>
+            
         </div>
+        
         
 
         <div class="sidebar" id="loading-sidebar">

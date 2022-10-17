@@ -353,9 +353,9 @@ async function post_get_race(data, ip, port, force_update=false, do_backend_upda
     }, 300);
   }
 
-  if (do_backend_update && (!fetched_servers.has(url) || force_update)) {
+  // Update entire race list - disabled for now due to performance issues
+  if (false && do_backend_update && (!fetched_servers.has(url) || force_update)) {
     setTimeout(() => {
-      testVal = false;
       applyFilters(true, true, false);
     }, 1000); // otherwise sidebar opening is laggy
   }
@@ -510,7 +510,20 @@ async function applyFilters(reload_data=false, reorder=false, update_backend=tru
   await create_race_list(region, level, sort_by + (reverse ? "-1" : ""), reload_data, reorder, update_backend);
 }
 
-let testVal = true;
+function showMessage(message, clearRaceList=false) {
+  document.getElementById("main-message").innerHTML = message;
+  document.getElementById("main-message").style.display = "block";
+
+  if (clearRaceList) {
+    document.getElementById("race-list").innerHTML = "";
+  }
+}
+
+function hideMessage() {
+  document.getElementById("main-message").innerHTML = "";
+  document.getElementById("main-message").style.display = "none";
+}
+
 async function create_race_list(region="all", level="all", sort_by="", reload_data=false, reorder=false, update_backend=true) {
   /*
     region: show only races form this region (options: all, europe, america, oceania).
@@ -542,11 +555,12 @@ async function create_race_list(region="all", level="all", sort_by="", reload_da
 
   if (typeof race_list[0] === "string" || race_list[0] instanceof String) {
     document.getElementById("main-message").style.fontSize = "1.6em";
-    document.getElementById("main-message").innerHTML = race_list[0];
+    showMessage(race_list[0]);
 
     document.getElementById("race-list").style.minHeight = "0px";
     return null;
   }
+  hideMessage();
 
   const sorted_race_list = race_list.slice();
 

@@ -959,3 +959,15 @@ input:checked+.slider:before {
     transform: scale(6, calc(6 / 1.77));
     opacity: 0;
 }
+
+.reload-servers {
+    margin: 3px;
+    margin-left: 25px;
+    height: calc(100% - 6px);
+    transition: opacity 0.15s;
+}
+
+.reload-servers:hover {
+    opacity: 0.7;
+    cursor: pointer;
+}
