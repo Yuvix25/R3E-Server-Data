@@ -126,8 +126,8 @@ const SESSIONS = {
 
 const LEVELS = {
   0: "Rookie",
-  75: "Amateur",
-  80: "Pro",
+  78: "Amateur",
+  85: "Pro",
 };
 
 const MULTIPLIERS = {
