@@ -969,7 +969,7 @@ function open_race(server, redirect=true, change_tab=true, to=0) {
                                         </div>
                                         
                                         <div class="driver-icon" style="flex: 2; justify-content: right;">
-                                            <img src="https://static1.beta.game.raceroom.com/static/img/flags/${driver.Country.toLowerCase()}.svg" alt="${driver.Country.toLowerCase()}_country_flag" class="driver-country" style="aspect-ratio: 7 / 6; margin-right: 20px; max-height: 60vh; max-width: 70%;">
+                                            <img src="https://prod.r3eassets.com/static/img/flags/${driver.Country.toLowerCase()}.svg" alt="${driver.Country.toLowerCase()}_country_flag" class="driver-country" style="aspect-ratio: 7 / 6; margin-right: 20px; max-height: 60vh; max-width: 70%;">
                                         </div>
                                     </div>
 
