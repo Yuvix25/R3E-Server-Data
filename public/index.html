@@ -14,9 +14,6 @@
         <link rel="icon" type="image/png" href="static/images/favicon.png"/>
         <link rel="apple-touch-icon" href="static/images/favicon.png">
 
-        <!-- <script src="//code.jquery.com/jquery-2.2.1.min.js"></script>
-        <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> -->
-
         <!-- Global site tag (gtag.js) - Google Analytics -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-42E1EPFFE8"></script>
         <script>
@@ -31,7 +28,6 @@
         <script src="static/javascript/xhrCache.js"></script>
         <script src="static/javascript/r3e_api.js"></script>
         <script src="static/javascript/index.js"></script>
-        <!-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" media="screen"> -->
         <style>
             .container {
                 max-width: 1000px;
@@ -275,17 +271,12 @@
             </div>
         </div>
 
+        <div id="buy-me-a-coffee" onclick="window.open('https://buymeacoffee.com/yuvalrosen', '_blank')">
+            <img src="static/images/buymeacoffee.png" alt="Buy me a coffee">
+        </div>
 
         <script>
             update_times();
-
-            if (!location.host.endsWith("web.app") && !location.host.endsWith("firebaseapp.com")) {
-                const newDomainMessage = document.createElement("p");
-                newDomainMessage.innerHTML = "<span style='font-weight: bold; font-size: 23px;'>NOTE: MOVED AGAIN</span><br>This site will no longer be available on this domain starting November 28th.<br>It would instead be available <a href='https://r3e-server-data.web.app' style='text-decoration: none; color: blue !important;'>here</a>.";
-                newDomainMessage.style = "color: red; height: 50px; margin-left: 20px; font-size: 18px;";
-                const listTools = document.getElementById("list-tools");
-                listTools.parentNode.insertBefore(newDomainMessage, listTools.nextSibling);
-            }
         </script>
     </body>
 

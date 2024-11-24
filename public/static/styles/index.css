@@ -98,9 +98,6 @@ div {
 }
 
 @media only screen and (max-width: 579px) {
-    /* .race-container {
-        width: 98vw !important;
-    } */
     :root {
         --race-container-width: 98vw !important;
     }
@@ -125,27 +122,18 @@ div {
 
 
 @media only screen and (min-width: 580px) and (max-width: 900px) {
-    /* .race-container {
-        width: 98vw !important;
-    } */
     :root {
         --race-container-width: 47vw !important;
     }
 }
 
 @media only screen and (min-width: 901px) and (max-width: 1169px) {
-    /* .race-container {
-        width: 48vw !important;
-    } */
     :root {
         --race-container-width: 31.33vw !important;
     }
 }
 
 @media only screen and (min-width: 1170px) and (max-width: 1580px) {
-    /* .race-container {
-        width: 31.33vw !important;
-    } */
     :root {
         --race-container-width: 23vw !important;
         --track-car-height: 230px;
@@ -157,16 +145,9 @@ div {
         --race-container-width: 18vw;
         --track-car-height: 250px;
     }
-
-    /* .race-container {
-        width: 23vw;
-    } */
 }
 
 @media only screen and (min-width: 2040px) and (max-width: 2469px) {
-    /* .race-container {
-        width: 18vw;
-    } */
     :root {
         --race-container-width: 18vw;
         --track-car-height: 230px;
@@ -174,9 +155,6 @@ div {
 }
 
 @media only screen and (min-width: 2470px) {
-    /* .race-container {
-        width: 15vw;
-    } */
     :root {
         --race-container-width: 13.4vw;
         --track-car-height: 200px;
@@ -189,7 +167,10 @@ div {
 
 
 #race-list {
-    min-height: 100vh;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-bottom: 100px;
 }
 
 
@@ -203,8 +184,6 @@ div {
     padding: 0px;
     padding-right: 20px;
     margin: 1vw;
-    /* display: inline-block; */
-    float: left;
     box-shadow: 5px 5px 50px rgb(14, 14, 14);
     transition: transform 0.3s;
     width: calc(var(--race-container-width) - 12px);
@@ -291,7 +270,6 @@ div {
 .dropdown {
     margin-right: 20px;
     margin-left: 10px;
-    /* margin-bottom: 8px; */
     display: inline-block;
     position: relative;
     overflow: hidden;
@@ -299,7 +277,6 @@ div {
     height: 4vh;
     background: #d8d8d8;
     border: 0px solid;
-    /* border-color: white #f7f7f7 whitesmoke; */
     border-radius: 3px;
 }
 
@@ -970,4 +947,23 @@ input:checked+.slider:before {
 .reload-servers:hover {
     opacity: 0.7;
     cursor: pointer;
+}
+
+#buy-me-a-coffee {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    margin: 15px;
+    cursor: pointer;
+    height: 55px;
+    transition: filter 0.13s;
+}
+
+#buy-me-a-coffee:hover {
+    filter: brightness(80%);
+}
+
+#buy-me-a-coffee img {
+    height: 100%;
+    border-radius: 15px;
 }

@@ -380,7 +380,7 @@ class RankedServer {
     this.trackLayout = trackLayout;
 
     this.trackThumbnail = "https://prod.r3eassets.com/assets/content/track/" +
-        `${nameAsPath(track.Name)}-${track["Id"]}-image-full.webp`;
+        `${nameAsPath(track.Name)}-${track["Id"]}-image-big.webp`;
 
     this.trackLogo = "https://prod.r3eassets.com/assets/content/track/" +
         `${nameAsPath(track.Name)}-${track["Id"]}-logo-original.webp`;
